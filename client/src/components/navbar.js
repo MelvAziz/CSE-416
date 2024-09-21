@@ -5,7 +5,11 @@ class NavBar extends React.Component {
         super(props);
     }
     render() {
-        return (<p>Test</p>);
+        return (
+            <div class="navbar">
+                <h3>State District Analyzer</h3>
+            </div>
+        );
     }
 }
 
