@@ -1,6 +1,5 @@
 import './stylesheets/App.css';
-import NavBar from './components/navbar.js';
-import OptionsMap from './components/optionsMap.js';
+import StateDistrictAnalyzer from './components/stateDistrictAnalyzer';
 import "leaflet/dist/leaflet.css";
 import "leaflet/dist/leaflet.js";
 
@@ -8,8 +7,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <NavBar/>
-        <OptionsMap />
+        <StateDistrictAnalyzer />
       </header>
     </div>
   );

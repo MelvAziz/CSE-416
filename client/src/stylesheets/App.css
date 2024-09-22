@@ -36,4 +36,23 @@
 .navbar {
   position: absolute;
   top: 0px;
+  display: flex;
+}
+
+.navbar_button {
+  height: 100px;
+}
+
+.map_checkbox_container {
+  display:flex;
+}
+
+.map_checkbox_text {
+  font-size: 20px;
+}
+
+.map_menu {
+  display: flex;
+  justify-content: column;
+  align-items: center;
 }
