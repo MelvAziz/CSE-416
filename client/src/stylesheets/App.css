@@ -28,19 +28,60 @@
   color: #61dafb;
 }
 
-#map {
+#map_0 {
   height: 600px;
-  width: 400px;
+  width: 800px;
+}
+#map_1 {
+  height: 600px;
+  width: 800px;
 }
 
 .navbar {
   position: absolute;
   top: 0px;
+  height: 10vh;
+  width: calc(100vw - 4px);
+  left: 0px;
   display: flex;
+  background-color: gray;
+  justify-content: center;
+  align-content: center;
+  border-style: solid;
+  border-width: 2px;
+
 }
 
+
+.navbar_button_container {
+  max-height: 5vh;
+  margin-top: 2.5vh;
+  margin-bottom: 2.5vh;
+  width: 20rem;
+  border-style: solid;
+  border-color: black;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-evenly;
+  margin-left: 2rem;
+  background-color: white;
+
+}
 .navbar_button {
-  height: 100px;
+  background-color: white;
+  border-style:none;
+  width: 50%;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.navbar_button_selected {
+  background-color: lightblue;
+  margin-right: 0px;
+  padding-right: 5px;
+  margin-left: 0px;
+  padding-left: 5px;
+
 }
 
 .map_checkbox_container {
@@ -52,6 +93,12 @@
 }
 
 .map_menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.map_subdivisions {
   display: flex;
   justify-content: column;
   align-items: center;
