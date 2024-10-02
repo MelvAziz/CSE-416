@@ -11,18 +11,18 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from PIL import Image
 import io
-import ipywidgets as widgets
+# import ipywidgets as widgets
 from IPython.display import display, clear_output
 import time
 
 # Set the random seed so that the results are reproducible!
 import random
-random.seed(2024)
+random.seed(904)
 
 # run many iterations
-for i in range(0, 3):
+for i in range(0, 1):
     # load graph from JSON file
-    graph = Graph.from_json("./gerrymandria.json")
+    graph = Graph.from_json("./out.json")
 
     # population tally, should be able to count different variables as well
     # fails on the last partition for some reason
@@ -35,7 +35,7 @@ for i in range(0, 3):
     # ask about this!!
     initial_partition = Partition.from_random_assignment(
         graph,
-        n_parts=8,
+        n_parts=7,
         epsilon=0.05,
         pop_col="TOTPOP",
         updaters=my_updaters
@@ -66,10 +66,10 @@ for i in range(0, 3):
         constraints=[contiguous],
         accept=accept.always_accept,
         initial_state=initial_partition,
-        total_steps=1000
+        total_steps=10001 # extra walk since aggregation doesn't work on the last partition. 10001st walk will be ignored
     )
 
-    # store all 1000 partitions (initial -> final)
+    # store all 10000 partitions (initial -> final)
     partition_list = [] 
     assignment_list = []
 
@@ -78,45 +78,48 @@ for i in range(0, 3):
         partition_list.append(item)
         assignment_list.append(item.assignment)
 
+    '''
     # manually aggregate since for some reason the updater for the last partition doesn't work
     dist_pops = {}
 
-    for i in range(0, len(partition_list[999].graph.nodes)):
-        node = partition_list[999].graph.nodes[i]
-        if (not(node["district"] in dist_pops.keys())):
-            dist_pops[node["district"]] = node["TOTPOP"]
+    for i in range(0, len(partition_list[9999].graph.nodes)):
+        node = partition_list[9999].graph.nodes[i]
+        district = partition_list[9999].assignment[i]
+        if (not(district in dist_pops.keys())):
+            dist_pops[district] = node["TOTPOP"]
         else:
-            dist_pops[node["district"]] += node["TOTPOP"]
-
+            dist_pops[district] += node["TOTPOP"]
+    '''
     # print populations for final partition
-    for district in dist_pops.keys():
-        print(f"District {district}: {dist_pops[district]}")
+    for i in range(0, 7):
+        print(f"District {i}: {partition_list[9999]["population"][i]}")
 
-    # generate images for initial partition and final partition
+    '''
+    # # generate images for initial partition and final partition
     frames = []
 
     for j in range(0, 2):
-        i = j * (len(assignment_list) - 1)
-        fig, ax = plt.subplots(figsize=(8,8))
-        pos = {node :(data['x'],data['y']) for node, data in graph.nodes(data=True)}
-        node_colors = [mcm.tab20(int(assignment_list[i][node]) % 20) for node in graph.nodes()]
-        node_labels = {node: str(assignment_list[i][node]) for node in graph.nodes()}
+         i = j * (len(assignment_list) - 1)
+         fig, ax = plt.subplots(figsize=(8,8))
+         pos = {node :(data['x'],data['y']) for node, data in graph.nodes(data=True)}
+         node_colors = [mcm.tab20(int(assignment_list[i][node]) % 20) for node in graph.nodes()]
+         node_labels = {node: str(assignment_list[i][node]) for node in graph.nodes()}
 
-        nx.draw_networkx_nodes(graph, pos, node_color=node_colors)
-        nx.draw_networkx_edges(graph, pos)
-        nx.draw_networkx_labels(graph, pos, labels=node_labels)
-        plt.axis('off')
+         nx.draw_networkx_nodes(graph, pos, node_color=node_colors)
+         nx.draw_networkx_edges(graph, pos)
+         nx.draw_networkx_labels(graph, pos, labels=node_labels)
+         plt.axis('off')
 
-        buffer = io.BytesIO()
-        plt.savefig(buffer, format='png')
-        buffer.seek(0)
-        image = Image.open(buffer)
-        frames.append(image)
-        plt.close(fig)
+         buffer = io.BytesIO()
+         plt.savefig(buffer, format='png')
+         buffer.seek(0)
+         image = Image.open(buffer)
+         frames.append(image)
+         plt.close(fig)
 
     def show_frame(idx):
-        clear_output(wait=True)
-        display(frames[idx])
+         clear_output(wait=True)
+         display(frames[idx])
 
     i = 0
 
@@ -124,6 +127,7 @@ for i in range(0, 3):
     time.sleep(5)
     frames[1].show()
 
-    # slider = widgets.IntSlider(value=0, min=0, max=len(frames)-1, step=1, description='Frame:')
-    # slider.layout.width = '500px'
-    # widgets.interactive(show_frame, idx=slider)
+    #slider = widgets.IntSlider(value=0, min=0, max=len(frames)-1, step=1, description='Frame:')
+    #slider.layout.width = '500px'
+    #widgets.interactive(show_frame, idx=slider)
+    '''
