@@ -1,0 +1,23 @@
+GEOID      Unique Geographic Identifier                                                                                                              
+STATEFP    State FIPS                                                                                                                                
+STATE      State Name                                                                                                                                
+COUNTYFP   County FIPS                                                                                                                               
+COUNTY     County Name                                                                                                                               
+MEDN_INC22 Median household income in past 12 months (in 2022 inflation-adjusted dollars) (B19013_001E)                                              
+TOT_HOUS22 Total households (B19001_001E)                                                                                                            
+LESS_10K22 Households with less than $10,000 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_002E)            
+E10K_15K22  Households with between $10,000 and $14,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_003E)  
+E15K_20K22  Households with between $15,000 and $19,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_004E)  
+E20K_25K22  Households with between $20,000 and $24,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_005E)  
+E25K_30K22  Households with between $25,000 and $29,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_006E)  
+E30K_35K22  Households with between $30,000 and $34,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_007E)  
+E35K_40K22  Households with between $35,000 and $39,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_008E)  
+E40K_45K22  Households with between $40,000 and $44,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_009E)  
+E45K_50K22  Households with between $45,000 and $49,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_010E)  
+E50K_60K22  Households with between $50,000 and $59,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_011E)  
+E60K_75K22  Households with between $60,000 and $74,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_012E)  
+E75K_100K22 Households with between $75,000 and $99,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_013E)  
+E100_125K22 Households with between $100,000 and $124,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_014E)
+E125_150K22 Households with between $125,000 and $149,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_015E)
+E150_200K22 Households with between $150,000 and $199,999 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_016E)
+E200K_MOR22 Households with more than $200,000 in household income in the past 12 months (in 2022 inflation-adjusted dollars) (B19001_017E)
