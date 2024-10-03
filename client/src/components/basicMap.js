@@ -67,13 +67,13 @@ class BasicMap extends React.Component {
                 }
                 if(selectedFeature !== layer) {
                     selectedPopup = popup;
-                    if(selectedFeature !== undefined) selectedFeature.setStyle({color: selectedFeatureColor, fillOpacity: opacity});
+                    if(selectedFeature !== undefined) selectedFeature.setStyle({fillColor: selectedFeatureColor, fillOpacity: opacity});
                     selectedFeature = layer;
-                    selectedFeatureColor = layer.options.color;
-                    layer.setStyle({color: "black", fillOpacity: "0.3"});
+                    selectedFeatureColor = layer.options.fillColor;
+                    layer.setStyle({fillColor: "black", fillOpacity: "1"});
                 }
                 else {
-                    selectedFeature.setStyle({color: selectedFeatureColor, fillOpacity: opacity});
+                    selectedFeature.setStyle({fillColor: selectedFeatureColor, fillOpacity: opacity});
                     selectedFeature = undefined;
                     selectedFeatureColor = undefined;
                     selectedPopup = undefined;
@@ -116,7 +116,6 @@ class BasicMap extends React.Component {
                 else if(this.sortBy === "a") pop = feature.properties.ASN_NHSP22;
                 else if(this.sortBy === "n") pop = feature.properties.AIA_NHSP22;
                 else pop = 100;
-                console.log(this.sortBy);
                 let frac = ((pop/total)*100).toFixed(10);
                 if(frac < 10) layer.options.fillColor = "#ffff3f";
                 else if(frac < 20) layer.options.fillColor = "#eeef20";
@@ -131,7 +130,7 @@ class BasicMap extends React.Component {
             }
         }
         let i = 0;
-        const data = this.data.map(d => <GeoJSON onEachFeature={countyHover} key={"Data-"+(i++)+"-o-"+opacity} data={d.features} style={{color: "black", fillOpacity: opacity}}/>);
+        const data = this.data.map(d => <GeoJSON onEachFeature={countyHover} key={"Data-"+(i++)+"-o-"+opacity} data={d.features} style={{color: "black", fillOpacity: opacity, weight: 1}}/>);
         return (
             <div class="map_countainer">
                 <MapContainer id="main_map" center={this.center} zoom={this.zoom} scrollWheelZoom={false} >
