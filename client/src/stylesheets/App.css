@@ -28,35 +28,39 @@
   color: #61dafb;
 }
 
-#map_0 {
-  height: 600px;
-  width: 800px;
+p {
+  font-size: 14px;
 }
-#map_1 {
-  height: 600px;
-  width: 800px;
-}
+
+/* Navbar stylization */
 
 .navbar {
   position: absolute;
-  top: 0px;
-  height: 10vh;
+  top: 0rem;
+  height: 7vh;
   width: calc(100vw - 4px);
   left: 0px;
   display: flex;
-  background-color: gray;
+  background-color: #118468;
   justify-content: center;
   align-content: center;
   border-style: solid;
   border-width: 2px;
+}
+
+.navbar_title {
+  margin-left: 0rem;
+  margin-top: 0rem;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
 
 }
 
 
 .navbar_button_container {
   max-height: 5vh;
-  margin-top: 2.5vh;
-  margin-bottom: 2.5vh;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
   width: 20rem;
   border-style: solid;
   border-color: black;
@@ -75,14 +79,61 @@
   margin-right: 5px;
 }
 
-.navbar_button_selected {
+.navbar_button:hover {
   background-color: lightblue;
+  cursor: pointer;  
+}
+
+.navbar_button_selected {
+  background-color: violet;
   margin-right: 0px;
   padding-right: 5px;
   margin-left: 0px;
   padding-left: 5px;
 
 }
+.navbar_button_selected:hover {
+  background-color: purple;
+  cursor: pointer;  
+}
+
+/* Map CSS */
+.map_options {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+#main_map {
+  /* visibility: hidden; */
+  position: absolute;
+  left: 1rem;
+  top: 12vh;
+  height: 60vh;
+  width: 40vw; 
+  min-width: 30rem;
+  min-height: 20rem;
+  border-style: solid;
+  border-width: 1px;
+}
+
+#map_popup {
+  background-color: #ffffff;
+  font-size: 14px;
+  position: absolute;
+  left: 1rem;
+  width: 18rem;
+  /* height: 20%; */
+  bottom: calc(28vh - 2px);
+  max-height: 20%;
+  padding-bottom: 1rem;
+  z-index: 10000;
+  border-radius: 0 5px 0 0;
+  border-style: solid;
+  border-width: 1px;
+  visibility: hidden;
+}
+
+/* Map Menu CSS */
 
 .map_checkbox_container {
   display:flex;
@@ -102,4 +153,134 @@
   display: flex;
   justify-content: column;
   align-items: center;
+}
+
+.map_container {
+  position: absolute;
+  left: 0rem;
+  width: 50vw;
+}
+
+/* Legend CSS */
+
+.map_legend {
+  position: absolute;
+  left: max(42vw, 32rem);
+  top: 12vh;
+}
+.legend_item {
+  display: flex;
+  height: 2vh;
+  margin-bottom: 20px;
+  justify-items: center;
+  align-items: center;
+}
+
+.legend_block {
+  width: 20px;
+  height: 20px;
+  border-width: 1px;
+}
+.legend_label {
+  width: 60px;
+  height: 20px;
+  margin: 0rem;
+
+}
+
+/* Map Menu  CSS */
+
+.map_menu {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  border-width: 1px;
+  border-style: solid;
+  height: 24vh;
+  width: max(40vw, 30rem);
+}
+
+.map_type_container {
+  width: max(40vw, 30rem);
+  display:flex;
+  align-content: flex-start;
+}
+
+.map_type_button {
+  border-radius: 0;
+  border-style: solid;
+  font-size: 20px;
+  padding-top: 0.2rem;
+  padding-bottom: 0.1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-width: 1px;
+  border-radius: 5px 15px 0 0;
+  background-color: violet;
+}
+.map_type_button:hover {
+  cursor: pointer;
+  background-color: rgb(200, 0, 200);
+}
+.map_type_button_selected {
+  background-color: purple;
+}
+
+.map_menu_divider {
+  width: max(40vw, 30rem);
+  margin-top: 0;
+}
+.map_sort_container {
+  width: max(40vw, 30rem);
+  display:flex;
+  align-content: flex-start;
+  justify-content: space-between;
+}
+
+.map_economic_sort_container {
+  justify-content: space-evenly;
+  margin-bottom: 1rem;
+}
+
+.map_race_sort_container {
+  max-height: 20vh;
+}
+
+.map_sort_buttons {
+  border-radius: 0;
+  border-style: solid;
+  font-size: 16px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-width: 1px;
+  border-radius: 6px; 
+  background-color: rgb(178, 249, 146);
+  width: 10rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.map_economic_sort_buttons {
+  margin-bottom: 0rem;
+  margin-right: 0rem;
+  margin-left: 0rem;
+}
+
+.map_sort_buttons:hover {
+  cursor: pointer;
+  background-color: rgb(53, 171, 2);
+}
+
+.map_sort_button_selected {
+  background-color: green;
+}
+
+.map_legend {
+  border-style: solid;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-width: 1px;
+  height: 60vh;
+  width: 5rem;
 }
