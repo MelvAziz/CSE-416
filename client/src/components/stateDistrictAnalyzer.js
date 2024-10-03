@@ -1,6 +1,7 @@
 import React from 'react';
 import NavBar from './navbar.js';
 import OptionsMap from './optionsMap.js';
+import ControlPanel from './controlPanel.js';
 import alabama_precincts from '../GeoData/alabama/alabama_precincts.json'
 import alabama_counties from '../GeoData/alabama/alabama_counties.json'
 import alabama_congressional_districts from '../GeoData/alabama/alabama_congressional_districts.json'
@@ -30,7 +31,10 @@ class StateDistrictAnalyzer extends React.Component {
         return (
             <div class="container">
                 <NavBar key={"navbar_"+name} selectState={name} dOptions={this.switchState}/>
-                {map}
+                <div class="map-container">
+                    {map}
+                    <ControlPanel className="ControlPanel"/>
+                </div>
             </div>
         );
     }
