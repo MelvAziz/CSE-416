@@ -21,7 +21,7 @@ class BasicMap extends React.Component {
         let selectedFeatureColor;
         let legend;
         if(this.viewMode !== 0) opacity = 0.85;
-        if(this.viewMode === 1  && this.sortBy === "m") legend = <MapLegend colors={["#FF0000", "#CC0033", "#990066", "#660099",  "#3300CC", "#0000FF"]} labels={ ["<45k", "45-60k", "60-75k", "75-90k", "90-115k", ">115k"]}/>
+        if(this.viewMode === 1  && this.sortBy === "m") legend = <MapLegend colors={["#FF0000", "#CC0033", "#990066", "#660099",  "#3300CC", "#0000FF", "darkblue"]} labels={ ["<45k", "45-60k", "60-75k", "75-100k", "100-125k", "125-150k", ">150k"]}/>
         if(this.viewMode === 2 || (this.viewMode === 1 && this.sortBy === "i")) legend = <MapLegend colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} labels={ ["<10%", "10-20%", "20-30%", "30-40%", "40-50%", "50-60%", "60-70%", "70-80%", "80-90%", "90-100"]}/>
         function readableNum(x) {return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
         const countyHover = (feature, layer) =>{
@@ -29,15 +29,83 @@ class BasicMap extends React.Component {
             let districtName = feature.properties.DISTRICT
             let precinctName = feature.properties.NAME10;  ;
             if(precinctName === undefined) precinctName = feature.properties.Precinct; 
-            if(districtName === undefined) districtName = feature.properties.DIST; 
-
-            let popup = "";            
+            if(districtName === undefined) districtName = feature.properties.DIST;   
+            let popup = "";          
             if(countyName !== undefined) popup = "<p>" + countyName + "</p>";
             else if(precinctName !== undefined) popup = "<p>" + precinctName + "</p>";
             else if(districtName !== undefined)  popup = "<p>" + districtName + "</p>";
-            
-            if(this.viewMode === 1 && feature.properties.MEDN_INC22 !== undefined) popup += "<p>Median Income: $" + readableNum(feature.properties.MEDN_INC22) + "</p>";
-            else if(this.viewMode === 2) {                
+            if(this.viewMode === 1) {
+                let brackets = [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"] ];
+                let medInc = feature.properties.MEDN_INC22;   
+                let tot =  feature.properties.TOT_HOUS22;
+                if(medInc === undefined) {
+                    tot = 0;
+                    for(let i = 0; i < 16; i++) tot += Number(brackets[i]);
+                    let count = 0;
+                    for(let i = 0; i < 16; i++) {
+                        count+=Number(brackets[i]);
+                        if(count > tot/2) {
+                            let frac = (tot/2 - (count - Number(brackets[i])))/Number(brackets[i]);
+                            if(i === 0) medInc = 10000*frac;
+                            else if(i > 0 && i < 9) medInc = 10000 + 5000*(i-1) + 5000*frac;
+                            else if(i === 9) medInc = 50000 + 10000*frac;
+                            else if(i === 10) medInc = 60000 + 15000*frac;
+                            else if(i > 10 && i < 14) medInc = 75000 + 25000*(i-11) + 25000*frac;
+                            else if(i === 14) medInc = 150000 + 50000*frac;
+                            else if(i === 15) medInc = 200000;
+                            break;
+                        }
+                    }
+                    
+                }
+                if(this.sortBy === "m") {
+                    if(feature.properties.MEDN_INC22 !== undefined) popup += "<p>Median Income: $" + readableNum(medInc) + "</p>";
+                    else popup += "<p>Median Income (Estimate): $" + readableNum(Number(medInc).toFixed(0)) + "</p>";
+                    if(medInc < 30000) layer.options.fillColor = "#FF0000";
+                    else if(medInc < 60000) layer.options.fillColor = "#CC0033";
+                    else if(medInc < 75000) layer.options.fillColor = "#990066";
+                    else if(medInc < 100000) layer.options.fillColor = "#660099";
+                    else if(medInc < 125000) layer.options.fillColor = "#3300CC";
+                    else if(medInc < 150000) layer.options.fillColor = "#0000FF";
+                    else layer.options.fillColor = "darkblue";
+                }
+                else {
+                    let count = 0;
+                    for(let i = this.min; i < this.max; i++) count+= Number(brackets[i]);
+                    let frac = ((count/tot)*100).toFixed(10);
+                    if(frac < 10) layer.options.fillColor = "#ffff3f";
+                    else if(frac < 20) layer.options.fillColor = "#eeef20";
+                    else if(frac < 30) layer.options.fillColor = "#dddf00";
+                    else if(frac < 40) layer.options.fillColor = "#d4d700";
+                    else if(frac < 50) layer.options.fillColor = "#bfd200";
+                    else if(frac < 60) layer.options.fillColor = "#aacc00";
+                    else if(frac < 70) layer.options.fillColor = "#80b918";
+                    else if(frac < 80) layer.options.fillColor = "#55a630";
+                    else if(frac < 90) layer.options.fillColor = "#2b9348";
+                    else layer.options.fillColor = "darkgreen";
+                }
+            }
+            else if(this.viewMode === 2) {
+                let total = feature.properties.TOT_POP22;
+                let pop = 0;
+                if(this.sortBy === "w") pop = feature.properties.WHT_NHSP22;
+                else if(this.sortBy === "b") pop = feature.properties.BLK_NHSP22;
+                else if(this.sortBy === "h") pop = feature.properties.HSP_POP22;
+                else if(this.sortBy === "a") pop = feature.properties.ASN_NHSP22;
+                else if(this.sortBy === "n") pop = feature.properties.AIA_NHSP22;
+                else pop = 100;
+                let frac = ((pop/total)*100).toFixed(10);
+                if(frac < 10) layer.options.fillColor = "#ffff3f";
+                else if(frac < 20) layer.options.fillColor = "#eeef20";
+                else if(frac < 30) layer.options.fillColor = "#dddf00";
+                else if(frac < 40) layer.options.fillColor = "#d4d700";
+                else if(frac < 50) layer.options.fillColor = "#bfd200";
+                else if(frac < 60) layer.options.fillColor = "#aacc00";
+                else if(frac < 70) layer.options.fillColor = "#80b918";
+                else if(frac < 80) layer.options.fillColor = "#55a630";
+                else if(frac < 90) layer.options.fillColor = "#2b9348";
+                else layer.options.fillColor = "007f5f";
+
                 if(feature.properties.TOT_POP22 !== undefined)popup += "<p>Total Population: " + readableNum(feature.properties.TOT_POP22) + "</p>";
                 popup += "<table><thead><tr><th>Race</th><th>Population</th><th>Percent of Total</th></tr></thead><tbody>";
                 if(feature.properties.WHT_NHSP22 !== undefined && feature.properties.WHT_NHSP22 > feature.properties.TOT_POP22/100) popup +=  "<tr><td>White</td><td>" +    readableNum(feature.properties.WHT_NHSP22) + "</td><td>" + ((feature.properties.WHT_NHSP22/feature.properties.TOT_POP22) * 100).toFixed(2) + "%</td></tr>"
@@ -47,6 +115,7 @@ class BasicMap extends React.Component {
                 if(feature.properties.AIA_NHSP22 !== undefined && feature.properties.AIA_NHSP22 > feature.properties.TOT_POP22/100) popup +=  "<tr><td>Native</td><td>" +   readableNum(feature.properties.AIA_NHSP22) + "</td><td>" +((feature.properties.AIA_NHSP22/feature.properties.TOT_POP22) * 100).toFixed(2) + "%</td></tr>"
                 popup+="</tbody></table>";
             }
+
             layer.on('mouseover', function (e) {
                 if(popup !== undefined) {
                     document.getElementById("map_popup").style.visibility = 'visible';
@@ -80,54 +149,6 @@ class BasicMap extends React.Component {
                     document.getElementById("map_popup").style.visibility = 'hidden';
                 }
             });
-            if(this.viewMode === 1) {
-                const medInc = feature.properties.MEDN_INC22;   
-                if(this.sortBy === "m" && medInc !== undefined) {
-                    if(medInc < 45000) layer.options.fillColor = "#FF0000";
-                    else if(medInc < 60000) layer.options.fillColor = "#CC0033";
-                    else if(medInc < 75000) layer.options.fillColor = "#990066";
-                    else if(medInc < 90000) layer.options.fillColor = "#660099";
-                    else if(medInc < 115000) layer.options.fillColor = "#3300CC";
-                    else layer.options.fillColor = "#0000FF";
-                }
-                else {
-                    let count = 0;
-                    let brackets = [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"] ];
-                    for(let i = this.min; i < this.max; i++) count+=brackets[i];
-                    let frac = ((count/feature.properties.TOT_HOUS22)*100).toFixed(10);
-                    if(frac < 10) layer.options.fillColor = "#ffff3f";
-                    else if(frac < 20) layer.options.fillColor = "#eeef20";
-                    else if(frac < 30) layer.options.fillColor = "#dddf00";
-                    else if(frac < 40) layer.options.fillColor = "#d4d700";
-                    else if(frac < 50) layer.options.fillColor = "#bfd200";
-                    else if(frac < 60) layer.options.fillColor = "#aacc00";
-                    else if(frac < 70) layer.options.fillColor = "#80b918";
-                    else if(frac < 80) layer.options.fillColor = "#55a630";
-                    else if(frac < 90) layer.options.fillColor = "#2b9348";
-                    else layer.options.fillColor = "darkgreen";
-                }
-            }
-            else if(this.viewMode === 2) {
-                let total = feature.properties.TOT_POP22;
-                let pop = 0;
-                if(this.sortBy === "w") pop = feature.properties.WHT_NHSP22;
-                else if(this.sortBy === "b") pop = feature.properties.BLK_NHSP22;
-                else if(this.sortBy === "h") pop = feature.properties.HSP_POP22;
-                else if(this.sortBy === "a") pop = feature.properties.ASN_NHSP22;
-                else if(this.sortBy === "n") pop = feature.properties.AIA_NHSP22;
-                else pop = 100;
-                let frac = ((pop/total)*100).toFixed(10);
-                if(frac < 10) layer.options.fillColor = "#ffff3f";
-                else if(frac < 20) layer.options.fillColor = "#eeef20";
-                else if(frac < 30) layer.options.fillColor = "#dddf00";
-                else if(frac < 40) layer.options.fillColor = "#d4d700";
-                else if(frac < 50) layer.options.fillColor = "#bfd200";
-                else if(frac < 60) layer.options.fillColor = "#aacc00";
-                else if(frac < 70) layer.options.fillColor = "#80b918";
-                else if(frac < 80) layer.options.fillColor = "#55a630";
-                else if(frac < 90) layer.options.fillColor = "#2b9348";
-                else layer.options.fillColor = "007f5f";
-            }
         }
         let i = 0;
         const data = this.data.map(d => <GeoJSON onEachFeature={countyHover} key={"Data-"+(i++)+"-o-"+opacity} data={d.features} style={{color: "black", fillOpacity: opacity, weight: 1}}/>);
