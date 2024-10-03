@@ -7,7 +7,7 @@ import alabama_congressional_districts from '../GeoData/alabama/alabama_congress
 import massachusetts_precincts from '../GeoData/massachusetts/massachusetts_precincts.json'
 import massachusetts_counties from '../GeoData/massachusetts/massachusetts_counties.json'
 import massachusetts_congressional_districts from '../GeoData/massachusetts/massachusetts_congressional_districts.json'
-
+import RightControl from './rightControl.js';
 class StateDistrictAnalyzer extends React.Component {
     constructor(props) {
         super(props);
@@ -35,6 +35,7 @@ class StateDistrictAnalyzer extends React.Component {
             <div class="container">
                 <NavBar key={"navbar_"+name} selectedState={this.state.selectedState} selectedStates={["Massachusetts", "Alabama"]} dOptions={this.switchState}/>
                 {map}
+                <RightControl/>
             </div>
         );
     }
