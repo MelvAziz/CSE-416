@@ -15,7 +15,7 @@ class NavBar extends React.Component {
         })
         return (
             <div class="navbar">
-                <h3>State District Analyzer</h3>
+                <h3 class="navbar_title">State District Analyzer</h3>
                 <div class="navbar_button_container">
                     {statesList}
                 </div>
