@@ -32,7 +32,10 @@ class RightControlDis extends React.Component {
             graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
         }
         else if (this.props.show === 2){ //Race
-            if( y  === undefined) y = [3250658, 1314187, 13900, 444662];
+            if( y  === undefined) {
+                if(this.props.tableData[0] === "Alabama") y = [3250658, 1314187, 13900, 444662];
+                else y = [4873836, 507888, 31282, 536280]
+            }
             let plotData = {
                 x: ["White", "Black", "Hispanic", "Other"],
                 y: y,
