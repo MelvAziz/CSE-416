@@ -207,13 +207,22 @@ class RightControlDis extends React.Component {
                     type: 'box',
                     name: '9',
                     marker: { color: 'blue' }
-                }  
+                },
+                {
+                    x: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+                    y: [0.1, 0.13, 0.17, 0.18, 0.23, 0.25, 0.28, 0.52, 0.6],
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: 'Current Plan',
+                    marker: { color: "red" }
+                },
             ];
 
             let plotLayout = {
-                title: 'LOCATION Pop. by Race',
-                title: 'Boxplot Example',
-                yaxis: { title: '% of Population', range: [0, 1] },
+                title: 'Distribution by Race',
+                // title: 'Boxplot Example',
+                yaxis: { title: '% of Population Black', range: [0, 1] },
+                xaxis: {title: 'District'},
                 width: 700,
                 height: 600,
             }
