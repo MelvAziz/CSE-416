@@ -8,14 +8,14 @@ def get_precinct_pop_data(test_index, df, census_blocks, county_to_census_block)
     area_percent = []
     # print(blocks_to_check)
     for i in blocks_to_check:
-        series1 = gpd.GeoSeries(df.iloc[test_index].geometry)
-        series2 = gpd.GeoSeries(census_blocks.iloc[i].geometry)
+        series1 = gpd.GeoSeries(df.iloc[test_index].geometry).make_valid()
+        series2 = gpd.GeoSeries(census_blocks.iloc[i].geometry).make_valid()
         series_int = series1.intersection(series2)
         if (not(series_int.is_empty.item())):
             blocks.append(i)
             area_percent.append(series_int.area.item() / series2.area.item())
     
-    g = open("/gpfs/scratch/mborczuk/gerrychain/prop_list_economic.txt", "r")
+    g = open("/gpfs/scratch/mborczuk/gerrychain/prop_list_hispanic.txt", "r")
     for k in g.readlines():
         prop = k[:-1]
         data = []
@@ -31,7 +31,7 @@ def get_precinct_pop_data(test_index, df, census_blocks, county_to_census_block)
         f.close()
 
 
-file = "./alabama_census_block_group_economic.geojson"
+file = "./alabama_census_block_hispanic.geojson"
 census_blocks = gpd.read_file(file)
 
 

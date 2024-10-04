@@ -40,7 +40,7 @@ for i in range(0, len(df)):
     for j in prop_list:
         prop = j[:-1]
         h = open(f"/gpfs/scratch/mborczuk/gerryfiles/{prop}/{i}.txt", "r")
-        prop_sum = int(float(h.readlines()[-1]))
+        prop_sum = float(h.readlines()[-1])
         node[prop] = prop_sum
         row.append(prop_sum)
     csvWriter.writerow(row)
