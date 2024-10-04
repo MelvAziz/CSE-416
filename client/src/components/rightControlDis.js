@@ -1,10 +1,7 @@
 import React from 'react'
-import denimg from "../graphs/Density1.png"
-import raceimg from "../graphs/Bar2.png"
-import ginimg from "../graphs/Scatter1.png"
 import Graphs from "./plots.js"
 import * as ss from 'simple-statistics'
-import Plotly from "react-plotly.js"
+
 class RightControlDis extends React.Component {
     constructor(props) {
         super(props);
@@ -80,19 +77,35 @@ class RightControlDis extends React.Component {
             const yData = [];
             const yData2 = [];
             let data = this.props.data[0];
-            for (var i = 0; i < data["features"].length; i++) {
-                const totalVotes = Math.round(data["features"][i]["properties"]["G22USSDBOY"] + data["features"][i]["properties"]["G22USSLSOP"] + data["features"][i]["properties"]["G22USSOWRI"] + data["features"][i]["properties"]["G22USSRBRI"])
-                xData.push(Math.round(data["features"][i]["properties"]["WHT_NHSP22"] / data["features"][i]["properties"]["TOT_POP22"] * 100))
-                yData.push(Math.round(data["features"][i]["properties"]["G22USSDBOY"] / totalVotes * 100));
-                yData2.push(Math.round(data["features"][i]["properties"]["G22USSRBRI"] / totalVotes * 100));
+            if (data["name"] === "alabama") {
+                for (var i = 0; i < data["features"].length; i++) {
+                    const totalVotes = Math.round(data["features"][i]["properties"]["G22USSDBOY"] + data["features"][i]["properties"]["G22USSLSOP"] + data["features"][i]["properties"]["G22USSOWRI"] + data["features"][i]["properties"]["G22USSRBRI"])
+                    xData.push(Math.round(data["features"][i]["properties"]["WHT_NHSP22"] / data["features"][i]["properties"]["TOT_POP22"] * 100))
+                    yData.push(Math.round(data["features"][i]["properties"]["G22USSDBOY"] / totalVotes * 100));
+                    yData2.push(Math.round(data["features"][i]["properties"]["G22USSRBRI"] / totalVotes * 100));
+                }
+            } else { // mass 
+                /*
+                G20PREDBID - Joseph R. Biden (Democratic-Farmer-Labor Party)
+                G20PRERTRU - Donald J. Trump (Republican Party)
+                G20PRELJOR - Jo Jorgensen (Libertarian Party)
+                G20PREGHAW - Howie Hawkins (Green Party)
+                G20PREOWRI - Write-in Votes
+                */
+                for (var i = 0; i < data["features"].length; i++) {
+                    const totalVotes = Math.round(data["features"][i]["properties"]["G20PREDBID"] + data["features"][i]["properties"]["G20PRERTRU"] + data["features"][i]["properties"]["G20PRELJOR"] + data["features"][i]["properties"]["G20PREGHAW"] + data["features"][i]["properties"]["G20PREOWRI"])
+                    xData.push(Math.round(data["features"][i]["properties"]["WHT_NHSP22"] / data["features"][i]["properties"]["TOT_POP22"] * 100))
+                    yData.push(Math.round(data["features"][i]["properties"]["G20PREDBID"] / totalVotes * 100));
+                    yData2.push(Math.round(data["features"][i]["properties"]["G20PRERTRU"] / totalVotes * 100));
+                }
             }
-            const regressionLine = ss.linearRegressionLine(ss.linearRegression(xData.map((x, i) => [x, yData[i]])));
+
+            const regressionLine = ss.linearRegressionLine(ss.linearRegression(xData.map((x, i) => [Number(x), Number(yData[i])])));
             // Calculate the line of best fit (linear regression)
-            const regressionLine2 = ss.linearRegressionLine(ss.linearRegression(xData.map((x, i) => [x, yData2[i]])));
+            const regressionLine2 = ss.linearRegressionLine(ss.linearRegression(xData.map((x, i) => [Number(x), Number(yData2[i])])));
             // Generate the trendline data based on regression formula
             const trendlineData = xData.map(x => regressionLine(x));
             const trendlineData2 = xData.map(x => regressionLine2(x));
-            console.log(trendlineData);
             let plotData = [
                 {
                     x: xData,
@@ -135,6 +148,9 @@ class RightControlDis extends React.Component {
                 height: 700
             };
             graph = <Graphs data={plotData} layout={plotLayout}/>
+        }
+        else if (this.props.show === 5) { // Ecological inference
+            graph = <img className="ei=graph" src={require("../graphs/Density1.png")} alt={"EI graph"}/>
         }
         else if (this.props.show === 6){ //Ensemble
             let plotData = [
