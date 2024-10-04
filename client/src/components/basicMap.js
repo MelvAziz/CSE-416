@@ -11,10 +11,12 @@ class BasicMap extends React.Component {
         this.height = this.props.height;
         this.viewMode = this.props.viewMode;
         this.sortBy = this.props.sortBy;
+        this.setData = this.props.setData;
         this.min = this.props.min;
         this.max = this.props.max;
     }
     render() {
+        let setData = this.setData;
         let opacity = 0.5;
         let selectedPopup;
         let selectedFeature;
@@ -213,6 +215,7 @@ class BasicMap extends React.Component {
                 else document.getElementById("map_popup").style.visibility = 'hidden';
             })
             layer.on('click', function (e) {
+                setData(["0-10K", "10-15K",  "15-20K",  "20-25K", "25-30K",  "30-35K", "35-40K",  "40-45K", "45-50K",  "50-60K", "60-75K",  "75-100K", "100-125K",  "125-150K", "150-200K",  "200K+"], [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"]]);
                 if(popup !== undefined) {
                     document.getElementById("map_popup").style.visibility = 'visible';
                     document.getElementById("map_popup").innerHTML = popup;

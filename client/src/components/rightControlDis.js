@@ -1,14 +1,13 @@
 import React from 'react'
 import denimg from "../graphs/Density1.png"
-import ecoimg from "../graphs/Bar1.png"
 import raceimg from "../graphs/Bar2.png"
 import ginimg from "../graphs/Scatter1.png"
+import BarGraph from "./barGraph.js";
 class RightControlDis extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {tableData: this.props.tableData}
     }
-
-
     render() {
         if (this.props.show === "Election"){
         return (
@@ -18,9 +17,15 @@ class RightControlDis extends React.Component {
         );
         }
         else if (this.props.show === "Economics"){
+            let graph;
+            if(this.state.tableData !== undefined) {
+                console.log(this.state.tableData);
+                graph = <BarGraph key={this.state.tableData.x + "_" + this.state.tableData.y } data={this.state.tableData}/>
+            }
+            // }
             return (
                 <div class="rightControlDis">
-                    <img src = {ecoimg}  width="700" height="500"></img>
+                    {graph}
                 </div>
             );
         }
