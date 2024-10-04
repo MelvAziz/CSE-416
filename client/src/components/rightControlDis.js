@@ -115,6 +115,73 @@ class RightControlDis extends React.Component {
             };
             graph = <Graphs key={this.state.tableData + "_" + this.props.show} data={plotData} layout={plotLayout}/>
         }
+        else if (this.props.show === 6){ //Gingles
+            let plotData = [
+                {
+                    y: [0.1, 0.12, 0.18, 0.20],
+                    type: 'box',
+                    name: '1',
+                    marker: { color: 'blue' }
+                },
+                {
+                    y: [0.11, 0.15, 0.2, 0.23],
+                    type: 'box',
+                    name: '2',
+                    marker: { color: 'blue' }
+                },
+                {
+                    y: [0.12, 0.18, 0.22, 0.25],
+                    type: 'box',
+                    name: '3',
+                    marker: { color: 'blue' }
+                },
+                {
+                    y: [0.16, 0.2, 0.25, 0.27],
+                    type: 'box',
+                    name: '4',
+                    marker: { color: 'blue' }
+                },
+                {
+                    y: [0.23, 0.25, 0.3, 0.33],
+                    type: 'box',
+                    name: '5',
+                    marker: { color: 'blue' }
+                },
+                {
+                    y: [0.25, 0.28, 0.3, 0.38],
+                    type: 'box',
+                    name: '6',
+                    marker: { color: 'blue' }
+                },   
+                {
+                    y: [0.28, 0.34, 0.38, 0.42],
+                    type: 'box',
+                    name: '7',
+                    marker: { color: 'blue' }
+                }   ,
+                {
+                    y: [0.31, 0.43, 0.47, 0.56],
+                    type: 'box',
+                    name: '8',
+                    marker: { color: 'blue' }
+                },   
+                {
+                    y: [0.34, 0.47, 0.52, 0.61],
+                    type: 'box',
+                    name: '9',
+                    marker: { color: 'blue' }
+                }  
+            ];
+
+            let plotLayout = {
+                title: 'LOCATION Pop. by Race',
+                title: 'Boxplot Example',
+                yaxis: { title: '% of Population', range: [0, 1] },
+                width: 700,
+                height: 600,
+            }
+            graph = <Graphs key={this.state.tableData + "_" + this.props.show} data={plotData} layout={plotLayout}/>
+        };
         return (
             <div class="rightControlDis">
                 {graph}
