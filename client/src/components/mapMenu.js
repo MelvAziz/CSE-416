@@ -53,6 +53,12 @@ class MapMenu extends React.Component {
         else if(this.state.sortBy === "gov3")   selectedSort[5] = "map_sort_button_selected";
 
 
+        if(this.state.sortBy === "griwht")        selectedSort[0] = "map_sort_button_selected";
+        else if(this.state.sortBy === "griblk")   selectedSort[1] = "map_sort_button_selected";
+        else if(this.state.sortBy === "grihsp")   selectedSort[2] = "map_sort_button_selected";
+        else if(this.state.sortBy === "griinc")   selectedSort[3] = "map_sort_button_selected"; 
+
+
         if(this.state.sortBy === "ecowht")        selectedSort[0] = "map_sort_button_selected";
         else if(this.state.sortBy === "ecoblk")   selectedSort[1] = "map_sort_button_selected";
         else if(this.state.sortBy === "ecohsp")   selectedSort[2] = "map_sort_button_selected";
@@ -127,7 +133,20 @@ class MapMenu extends React.Component {
                 <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[0]} type="button" value="White" onClick={(e) =>       this.switchSort("ecowht")}/>
                 <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[1]} type="button" value="Black" onClick={(e) =>    this.switchSort("ecoblk")}/>
                 <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[2]} type="button" value="Hispanic" onClick={(e) =>    this.switchSort("ecohsp")}/>
-                <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[3]} type="button" value="Economic" onClick={(e) =>   this.switchSort("ecoinc")}/> 
+                {/* <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[3]} type="button" value="Economic" onClick={(e) =>   this.switchSort("ecoinc")}/>  */}
+            </div>
+        if(this.props.viewMode === 5) map_sub_selection = 
+        <div class="map_sort_container map_election_sort_container">
+            <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[0]} type="button" value="White" onClick={(e) =>       this.switchSort("ecowht")}/>
+            <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[1]} type="button" value="Black" onClick={(e) =>    this.switchSort("ecoblk")}/>
+            <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[2]} type="button" value="Hispanic" onClick={(e) =>    this.switchSort("ecohsp")}/>
+            {/* <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[3]} type="button" value="Economic" onClick={(e) =>   this.switchSort("ecogriinc")}/>  */}
+        </div>
+        if(this.props.viewMode === 6) map_sub_selection = 
+            <div class="map_sort_container map_election_sort_container">
+                <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[0]} type="button" value="White" onClick={(e) =>       this.switchSort("ecowht")}/>
+                <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[1]} type="button" value="Black" onClick={(e) =>    this.switchSort("ecoblk")}/>
+                {/* <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[2]} type="button" value="Economic" onClick={(e) =>   this.switchSort("ecoinc")}/>  */}
             </div>
         return (
             <div class="map_menu">

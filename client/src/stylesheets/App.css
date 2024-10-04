@@ -360,5 +360,5 @@ p {
 
 
 .right_sort_button_selected {
-  background-color: green;
+  background-color: green !important;
 }

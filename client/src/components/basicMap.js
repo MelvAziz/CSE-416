@@ -24,7 +24,7 @@ class BasicMap extends React.Component {
         let legend;
         if(this.viewMode !== 0) opacity = 0.85;
         if(this.viewMode === 1  && this.sortBy === "med") legend = <MapLegend colors={["#FF0000", "#CC0033", "#990066", "#660099",  "#3300CC", "#0000FF", "darkblue"]} labels={ ["<45k", "45-60k", "60-75k", "75-100k", "100-125k", "125-150k", ">150k"]}/>
-        else if(this.viewMode === 2 || (this.viewMode === 1 && this.sortBy === "inc")) legend =     <MapLegend colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} labels={ ["<10%", "10-20%", "20-30%", "30-40%", "40-50%", "50-60%", "60-70%", "70-80%", "80-90%", "90-100"]}/>
+        else if((this.viewMode === 2 || (this.viewMode === 1 && this.sortBy === "inc")) ||  this.sortBy === "ecowht" || this.sortBy === "ecoblk" || this.sortBy === "ecohsp") legend =     <MapLegend colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} labels={ ["<10%", "10-20%", "20-30%", "30-40%", "40-50%", "50-60%", "60-70%", "70-80%", "80-90%", "90-100"]}/>
         else if(this.viewMode === 3 && (this.sortBy === "sen1" || this.sortBy === "gov1")) legend = <MapLegend colors={[null, "#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#FF4C4C", "#ff0000", "#CC0000", "#990000", "#660000", null]} labels={["Democratic", "90-100%", "75-90%", "60-75%", "45-60%", "30-45%", "30-45%", "45-60%", "60-75%", "75-90%", "90-100%", "Republican"]}/>;
         else if(this.viewMode === 3 && (this.sortBy === "sen2" || this.sortBy === "gov2")) legend = <MapLegend colors={["#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#6666FF", "#9999FF"]} labels={["90-100%", "75-90%", "60-75%", "45-60%", "30-45%", "15-30%", "0-15%"]}/>;
         else if(this.viewMode === 3 && (this.sortBy === "sen3" || this.sortBy === "gov3")) legend = <MapLegend colors={["#660000", "#990000", "#CC0000", "#ff0000", "#FF3333", "#FF6666", "#FF9999"]} labels={["90-100%", "75-90%", "60-75%", "45-60%", "30-45%", "15-30%", "0-15%"]}/>;
@@ -35,7 +35,7 @@ class BasicMap extends React.Component {
             let popup =  "<p>" + name + "</p>";;  
             let viewMode = this.viewMode;  
             let sortBy = this.sortBy;      
-            if(viewMode === 1 || (viewMode === 4 && this.sortBy === "ecoinc")) {
+            if(viewMode === 1 || this.sortBy === "ecoinc") {
                 let brackets = [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"]];
                 let medInc = feature.properties.MEDN_INC22;   
                 let tot =  feature.properties.TOT_HOUS22;
@@ -86,7 +86,7 @@ class BasicMap extends React.Component {
                     else layer.options.fillColor = "darkgreen";
                 }
             }
-            else if(viewMode === 2 || (viewMode === 4 && this.sortBy !== "ecoinc")) {
+            else if(viewMode === 2 || ((viewMode === 4 || viewMode === 5 || viewMode === 6) && this.sortBy !== "ecoinc")) {
                 let total = feature.properties.TOT_POP22;
                 let pop = 0;
                 if(this.sortBy === "wht" || this.sortBy === "ecowht") pop = feature.properties.WHT_NHSP22;
