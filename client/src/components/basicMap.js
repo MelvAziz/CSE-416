@@ -11,10 +11,12 @@ class BasicMap extends React.Component {
         this.height = this.props.height;
         this.viewMode = this.props.viewMode;
         this.sortBy = this.props.sortBy;
+        this.setData = this.props.setData;
         this.min = this.props.min;
         this.max = this.props.max;
     }
     render() {
+        let setData = this.setData;
         let opacity = 0.5;
         let selectedPopup;
         let selectedFeature;
@@ -29,17 +31,10 @@ class BasicMap extends React.Component {
         function readableNum(x) {return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
         const countyHover = (feature, layer) =>{
             let currentState = this.data[0].name;
-            const countyName = feature.properties.COUNTY;   
-            let districtName = feature.properties.DISTRICT
-            let precinctName = feature.properties.NAME10;
-            if(precinctName === undefined) precinctName = feature.properties.Precinct; 
-            if(districtName === undefined) districtName = feature.properties.DIST;   
-            let popup = "";          
-            if(countyName !== undefined) popup = "<p>" + countyName + "</p>";
-            else if(precinctName !== undefined) popup = "<p>" + precinctName.replace("_", ".") + "</p>";
-            else if(districtName !== undefined)  popup = "<p>" + districtName + "</p>";
+            const name = feature.properties.NAME;
+            let popup =  "<p>" + name + "</p>";;          
             if(this.viewMode === 1) {
-                let brackets = [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"] ];
+                let brackets = [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"]];
                 let medInc = feature.properties.MEDN_INC22;   
                 let tot =  feature.properties.TOT_HOUS22;
                 if(medInc === undefined) {
@@ -218,6 +213,7 @@ class BasicMap extends React.Component {
                     document.getElementById("map_popup").innerHTML = popup;
                 }
                 if(selectedFeature !== layer) {
+                    setData(name, [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"]]);
                     selectedPopup = popup;
                     if(selectedFeature !== undefined) selectedFeature.setStyle({fillColor: selectedFeatureColor, fillOpacity: opacity});
                     selectedFeature = layer;
@@ -225,6 +221,7 @@ class BasicMap extends React.Component {
                     layer.setStyle({fillColor: "black", fillOpacity: "1"});
                 }
                 else {
+                    setData(currentState[0].toUpperCase() + currentState.substring(1, currentState.length), undefined);
                     selectedFeature.setStyle({fillColor: selectedFeatureColor, fillOpacity: opacity});
                     selectedFeature = undefined;
                     selectedFeatureColor = undefined;

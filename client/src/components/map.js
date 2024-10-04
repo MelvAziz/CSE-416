@@ -9,6 +9,7 @@ class Map extends React.Component {
         this.zoom = this.props.zoom;
         this.height = this.props.height;
         this.center = this.props.center;
+        this.setData = this.props.setData;
         this.setSort = this.setSort.bind(this);
         this.setView = this.setView.bind(this);
         this.setSingleMap = this.setSingleMap.bind(this);
@@ -35,7 +36,7 @@ class Map extends React.Component {
         if(this.state.selected === "pre")       data.push(this.data[0]);
         else if(this.state.selected === "cnt")  data.push(this.data[1]);
         else if(this.state.selected === "dis")  data.push(this.data[2]);
-        let map = <BasicMap min={this.state.min} max={this.state.max} center={this.center} zoom={this.zoom} height={this.height} key={data.length + "_" + data.selected + "_" + this.state.selected + "_" + this.state.sortBy + "_" + this.state.min + "_" + this.state.max} data={data} viewMode={this.state.viewMode} sortBy={this.state.sortBy}/>;  
+        let map = <BasicMap setData={this.setData} min={this.state.min} max={this.state.max} center={this.center} zoom={this.zoom} height={this.height} key={data.length + "_" + data.selected + "_" + this.state.selected + "_" + this.state.sortBy + "_" + this.state.min + "_" + this.state.max} data={data} viewMode={this.state.viewMode} sortBy={this.state.sortBy}/>;  
         let menu = <MapMenu selectedState={this.state.state} setRange={this.setRange} setSort={this.setSort} setCheck={this.setCheck} setView={this.setView} sortBy={this.state.sortBy} viewMode={this.state.viewMode} singleMap={this.setSingleMap} selected={this.state.selected}/>; 
         return (
             <div class="map-options">
