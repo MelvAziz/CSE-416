@@ -300,3 +300,59 @@ p {
   margin-bottom: 0.75rem;
   margin-top: 0.75rem;
 }
+/**Right Control CSS*/
+
+.container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.rightControl {
+  flex: 1; /* Adjust flex so the right control takes less space */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  justify-content: flex-start;
+  border-width: 1px;
+  border-style: solid;
+  height: 85%;
+  margin-top:  12vh;
+  margin-left: 50%;
+  width: 1400px;
+}
+
+/* Menu inside right control */
+.rightControlMenu {
+  padding: 10px 10px 0px 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  border-width: 0px 0px 1px 0px;
+  border-style: solid;
+  margin-bottom: 10px;
+}
+
+/* Buttons styling inside right control */
+.rightControlMenu button {
+  border-radius: 0;
+  border-style: solid;
+  font-size: 20px;
+  padding-top: 0.2rem;
+  padding-bottom: 0.1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-width: 1px;
+  border-radius: 5px 15px 0 0;
+  background-color: violet;
+}
+
+.rightControlMenu button:hover {
+  cursor: pointer;
+  background-color: rgb(200, 0, 200);
+}
+
+/* Additional selected button state */
+.rightControlMenu .selected {
+  background-color: purple;
+}
