@@ -35,7 +35,7 @@ class BasicMap extends React.Component {
             let popup =  "<p>" + name + "</p>";;  
             let viewMode = this.viewMode;  
             let sortBy = this.sortBy;      
-            if(viewMode === 1) {
+            if(viewMode === 1 || (viewMode === 4 && this.sortBy === "ecoinc")) {
                 let brackets = [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"]];
                 let medInc = feature.properties.MEDN_INC22;   
                 let tot =  feature.properties.TOT_HOUS22;
@@ -61,7 +61,7 @@ class BasicMap extends React.Component {
                 }
                 if(feature.properties.MEDN_INC22 !== undefined) popup += "<p>Median Income: $" + readableNum(medInc) + "</p>";
                 else popup += "<p>Median Income (Estimate): $" + readableNum(Number(medInc).toFixed(0)) + "</p>";
-                if(this.sortBy === "med") {
+                if(this.sortBy === "med" || this.sortBy === "ecoinc" ) {
                     if(medInc < 30000) layer.options.fillColor = "#FF0000";
                     else if(medInc < 60000) layer.options.fillColor = "#CC0033";
                     else if(medInc < 75000) layer.options.fillColor = "#990066";
@@ -86,12 +86,12 @@ class BasicMap extends React.Component {
                     else layer.options.fillColor = "darkgreen";
                 }
             }
-            else if(viewMode === 2) {
+            else if(viewMode === 2 || (viewMode === 4 && this.sortBy !== "ecoinc")) {
                 let total = feature.properties.TOT_POP22;
                 let pop = 0;
-                if(this.sortBy === "wht") pop = feature.properties.WHT_NHSP22;
-                else if(this.sortBy === "blk") pop = feature.properties.BLK_NHSP22;
-                else if(this.sortBy === "hsp") pop = feature.properties.HSP_POP22;
+                if(this.sortBy === "wht" || this.sortBy === "ecowht") pop = feature.properties.WHT_NHSP22;
+                else if(this.sortBy === "blk" || this.sortBy === "ecoblk") pop = feature.properties.BLK_NHSP22;
+                else if(this.sortBy === "hsp" || this.sortBy === "ecohsp") pop = feature.properties.HSP_POP22;
                 else if(this.sortBy === "asn") pop = feature.properties.ASN_NHSP22;
                 else if(this.sortBy === "aia") pop = feature.properties.AIA_NHSP22;
                 else pop = 100;

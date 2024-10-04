@@ -357,3 +357,8 @@ p {
 .rightControlMenu .selected {
   background-color: green;
 }
+
+
+.right_sort_button_selected {
+  background-color: green;
+}

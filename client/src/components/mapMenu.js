@@ -51,6 +51,12 @@ class MapMenu extends React.Component {
         else if(this.state.sortBy === "gov1")   selectedSort[3] = "map_sort_button_selected";
         else if(this.state.sortBy === "gov2")   selectedSort[4] = "map_sort_button_selected";
         else if(this.state.sortBy === "gov3")   selectedSort[5] = "map_sort_button_selected";
+
+
+        if(this.state.sortBy === "ecowht")        selectedSort[0] = "map_sort_button_selected";
+        else if(this.state.sortBy === "ecoblk")   selectedSort[1] = "map_sort_button_selected";
+        else if(this.state.sortBy === "ecohsp")   selectedSort[2] = "map_sort_button_selected";
+        else if(this.state.sortBy === "ecoinc")   selectedSort[3] = "map_sort_button_selected"; 
         
         if(this.props.viewMode === 1) map_subdivisions = 
             <div class="map_type_container"> 

@@ -10,15 +10,17 @@ class RightControlMenu extends React.Component {
         this.props.buttonClicked(name); 
     }
     render() {
-
+        let selectedTab = ["", "", "", "", "", "", ""];
+        selectedTab[this.props.viewMode-1] = "right_sort_button_selected";
+        console.log(this.props.viewMode);
         return (
             <div class="rightControlMenu">
-                <button onClick={() => this.buttonPushed("Economics")}> Economics </button>
-                <button onClick={() => this.buttonPushed("Race")}> Race </button>
-                <button onClick={() => this.buttonPushed("Election")}> Election Stats </button>
-                <button onClick={() => this.buttonPushed("Gingles")}> Gingles </button>
-                <button onClick={() => this.buttonPushed("Ecological")}> Ecological Inference </button>
-                <button onClick={() => this.buttonPushed("Ensemble")}> Ensemble Plan</button>
+                <button class={selectedTab[0]} onClick={() => this.buttonPushed("Economics")}> Economics </button>
+                <button class={selectedTab[1]} onClick={() => this.buttonPushed("Race")}> Race </button>
+                <button class={selectedTab[2]} onClick={() => this.buttonPushed("Election")}> Election Stats </button>
+                <button class={selectedTab[3]} onClick={() => this.buttonPushed("Gingles")}> Gingles </button>
+                <button class={selectedTab[4]} onClick={() => this.buttonPushed("Ecological")}> Ecological Inference </button>
+                <button class={selectedTab[5]} onClick={() => this.buttonPushed("Ensemble")}> Ensemble Plan</button>
             </div>
         );
     }
