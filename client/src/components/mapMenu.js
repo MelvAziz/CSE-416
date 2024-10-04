@@ -128,12 +128,6 @@ class MapMenu extends React.Component {
             </div>
         return (
             <div class="map_menu">
-                <div class="map_types"> 
-                    {/* <input class="map_buttons" type="button" value="Boundaries" onClick={(e) => this.switchView(0)}/> */}
-                    <input  class="map_buttons" type="button" value="Economics" onClick={(e) => this.switchView(1)}/>
-                    <input  class="map_buttons" type="button" value="Race" onClick={(e) => this.switchView(2)}/>
-                    <input  class="map_buttons" type="button" value="Election" onClick={(e) => this.switchView(3)}/>
-                </div>
                 {map_subdivisions}
                 <hr class="map_menu_divider"/>
                 {map_sub_selection}

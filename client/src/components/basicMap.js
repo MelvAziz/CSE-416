@@ -130,9 +130,9 @@ class BasicMap extends React.Component {
                         tot = Number(feature.properties.G22GOVDFLO) + Number(feature.properties.G22GOVLBLA) + Number(feature.properties.G22GOVOWRI) + Number(feature.properties.G22GOVRIVE);
                         dem = Number(feature.properties.G22GOVDFLO);
                         rep = Number(feature.properties.G22GOVRIVE);
-                        popup += "<tr><td>(Dem)Yolanda Rochelle Flowers</td><td>" + dem + "</td><td>" + ((dem/tot)*100).toFixed(2)  +"%</td></tr>";
+                        popup += "<tr><td>(Dem)Yolanda Flowers</td><td>" + dem + "</td><td>" + ((dem/tot)*100).toFixed(2)  +"%</td></tr>";
                         popup += "<tr><td>(Rep)Kay Ivey</td><td>" + rep + "</td><td>" + ((rep/tot)*100).toFixed(2)  +"%</td></tr>";
-                        popup += "<tr><td>(Lib)James \"Jimmy\" Blake</td><td>" + Number(feature.properties.G22GOVLBLA) + "</td><td>" + ((Number(feature.properties.G22GOVLBLA)/tot)*100).toFixed(2)  +"%</td></tr>";
+                        popup += "<tr><td>(Lib)James Blake</td><td>" + Number(feature.properties.G22GOVLBLA) + "</td><td>" + ((Number(feature.properties.G22GOVLBLA)/tot)*100).toFixed(2)  +"%</td></tr>";
                         popup += "</tbody></table>";
                     }
                     else {

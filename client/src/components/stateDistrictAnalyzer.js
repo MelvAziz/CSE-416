@@ -12,10 +12,18 @@ class StateDistrictAnalyzer extends React.Component {
     constructor(props) {
         super(props);
         this.switchState = this.switchState.bind(this);
-        this.state = {selectedState: "Alabama"};
+        this.setView = this.setView.bind(this);
+        this.state = {selectedState: "Alabama", viewMode: 1};
     }
     switchState(state) {
         this.setState({selectedState: state});
+    }
+    setView(options) {
+        if (options === "Economics") this.setState({viewMode: 1});
+        else if (options === "Race") this.setState({viewMode: 2});
+        else if (options === "Election") this.setState({viewMode: 3});
+        else if (options === "Gingles") this.setState({viewMode: 4});
+
     }
     render() {
         let name = "Alabama";
@@ -30,12 +38,12 @@ class StateDistrictAnalyzer extends React.Component {
             zoom = 8;
             height = "1";
         }
-        let map = <Map key={"map_state_"+name} center={center} data={data} zoom={zoom} height={height} selectedState={this.state.selectedState}/>;
+        let map = <Map key={"map_state_"+name+"_"+this.state.viewMode} viewMode={this.state.viewMode} center={center} data={data} zoom={zoom} height={height} selectedState={this.state.selectedState}/>;
         return (
             <div class="container">
                 <NavBar key={"navbar_"+name} selectedState={this.state.selectedState} selectedStates={["Massachusetts", "Alabama"]} dOptions={this.switchState}/>
                 {map}
-                <RightControl/>
+                <RightControl setView={this.setView}/>
             </div>
         );
     }

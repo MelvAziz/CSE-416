@@ -13,7 +13,7 @@ class Map extends React.Component {
         this.setView = this.setView.bind(this);
         this.setSingleMap = this.setSingleMap.bind(this);
         this.setRange = this.setRange.bind(this);
-        this.state = {state: this.props.selectedState, viewMode: 1, sortBy: "med", selected: "pre", min: 3, max: 10};
+        this.state = {state: this.props.selectedState, viewMode: this.props.viewMode, sortBy: "med", selected: "pre", min: 3, max: 10};
     }
       setSingleMap(option) {
         this.setState({selected: option});

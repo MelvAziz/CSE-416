@@ -13,12 +13,12 @@ class RightControlMenu extends React.Component {
 
         return (
             <div class="rightControlMenu">
-                <button onClick={() => this.buttonPushed("Overview")}> Overview </button>
                 <button onClick={() => this.buttonPushed("Economics")}> Economics </button>
                 <button onClick={() => this.buttonPushed("Race")}> Race </button>
-                <button onClick={() => this.buttonPushed("Election Stats")}> Election Stats </button>
+                <button onClick={() => this.buttonPushed("Election")}> Election Stats </button>
                 <button onClick={() => this.buttonPushed("Gingles")}> Gingles </button>
-                <button onClick={() => this.buttonPushed("Ecologic Inference")}> Ecologic Inference </button>
+                <button onClick={() => this.buttonPushed("Ecological")}> Ecological Inference </button>
+                <button onClick={() => this.buttonPushed("Ensemble")}> Ensemble Plan</button>
             </div>
         );
     }

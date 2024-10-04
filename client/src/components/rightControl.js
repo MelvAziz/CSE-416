@@ -5,10 +5,12 @@ class RightControl extends React.Component {
     constructor(props) {
         super(props);
         this.state = {pageShown: ""};
+        this.setView = this.props.setView;
         this.setDisplay = this.setDisplay.bind(this); 
     }
 
     setDisplay(buttonName){
+        this.setView(buttonName);
         this.setState({pageShown: buttonName}); 
     }
     render() {

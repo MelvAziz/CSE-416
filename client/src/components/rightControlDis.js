@@ -10,28 +10,28 @@ class RightControlDis extends React.Component {
 
 
     render() {
-        if (this.props.show == "Election Stats"){
+        if (this.props.show === "Election"){
         return (
             <div class="rightControlDis">
                 <img src = {denimg}  width="700" height="500"></img>
             </div>
         );
         }
-        else if (this.props.show == "Economics"){
+        else if (this.props.show === "Economics"){
             return (
                 <div class="rightControlDis">
                     <img src = {ecoimg}  width="700" height="500"></img>
                 </div>
             );
         }
-        else if (this.props.show == "Race"){
+        else if (this.props.show === "Race"){
             return (
                 <div class="rightControlDis">
                     <img src = {raceimg}  width="700" height="500"></img>
                 </div>
             );
         }
-        else if (this.props.show == "Gingles"){
+        else if (this.props.show === "Gingles"){
             return (
                 <div class="rightControlDis">
                     <img src = {ginimg}  width="700" height="500"></img>
