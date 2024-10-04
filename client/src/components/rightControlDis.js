@@ -66,8 +66,8 @@ class RightControlDis extends React.Component {
                 title: this.props.tableData[0] + ' Votes',
                 width: 700,
                 height: 600,
-                xaxis: {title: "Race"},
-                yaxis: {title: "Population"},
+                xaxis: {title: "Candidate"},
+                yaxis: {title: "Votes"},
                 datarevision: this.state.tableData[0],
             }
             graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
@@ -79,6 +79,12 @@ class RightControlDis extends React.Component {
             let sortBy = this.props.sortBy;
             let propName = "";
             let label = "";
+            // let o1 = new Object();
+            // o1.b = 68;
+            // o1.m = 0.128;
+            // let o2 = new Object();
+            // o2.b = 32;
+            // o2.m = -0.149;
             // ecowht, ecoblk, ecohsp, ecoinc
             if (sortBy === "ecowht") {
                 propName = "WHT_NHSP22";
@@ -113,13 +119,12 @@ class RightControlDis extends React.Component {
                     yData2.push(Math.round(data["features"][i]["properties"]["G20PRERTRU"] / totalVotes * 100));
                 }
             }
-
-            const regressionLine = ss.linearRegressionLine(ss.linearRegression(xData.map((x, i) => [Number(x), Number(yData[i])])));
-            // Calculate the line of best fit (linear regression)
-            const regressionLine2 = ss.linearRegressionLine(ss.linearRegression(xData.map((x, i) => [Number(x), Number(yData2[i])])));
-            // Generate the trendline data based on regression formula
-            const trendlineData = xData.map(x => regressionLine(x));
-            const trendlineData2 = xData.map(x => regressionLine2(x));
+            // const regressionLine = ss.linearRegressionLine(o1);
+            // // Calculate the line of best fit (linear regression)
+            // const regressionLine2 = ss.linearRegressionLine(o2);
+            // // Generate the trendline data based on regression formula
+            // const trendlineData = xData.map(x => regressionLine(x));
+            // const trendlineData2 = xData.map(x => regressionLine2(x));
             let plotData = [
                 {
                     x: xData,
@@ -142,7 +147,7 @@ class RightControlDis extends React.Component {
                 //     y: trendlineData,
                 //     mode: 'lines',
                 //     type: 'scatter',
-                //     name: 'D',
+                //     name: 'Democrat Regression Line',
                 //     line: { color: 'blue' }
                 // },
                 // {
@@ -150,7 +155,7 @@ class RightControlDis extends React.Component {
                 //     y: trendlineData2,
                 //     mode: 'lines',
                 //     type: 'scatter',
-                //     name: 'R',
+                //     name: 'Republican Regression Line',
                 //     line: { color: 'red' }
                 // }
             ];
