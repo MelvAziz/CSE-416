@@ -233,9 +233,11 @@ class BasicMap extends React.Component {
                 }
                 else {
                     barTitle = currentState[0].toUpperCase() + currentState.substring(1, currentState.length);
-                    if((sortBy === "gov1" || sortBy === "gov2"  || sortBy === "gov3") && currentState === "massachusetts") barTitle += " (President)";
-                    if((sortBy === "gov1" || sortBy === "gov2"  || sortBy === "gov3") && currentState === "alabama") barTitle += " (Governor)";
-                    else barTitle += " (Senator)"
+                    if(viewMode === 3) {
+                        if((sortBy === "gov1" || sortBy === "gov2"  || sortBy === "gov3") && currentState === "massachusetts") barTitle += " (President)";
+                        else if((sortBy === "gov1" || sortBy === "gov2"  || sortBy === "gov3") && currentState === "alabama") barTitle += " (Governor)";
+                        else barTitle += " (Senator)"
+                    }
                     setData(barTitle, undefined);
                     selectedFeature.setStyle({fillColor: selectedFeatureColor, fillOpacity: opacity});
                     selectedFeature = undefined;
