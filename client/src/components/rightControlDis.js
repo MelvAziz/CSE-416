@@ -11,7 +11,10 @@ class RightControlDis extends React.Component {
         let graph;
         let y = this.props.tableData[1];
         if(this.props.show === 1){ //Economics
-            if( y  === undefined) y = [124036, 103145, 91533, 92600, 87152, 86027, 80601, 79982, 74887, 142999, 180212, 239693, 166596, 116460, 127890, 124471];
+            if( y  === undefined) {
+                if(this.props.tableData[0] === "Alabama") y = [124036, 103145, 91533, 92600, 87152, 86027, 80601, 79982, 74887, 142999, 180212, 239693, 166596, 116460, 127890, 124471];
+                else y = [116876, 97099, 77467, 77861, 76025, 70883, 68282, 69892, 67950, 140203, 196027, 301312, 256373, 211933, 309177, 512776, 0]
+            }
             let plotData = {
                 x: ["<10k", "10K-15K", "15K-20K", "20K-25K", "25K-30K", "30K-35K", "35K-40K", "40K-45K", "45K-50K", "50K-60K", "60K-75K", "75K-100K", "100K-125K", "125K-150K", "150K-200K", ">200K"],
                 y: y,
@@ -29,7 +32,10 @@ class RightControlDis extends React.Component {
             graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
         }
         else if (this.props.show === 2){ //Race
-            if( y  === undefined) y = [3250658, 1314187, 13900, 444662];
+            if( y  === undefined) {
+                if(this.props.tableData[0] === "Alabama") y = [3250658, 1314187, 13900, 444662];
+                else y = [4873836, 507888, 31282, 536280]
+            }
             let plotData = {
                 x: ["White", "Black", "Hispanic", "Other"],
                 y: y,
