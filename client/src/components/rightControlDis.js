@@ -79,26 +79,23 @@ class RightControlDis extends React.Component {
             graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
         }
         else if (this.props.show === 4){ //Gingles
-
             const xData = [];
             const yData = [];
             const yData2 = [];
-            for (var i = 0; i < this.props.tableData[1]["features"].length; i++) {
-                const totalVotes = Math.round(this.props.tableData[1]["features"][i]["properties"]["G22USSDBOY"] + this.props.tableData[1]["features"][i]["properties"]["G22USSLSOP"] + this.props.tableData[1]["features"][i]["properties"]["G22USSOWRI"] + this.props.tableData[1]["features"][i]["properties"]["G22USSRBRI"])
-                xData.push(Math.round(this.props.tableData[1]["features"][i]["properties"]["WHT_NHSP22"] / this.props.tableData[1]["features"][i]["properties"]["TOT_POP22"] * 100))
-                yData.push(Math.round(this.props.tableData[1]["features"][i]["properties"]["G22USSDBOY"] / totalVotes * 100));
-                yData2.push(Math.round(this.props.tableData[1]["features"][i]["properties"]["G22USSRBRI"] / totalVotes * 100));
+            console.log(this.props.data[0]);
+            let data = this.props.data[0];
+            for (var i = 0; i < data["features"].length; i++) {
+                const totalVotes = Math.round(data["features"][i]["properties"]["G22USSDBOY"] + data["features"][i]["properties"]["G22USSLSOP"] + data["features"][i]["properties"]["G22USSOWRI"] + data["features"][i]["properties"]["G22USSRBRI"])
+                xData.push(Math.round(data["features"][i]["properties"]["WHT_NHSP22"] / data["features"][i]["properties"]["TOT_POP22"] * 100))
+                yData.push(Math.round(data["features"][i]["properties"]["G22USSDBOY"] / totalVotes * 100));
+                yData2.push(Math.round(data["features"][i]["properties"]["G22USSRBRI"] / totalVotes * 100));
             }
-
             const regressionLine = ss.linearRegressionLine(ss.linearRegression(xData.map((x, i) => [x, yData[i]])));
-
             // Calculate the line of best fit (linear regression)
             const regressionLine2 = ss.linearRegressionLine(ss.linearRegression(xData.map((x, i) => [x, yData2[i]])));
-        
             // Generate the trendline data based on regression formula
             const trendlineData = xData.map(x => regressionLine(x));
             const trendlineData2 = xData.map(x => regressionLine2(x));
-
             console.log(trendlineData);
             let plotData = [
                 {
@@ -134,7 +131,6 @@ class RightControlDis extends React.Component {
                     line: { color: 'red' }
                 }
             ];
-        
             let plotLayout = {
                 title: '',
                 xaxis: { title: '% White Pop.' },
@@ -144,7 +140,7 @@ class RightControlDis extends React.Component {
             };
             graph = <Graphs data={plotData} layout={plotLayout}/>
         }
-        else if (this.props.show === 6){ //Gingles
+        else if (this.props.show === 6){ //Ensemble
             let plotData = [
                 {
                     y: [0.1, 0.12, 0.18, 0.20],

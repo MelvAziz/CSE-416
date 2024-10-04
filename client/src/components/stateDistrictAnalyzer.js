@@ -56,7 +56,7 @@ class StateDistrictAnalyzer extends React.Component {
             height = "1";
         }
         let map = <Map key={"map_state_"+name+"_"+this.state.viewMode} viewMode={this.state.viewMode} setData={this.setData} center={center} data={data} zoom={zoom} height={height} selectedState={this.state.selectedState}/>;
-        let right = <RightControl key={this.state.tableData + "_" + this.state.viewMode} viewMode={this.state.viewMode} tableData={this.state.tableData} setView={this.setView}/>;
+        let right = <RightControl key={this.state.tableData + "_" + this.state.viewMode} data={data} viewMode={this.state.viewMode} tableData={this.state.tableData} setView={this.setView}/>;
         return (
             <div class="container">
                 <NavBar key={"navbar_"+name} selectedState={this.state.selectedState} selectedStates={["Massachusetts", "Alabama"]} dOptions={this.switchState}/>

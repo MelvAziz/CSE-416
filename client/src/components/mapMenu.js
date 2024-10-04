@@ -52,8 +52,7 @@ class MapMenu extends React.Component {
         else if(this.state.sortBy === "gov2")   selectedSort[4] = "map_sort_button_selected";
         else if(this.state.sortBy === "gov3")   selectedSort[5] = "map_sort_button_selected";
 
-        
-
+    console.log(this.selectedState);
         
         if(this.props.viewMode === 1) map_subdivisions = 
             <div class="map_type_container"> 
@@ -99,7 +98,7 @@ class MapMenu extends React.Component {
                 <input  class={"map_sort_buttons " + selectedSort[3]} type="button" value="Asian" onClick={(e) =>       this.switchSort("asn")}/> 
                 <input  class={"map_sort_buttons " + selectedSort[4]} type="button" value="Native" onClick={(e) =>      this.switchSort("aia")}/>
             </div>
-        if(this.props.viewMode === 3 && this.selectState === "alabama") map_sub_selection = 
+        if(this.props.viewMode === 3 && this.selectedState === "Alabama") map_sub_selection = 
             <div class="map_sort_container map_election_sort_container">
                 <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[0]} type="button" value="2022 Senator (General)" onClick={(e) =>       this.switchSort("sen1")}/>
                 <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[1]} type="button" value="2022 Senator (Democratic)" onClick={(e) =>    this.switchSort("sen2")}/>
