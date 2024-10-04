@@ -14,7 +14,11 @@ class StateDistrictAnalyzer extends React.Component {
         this.switchState = this.switchState.bind(this);
         this.setView = this.setView.bind(this);
         this.setData = this.setData.bind(this);
-        this.state = {selectedState: "Alabama", viewMode: 1, tableData: []};
+        this.setSortEco = this.setSortEco.bind(this);
+        this.state = {selectedState: "Alabama", viewMode: 1, tableData: [], sortBy: "wht"};
+    }
+    setSortEco(sort) {
+        this.setState({sortBy: sort});
     }
     switchState(state) {
         let tableData = [state, undefined]
@@ -55,11 +59,11 @@ class StateDistrictAnalyzer extends React.Component {
             zoom = 8;
             height = "1";
         }
-        let map = <Map key={"map_state_"+name+"_"+this.state.viewMode} viewMode={this.state.viewMode} setData={this.setData} center={center} data={data} zoom={zoom} height={height} selectedState={this.state.selectedState}/>;
-        let right = <RightControl key={this.state.tableData + "_" + this.state.viewMode} data={data} viewMode={this.state.viewMode} tableData={this.state.tableData} setView={this.setView}/>;
+        let map = <Map key={"map_state_"+name+"_"+this.state.viewMode} setSortEco={this.setSortEco} viewMode={this.state.viewMode} setData={this.setData} center={center} data={data} zoom={zoom} height={height} selectedState={this.state.selectedState}/>;
+        let right = <RightControl key={this.state.tableData + "_" + this.state.viewMode + "_"   } sortBy={this.state.sortBy} data={data} viewMode={this.state.viewMode} tableData={this.state.tableData} setView={this.setView}/>;
         return (
             <div class="container">
-                <NavBar key={"navbar_"+name} selectedState={this.state.selectedState} selectedStates={["Massachusetts", "Alabama"]} dOptions={this.switchState}/>
+                <NavBar key={"navbar_"+name+"_"+this.state.sortBy} sortBy={this.state.sortBy} selectedState={this.state.selectedState} selectedStates={["Massachusetts", "Alabama"]} dOptions={this.switchState}/>
                 {map}
                 {right}
             </div>

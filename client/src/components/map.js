@@ -26,6 +26,7 @@ class Map extends React.Component {
         // else if(option === ) this.setState({viewMode: option, selected: "pre", sortBy: "sen1"});
       };
       setSort(option) {
+        this.props.setSortEco(option);
         this.setState({sortBy: option, selected: this.state.selected});
       };
       setRange(e) {

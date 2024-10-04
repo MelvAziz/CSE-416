@@ -11,8 +11,6 @@ class RightControlDis extends React.Component {
         this.state = {tableData: this.props.tableData}
     }
     render() {
-        console.log(this.props.show);
-        console.log(this.props.tableData);
         let graph;
         let y = this.props.tableData[1];
         if(this.props.show === 1){ //Economics
@@ -53,7 +51,6 @@ class RightControlDis extends React.Component {
             graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
         }
         else if (this.props.show === 3){ //Election
-            console.log(y);
             if( y === undefined) {
                 console.log(this.props.tableData[0].includes("President"));
                 if(this.props.tableData[0].includes("President")) y = [[2382202, 1167202, 81998], ["Joe Biden", "Donald Trump", "Other"]];
@@ -82,7 +79,6 @@ class RightControlDis extends React.Component {
             const xData = [];
             const yData = [];
             const yData2 = [];
-            console.log(this.props.data[0]);
             let data = this.props.data[0];
             for (var i = 0; i < data["features"].length; i++) {
                 const totalVotes = Math.round(data["features"][i]["properties"]["G22USSDBOY"] + data["features"][i]["properties"]["G22USSLSOP"] + data["features"][i]["properties"]["G22USSOWRI"] + data["features"][i]["properties"]["G22USSRBRI"])
