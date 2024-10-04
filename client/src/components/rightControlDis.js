@@ -13,8 +13,8 @@ class RightControlDis extends React.Component {
         console.log(this.props.show);
         console.log(this.props.tableData);
         let graph;
+        let y = this.props.tableData[1];
         if(this.props.show === 1){ //Economics
-            let y = this.props.tableData[1];
             if( y  === undefined) y = [124036, 103145, 91533, 92600, 87152, 86027, 80601, 79982, 74887, 142999, 180212, 239693, 166596, 116460, 127890, 124471];
             let plotData = {
                 x: ["<10k", "10K-15K", "15K-20K", "20K-25K", "25K-30K", "30K-35K", "35K-40K", "40K-45K", "45K-50K", "50K-60K", "60K-75K", "75K-100K", "100K-125K", "125K-150K", "150K-200K", ">200K"],
@@ -28,54 +28,54 @@ class RightControlDis extends React.Component {
                 height: 600,
                 xaxis: {title: "Economic Brackets"},
                 yaxis: {title: "# of Households"},
-                datarevision: this.state.tableData
+                datarevision: this.state.tableData[0]
             }
-            graph = <Graphs key={this.state.tableData} data={[plotData]} layout={plotLayout}/>;
+            graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
         }
         else if (this.props.show === 2){ //Race
-            let graph;
-            let y = this.props.tableData[1];
             if( y  === undefined) y = [3250658, 1314187, 13900, 444662];
             let plotData = {
                 x: ["White", "Black", "Hispanic", "Other"],
                 y: y,
                 type: 'bar',
-                mode: 'lines+markers',
+                // mode: 'lines+markers',
                 marker: { color: 'blue' },
             }
             let plotLayout = {
-                title: this.props.tableData[0] + 'Pop. by Race',
+                title: this.props.tableData[0] + ' Pop. by Race',
+                width: 700,
+                height: 600,
                 xaxis: {title: "Race"},
                 yaxis: {title: "Population"},
-                datarevision: this.state.tableData,
-                width: 700,
-                height: 600,
+                datarevision: this.state.tableData[0],
             }
-            graph = <Graphs key={this.state.tableData} data={[plotData]} layout={plotLayout}/>;
+            graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
         }
         else if (this.props.show === 3){ //Election
-            let plotData = [
-                {
-                    y: [10, 15, 13, 17],
-                    type: 'box',
-                    name: 'Democrat',
-                    marker: { color: 'blue' }
-                },
-                {
-                    y: [16, 5, 11, 9],
-                    type: 'box',
-                    name: 'Republican',
-                    marker: { color: 'red' }
-                }
-            ];
-
+            console.log(y);
+            if( y === undefined) {
+                console.log(this.props.tableData[0].includes("President"));
+                if(this.props.tableData[0].includes("President")) y = [[2382202, 1167202, 81998], ["Joe Biden", "Donald Trump", "Other"]];
+                else if(this.props.tableData[0].includes("Governor")) y = [[412961, 946932, 55390], ["Yolanda Flowers", "Kay Ivey", "Other"]];
+                else if(this.props.tableData[0].includes("Alabama")) y = [[436746, 942154, 35338], ["Will Boyd", "Katie Britt", "Other"]];
+                else y = [[2357809, 1177765, 28562], ["Ed Markey", "Kevin O'Connor", "Other"]];
+            }
+            let plotData = {
+                x: y[1],
+                y: y[0],
+                type: 'bar',
+                // mode: 'lines+markers',
+                marker: { color: ['blue', 'red', 'orange'] },
+            }
             let plotLayout = {
-                title: 'Boxplot Example',
-                yaxis: { title: 'Value' },
+                title: this.props.tableData[0] + ' Votes',
                 width: 700,
                 height: 600,
-            };
-            graph = <Graphs data={plotData} layout={plotLayout}/>
+                xaxis: {title: "Race"},
+                yaxis: {title: "Population"},
+                datarevision: this.state.tableData[0],
+            }
+            graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
         }
         else if (this.props.show === 4){ //Gingles
             const xData = [0, 20, 40, 60, 80, 100];
@@ -113,7 +113,7 @@ class RightControlDis extends React.Component {
                 width: 700,
                 height: 500
             };
-            graph = graph = <Graphs data={plotData} layout={plotLayout}/>
+            graph = <Graphs key={this.state.tableData + "_" + this.props.show} data={plotData} layout={plotLayout}/>
         }
         return (
             <div class="rightControlDis">

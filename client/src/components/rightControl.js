@@ -12,7 +12,7 @@ class RightControl extends React.Component {
         return (
             <div class="rightControl">
                 <RightControlMenu buttonClicked = {this.setView}/>
-                <RightControlDis key={this.props.tableData} show = {this.state.pageShown} tableData={this.state.tableData}/>
+                <RightControlDis key={this.props.tableData[0]} show = {this.state.pageShown} tableData={this.state.tableData}/>
             </div>
         );
     }

@@ -32,8 +32,10 @@ class BasicMap extends React.Component {
         const countyHover = (feature, layer) =>{
             let currentState = this.data[0].name;
             const name = feature.properties.NAME;
-            let popup =  "<p>" + name + "</p>";;          
-            if(this.viewMode === 1) {
+            let popup =  "<p>" + name + "</p>";;  
+            let viewMode = this.viewMode;  
+            let sortBy = this.sortBy;      
+            if(viewMode === 1) {
                 let brackets = [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"]];
                 let medInc = feature.properties.MEDN_INC22;   
                 let tot =  feature.properties.TOT_HOUS22;
@@ -84,9 +86,8 @@ class BasicMap extends React.Component {
                     else layer.options.fillColor = "darkgreen";
                 }
             }
-            else if(this.viewMode === 2) {
+            else if(viewMode === 2) {
                 let total = feature.properties.TOT_POP22;
-                console.log("HERE");
                 let pop = 0;
                 if(this.sortBy === "wht") pop = feature.properties.WHT_NHSP22;
                 else if(this.sortBy === "blk") pop = feature.properties.BLK_NHSP22;
@@ -115,7 +116,7 @@ class BasicMap extends React.Component {
                 if(feature.properties.AIA_NHSP22 !== undefined && feature.properties.AIA_NHSP22 > feature.properties.TOT_POP22/100) popup +=  "<tr><td>Native</td><td>" +   readableNum(feature.properties.AIA_NHSP22) + "</td><td>" +((feature.properties.AIA_NHSP22/feature.properties.TOT_POP22) * 100).toFixed(2) + "%</td></tr>"
                 popup+="</tbody></table>";
             }
-            else if(this.viewMode === 3) {
+            else if(viewMode === 3) {
                 let tot = Number(feature.properties.G22USSDBOY) + Number(feature.properties.G22USSLSOP) + Number(feature.properties.G22USSOWRI) + Number(feature.properties.G22USSRBRI);
                 let dem = Number(feature.properties.G22USSDBOY);
                 let rep = Number(feature.properties.G22USSRBRI);
@@ -212,8 +213,18 @@ class BasicMap extends React.Component {
                     document.getElementById("map_popup").style.visibility = 'visible';
                     document.getElementById("map_popup").innerHTML = popup;
                 }
+                let barTitle = name;
                 if(selectedFeature !== layer) {
-                    setData(name, [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"]]);
+                    console.log(viewMode);
+                    if(viewMode === 1)setData(barTitle, [feature.properties.LESS_10K22, feature.properties["10K_15K22"], feature.properties["15K_20K22"], feature.properties["20K_25K22"], feature.properties["25K_30K22"], feature.properties["30K_35K22"], feature.properties["35K_40K22"], feature.properties["40K_45K22"],  feature.properties["45K_50K22"], feature.properties["50K_60K22"], feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"], feature.properties["200K_MOR22"]]);
+                    else if(viewMode === 2) setData(barTitle, [feature.properties.WHT_NHSP22, feature.properties.BLK_NHSP22, feature.properties.HSP_POP22, Number(feature.properties.TOT_POP22) - Number(feature.properties.HSP_POP22) - Number(feature.properties.BLK_NHSP22) - Number(feature.properties.WHT_NHSP22)]);
+                    else if(viewMode === 3) {
+                        if((sortBy === "gov1" || sortBy === "gov2"  || sortBy === "gov3") && currentState === "massachusetts") setData(name + " (President)", [[feature.properties.G20PREDBID, feature.properties.G20PRERTRU, Number(feature.properties.G20PRELJOR) + Number(feature.properties.G20PREOWRI) + Number(feature.properties.G20PREGHAW)], ["Donald Trump", "Joe Biden", "Other"]]);
+                        else if((sortBy === "sen1" || sortBy === "sen2"  || sortBy === "sen3") && currentState === "massachusetts") setData(name + " (Senate)", [[feature.properties.G20USSDMAR, feature.properties.G20USSROCO, Number(feature.properties.G20USSOAYY) + Number(feature.properties.G20USSOWRI)], ["Ed Markey", "Kevin O'Connor", "Other"]]);
+                        else if((sortBy === "gov1" || sortBy === "gov2"  || sortBy === "gov3") && currentState === "alabama") setData(name + " (Governor)", [[feature.properties.G22GOVDFLO, feature.properties.G22GOVRIVE, Number(feature.properties.G22GOVLBLA) + Number(feature.properties.G22GOVOWRI)], ["Yolanda Flowers", "Kay Ivey", "Other"]]);
+                        else if((sortBy === "sen1" || sortBy === "sen2"  || sortBy === "sen3") && currentState === "alabama") setData(name + " (Senate)", [[feature.properties.G22USSDBOY, feature.properties.G22USSRBRI, Number(feature.properties.G22USSOWRI) + Number(feature.properties.G22USSLSOP)], ["Will Boyd", "Katie Britt", "Other"]]);
+                    
+                    }
                     selectedPopup = popup;
                     if(selectedFeature !== undefined) selectedFeature.setStyle({fillColor: selectedFeatureColor, fillOpacity: opacity});
                     selectedFeature = layer;
@@ -221,7 +232,11 @@ class BasicMap extends React.Component {
                     layer.setStyle({fillColor: "black", fillOpacity: "1"});
                 }
                 else {
-                    setData(currentState[0].toUpperCase() + currentState.substring(1, currentState.length), undefined);
+                    barTitle = currentState[0].toUpperCase() + currentState.substring(1, currentState.length);
+                    if((sortBy === "gov1" || sortBy === "gov2"  || sortBy === "gov3") && currentState === "massachusetts") barTitle += " (President)";
+                    if((sortBy === "gov1" || sortBy === "gov2"  || sortBy === "gov3") && currentState === "alabama") barTitle += " (Governor)";
+                    else barTitle += " (Senator)"
+                    setData(barTitle, undefined);
                     selectedFeature.setStyle({fillColor: selectedFeatureColor, fillOpacity: opacity});
                     selectedFeature = undefined;
                     selectedFeatureColor = undefined;

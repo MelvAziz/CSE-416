@@ -32,6 +32,7 @@ class Map extends React.Component {
         this.setState({min: e.minValue, max: e.maxValue})
       }
     render() {
+        if(this.state.sortBy === "med" && this.state.viewMode === 3) this.setState({sortBy: "gov1"});
         let data = [];
         if(this.state.selected === "pre")       data.push(this.data[0]);
         else if(this.state.selected === "cnt")  data.push(this.data[1]);
