@@ -85,7 +85,7 @@ p {
 }
 
 .navbar_button_selected {
-  background-color: violet;
+  background-color: #3ed0ac;;
   margin-right: 0px;
   padding-right: 5px;
   margin-left: 0px;
@@ -93,7 +93,7 @@ p {
 
 }
 .navbar_button_selected:hover {
-  background-color: purple;
+  background-color: green;
   cursor: pointer;  
 }
 
@@ -216,14 +216,18 @@ p {
   padding-right: 1rem;
   border-width: 1px;
   border-radius: 5px 15px 0 0;
-  background-color: violet;
+  background-color: #76f5d5;
 }
 .map_type_button:hover {
   cursor: pointer;
-  background-color: rgb(200, 0, 200);
+  background-color: #3ed0ac;
 }
 .map_type_button_selected {
-  background-color: purple;
+  background-color: #118468;
+}
+
+.map_type_button_selected:hover {
+  background-color: #118468;
 }
 
 .map_menu_divider {
@@ -283,4 +287,16 @@ p {
   border-width: 1px;
   height: 60vh;
   width: 5rem;
+}
+
+.map_election_sort_container{
+  flex-wrap: wrap;
+}
+
+.map_election_sort_button {
+  width: 15rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.75rem;
+  margin-top: 0.75rem;
 }
