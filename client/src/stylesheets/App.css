@@ -41,6 +41,7 @@ p {
   width: calc(100vw - 4px);
   left: 0px;
   display: flex;
+  /* flex-direction: column; */
   background-color: #118468;
   justify-content: center;
   align-content: center;
@@ -85,7 +86,7 @@ p {
 }
 
 .navbar_button_selected {
-  background-color: violet;
+  background-color: #3ed0ac;;
   margin-right: 0px;
   padding-right: 5px;
   margin-left: 0px;
@@ -93,7 +94,7 @@ p {
 
 }
 .navbar_button_selected:hover {
-  background-color: purple;
+  background-color: green;
   cursor: pointer;  
 }
 
@@ -121,7 +122,7 @@ p {
   font-size: 14px;
   position: absolute;
   left: 1rem;
-  width: 18rem;
+  width: 20rem;
   /* height: 20%; */
   bottom: calc(28vh - 2px);
   max-height: 20%;
@@ -216,14 +217,18 @@ p {
   padding-right: 1rem;
   border-width: 1px;
   border-radius: 5px 15px 0 0;
-  background-color: violet;
+  background-color: #76f5d5;
 }
 .map_type_button:hover {
   cursor: pointer;
-  background-color: rgb(200, 0, 200);
+  background-color: #3ed0ac;
 }
 .map_type_button_selected {
-  background-color: purple;
+  background-color: #118468;
+}
+
+.map_type_button_selected:hover {
+  background-color: #118468;
 }
 
 .map_menu_divider {
@@ -283,4 +288,72 @@ p {
   border-width: 1px;
   height: 60vh;
   width: 5rem;
+}
+
+.map_election_sort_container{
+  flex-wrap: wrap;
+}
+
+.map_election_sort_button {
+  width: 15rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.75rem;
+  margin-top: 0.75rem;
+}
+/**Right Control CSS*/
+
+.container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.rightControl {
+  flex: 1; /* Adjust flex so the right control takes less space */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  justify-content: flex-start;
+  border-width: 1px;
+  border-style: solid;
+  height: 86vh;  
+  width: 98vw;
+  margin-left: 50%;
+  margin-top:  12vh;
+}
+
+/* Menu inside right control */
+.rightControlMenu {
+  padding: 10px 10px 0px 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  border-width: 0px 0px 1px 0px;
+  border-style: solid;
+  margin-bottom: 10px;
+}
+
+/* Buttons styling inside right control */
+.rightControlMenu button {
+  border-radius: 0;
+  border-style: solid;
+  font-size: 19px;
+  padding-top: 0.2rem;
+  padding-bottom: 0.1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-width: 1px;
+  border-radius: 5px 15px 0 0;
+  background-color: rgb(178, 249, 146);
+}
+
+.rightControlMenu button:hover {
+  cursor: pointer;
+  background-color: #118468;
+}
+
+/* Additional selected button state */
+.rightControlMenu .selected {
+  background-color: green;
 }
