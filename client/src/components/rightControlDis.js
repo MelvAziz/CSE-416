@@ -4,6 +4,7 @@ import raceimg from "../graphs/Bar2.png"
 import ginimg from "../graphs/Scatter1.png"
 import Graphs from "./plots.js"
 import * as ss from 'simple-statistics'
+import Plotly from "react-plotly.js"
 class RightControlDis extends React.Component {
     constructor(props) {
         super(props);
@@ -78,42 +79,70 @@ class RightControlDis extends React.Component {
             graph = <Graphs data={plotData} layout={plotLayout}/>
         }
         else if (this.props.show === 4){ //Gingles
-            const xData = [0, 20, 40, 60, 80, 100];
-            const yData = [2, 4, 5, 4, 5, 7];
-        
-            // Calculate the line of best fit (linear regression)
+
+            const xData = [];
+            const yData = [];
+            const yData2 = [];
+            for (var i = 0; i < this.props.tableData[1]["features"].length; i++) {
+                const totalVotes = Math.round(this.props.tableData[1]["features"][i]["properties"]["G22USSDBOY"] + this.props.tableData[1]["features"][i]["properties"]["G22USSLSOP"] + this.props.tableData[1]["features"][i]["properties"]["G22USSOWRI"] + this.props.tableData[1]["features"][i]["properties"]["G22USSRBRI"])
+                xData.push(Math.round(this.props.tableData[1]["features"][i]["properties"]["WHT_NHSP22"] / this.props.tableData[1]["features"][i]["properties"]["TOT_POP22"] * 100))
+                yData.push(Math.round(this.props.tableData[1]["features"][i]["properties"]["G22USSDBOY"] / totalVotes * 100));
+                yData2.push(Math.round(this.props.tableData[1]["features"][i]["properties"]["G22USSRBRI"] / totalVotes * 100));
+            }
+
             const regressionLine = ss.linearRegressionLine(ss.linearRegression(xData.map((x, i) => [x, yData[i]])));
+
+            // Calculate the line of best fit (linear regression)
+            const regressionLine2 = ss.linearRegressionLine(ss.linearRegression(xData.map((x, i) => [x, yData2[i]])));
         
             // Generate the trendline data based on regression formula
             const trendlineData = xData.map(x => regressionLine(x));
-        
+            const trendlineData2 = xData.map(x => regressionLine2(x));
+
+            console.log(trendlineData);
             let plotData = [
                 {
                     x: xData,
                     y: yData,
                     mode: 'markers',
                     type: 'scatter',
-                    name: 'White Pop. (1000s)',
-                    marker: { color: 'blue' }
+                    name: 'Democratic',
+                    marker: { color: "#B9D9EB" }
+                },
+                {
+                    x: xData,
+                    y: yData2,
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: 'Republican',
+                    marker: { color: 'pink' }
                 },
                 {
                     x: xData,
                     y: trendlineData,
                     mode: 'lines',
                     type: 'scatter',
-                    name: 'Best Fit Line',
+                    name: 'D',
+                    line: { color: 'blue' }
+                },
+                {
+                    x: xData,
+                    y: trendlineData2,
+                    mode: 'lines',
+                    type: 'scatter',
+                    name: 'R',
                     line: { color: 'red' }
                 }
             ];
         
             let plotLayout = {
-                title: 'Likelyhood to Vote Rep.',
-                xaxis: { title: '% to Vote Republican' },
-                yaxis: { title: 'White Pop.' },
-                width: 700,
-                height: 500
+                title: '',
+                xaxis: { title: '% White Pop.' },
+                yaxis: { title: '% Votes' },
+                width: 900,
+                height: 700
             };
-            graph = graph = <Graphs data={plotData} layout={plotLayout}/>
+            graph = <Graphs data={plotData} layout={plotLayout}/>
         }
         return (
             <div class="rightControlDis">

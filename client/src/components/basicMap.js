@@ -192,6 +192,8 @@ class BasicMap extends React.Component {
                     else if(rep/tot > 0.15) layer.options.fillColor = "#FF6666";
                     else layer.options.fillColor = "#FF9999";
                 }
+            } else {
+                this.setData("All Data", this.data[0])
             }
 
             layer.on('mouseover', function (e) {
