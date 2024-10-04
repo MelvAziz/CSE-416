@@ -13,15 +13,16 @@ class Map extends React.Component {
         this.setView = this.setView.bind(this);
         this.setSingleMap = this.setSingleMap.bind(this);
         this.setRange = this.setRange.bind(this);
-        this.state = {state: "", viewMode: 1, sortBy: "med", selected: "pre", min: 3, max: 10};
+        this.state = {state: this.props.selectedState, viewMode: 1, sortBy: "med", selected: "pre", min: 3, max: 10};
     }
       setSingleMap(option) {
         this.setState({selected: option});
       }
       setView(option) {
         if(option === 1) this.setState({viewMode: option, sortBy: "inc"});
-        else if(option === 2) this.setState({viewMode: option, sortBy: "blk"});
-        else if(option === 3) this.setState({viewMode: option, sortBy: "sen1"});
+        else if(option === 2) this.setState({viewMode: option, sortBy: "wht"});
+        else if(option === 3) this.setState({viewMode: option, selected: "pre", sortBy: "sen1"});
+        // else if(option === ) this.setState({viewMode: option, selected: "pre", sortBy: "sen1"});
       };
       setSort(option) {
         this.setState({sortBy: option, selected: this.state.selected});
@@ -35,7 +36,7 @@ class Map extends React.Component {
         else if(this.state.selected === "cnt")  data.push(this.data[1]);
         else if(this.state.selected === "dis")  data.push(this.data[2]);
         let map = <BasicMap min={this.state.min} max={this.state.max} center={this.center} zoom={this.zoom} height={this.height} key={data.length + "_" + data.selected + "_" + this.state.selected + "_" + this.state.sortBy + "_" + this.state.min + "_" + this.state.max} data={data} viewMode={this.state.viewMode} sortBy={this.state.sortBy}/>;  
-        let menu = <MapMenu setRange={this.setRange} setSort={this.setSort} setCheck={this.setCheck} setView={this.setView} sortBy={this.state.sortBy} viewMode={this.state.viewMode} singleMap={this.setSingleMap} selected={this.state.selected}/>; 
+        let menu = <MapMenu selectedState={this.state.state} setRange={this.setRange} setSort={this.setSort} setCheck={this.setCheck} setView={this.setView} sortBy={this.state.sortBy} viewMode={this.state.viewMode} singleMap={this.setSingleMap} selected={this.state.selected}/>; 
         return (
             <div class="map-options">
                 {map}

@@ -23,7 +23,7 @@ class BasicMap extends React.Component {
         if(this.viewMode !== 0) opacity = 0.85;
         if(this.viewMode === 1  && this.sortBy === "med") legend = <MapLegend colors={["#FF0000", "#CC0033", "#990066", "#660099",  "#3300CC", "#0000FF", "darkblue"]} labels={ ["<45k", "45-60k", "60-75k", "75-100k", "100-125k", "125-150k", ">150k"]}/>
         else if(this.viewMode === 2 || (this.viewMode === 1 && this.sortBy === "inc")) legend =     <MapLegend colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} labels={ ["<10%", "10-20%", "20-30%", "30-40%", "40-50%", "50-60%", "60-70%", "70-80%", "80-90%", "90-100"]}/>
-        else if(this.viewMode === 3 && (this.sortBy === "sen1" || this.sortBy === "gov1")) legend = <MapLegend colors={["#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#FF4C4C", "#ff0000", "#CC0000", "#990000", "#660000"]} labels={["90-100%", "75-90%", "60-75%", "45-60%", "30-45%", "30-45%", "45-60%", "60-75%", "75-90%", "90-100%"]}/>;
+        else if(this.viewMode === 3 && (this.sortBy === "sen1" || this.sortBy === "gov1")) legend = <MapLegend colors={[null, "#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#FF4C4C", "#ff0000", "#CC0000", "#990000", "#660000", null]} labels={["Democratic", "90-100%", "75-90%", "60-75%", "45-60%", "30-45%", "30-45%", "45-60%", "60-75%", "75-90%", "90-100%", "Republican"]}/>;
         else if(this.viewMode === 3 && (this.sortBy === "sen2" || this.sortBy === "gov2")) legend = <MapLegend colors={["#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#6666FF", "#9999FF"]} labels={["90-100%", "75-90%", "60-75%", "45-60%", "30-45%", "15-30%", "0-15%"]}/>;
         else if(this.viewMode === 3 && (this.sortBy === "sen3" || this.sortBy === "gov3")) legend = <MapLegend colors={["#660000", "#990000", "#CC0000", "#ff0000", "#FF3333", "#FF6666", "#FF9999"]} labels={["90-100%", "75-90%", "60-75%", "45-60%", "30-45%", "15-30%", "0-15%"]}/>;
         function readableNum(x) {return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
@@ -91,6 +91,7 @@ class BasicMap extends React.Component {
             }
             else if(this.viewMode === 2) {
                 let total = feature.properties.TOT_POP22;
+                console.log("HERE");
                 let pop = 0;
                 if(this.sortBy === "wht") pop = feature.properties.WHT_NHSP22;
                 else if(this.sortBy === "blk") pop = feature.properties.BLK_NHSP22;
@@ -138,6 +139,27 @@ class BasicMap extends React.Component {
                         popup += "<tr><td>(Dem)Will Boyd</td><td>" + dem + "</td><td>" + ((dem/tot)*100).toFixed(2)  +"%</td></tr>";
                         popup += "<tr><td>(Rep)Katie Britt</td><td>" + rep + "</td><td>" + ((rep/tot)*100).toFixed(2)  +"%</td></tr>";
                         popup += "<tr><td>(Lib)John Sophocleus</td><td>" + Number(feature.properties.G22USSLSOP) + "</td><td>" + ((Number(feature.properties.G22USSLSOP)/tot)*100).toFixed(2)  +"%</td></tr>";
+                        popup += "</tbody></table>";
+                    }
+                }
+                else {
+                    if(this.sortBy === "gov1" || this.sortBy === "gov2" || this.sortBy === "gov3") {
+                        tot = Number(feature.properties.G20PREDBID) + Number(feature.properties.G20PRERTRU) + Number(feature.properties.G20PRELJOR) + Number(feature.properties.G20PREGHAW) + Number(feature.properties.G20PREOWRI);
+                        dem = Number(feature.properties.G20PREDBID);
+                        rep = Number(feature.properties.G20PRERTRU);
+                        popup += "<tr><td>(Dem)Joe Biden</td><td>" + dem + "</td><td>" + ((dem/tot)*100).toFixed(2)  +"%</td></tr>";
+                        popup += "<tr><td>(Rep)Donald Trump</td><td>" + rep + "</td><td>" + ((rep/tot)*100).toFixed(2)  +"%</td></tr>";
+                        popup += "<tr><td>(Lib)Jo Jorgensen</td><td>" + Number(feature.properties.G20PRELJOR) + "</td><td>" + ((Number(feature.properties.G20PRELJOR)/tot)*100).toFixed(2)  +"%</td></tr>";
+                        popup += "<tr><td>(Gre)Howie Hawkins</td><td>" + Number(feature.properties.G20PREGHAW) + "</td><td>" + ((Number(feature.properties.G20PREGHAW)/tot)*100).toFixed(2)  +"%</td></tr>";
+                        popup += "</tbody></table>";
+                    }
+                    else {
+                        tot = Number(feature.properties.G20USSDMAR) + Number(feature.properties.G20USSROCO) + Number(feature.properties.G20USSOAYY) + Number(feature.properties.G20PREGHAW) + Number(feature.properties.G20USSOWRI);
+                        dem = Number(feature.properties.G20USSDMAR);
+                        rep = Number(feature.properties.G20USSROCO);
+                        popup += "<tr><td>(Dem)Ed Markey</td><td>" + dem + "</td><td>" + ((dem/tot)*100).toFixed(2)  +"%</td></tr>";
+                        popup += "<tr><td>(Rep)Kevin O'Conner</td><td>" + rep + "</td><td>" + ((rep/tot)*100).toFixed(2)  +"%</td></tr>";
+                        popup += "<tr><td>(Ind)Shiva Ayyadurai</td><td>" + Number(feature.properties.G20USSOAYY) + "</td><td>" + ((Number(feature.properties.G20USSOAYY)/tot)*100).toFixed(2)  +"%</td></tr>";
                         popup += "</tbody></table>";
                     }
                 }

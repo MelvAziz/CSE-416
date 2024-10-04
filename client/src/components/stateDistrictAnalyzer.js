@@ -30,7 +30,7 @@ class StateDistrictAnalyzer extends React.Component {
             zoom = 8;
             height = "1";
         }
-        let map = <Map key={"map_state_"+name} center={center} data={data} zoom={zoom} height={height}/>;
+        let map = <Map key={"map_state_"+name} center={center} data={data} zoom={zoom} height={height} selectedState={this.state.selectedState}/>;
         return (
             <div class="container">
                 <NavBar key={"navbar_"+name} selectedState={this.state.selectedState} selectedStates={["Massachusetts", "Alabama"]} dOptions={this.switchState}/>
