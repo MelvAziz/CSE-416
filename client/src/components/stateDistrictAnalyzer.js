@@ -8,14 +8,28 @@ import massachusetts_precincts from '../GeoData/massachusetts/massachusetts_prec
 import massachusetts_counties from '../GeoData/massachusetts/massachusetts_counties.json'
 import massachusetts_congressional_districts from '../GeoData/massachusetts/massachusetts_congressional_districts.json'
 import RightControl from './rightControl.js';
+import axios from 'axios';
 class StateDistrictAnalyzer extends React.Component {
     constructor(props) {
         super(props);
         this.switchState = this.switchState.bind(this);
         this.setView = this.setView.bind(this);
         this.setData = this.setData.bind(this);
+        this.fetchData = this.fetchData.bind(this);
         this.state = {selectedState: "Alabama", viewMode: 1, tableData: []};
+        
     }
+
+
+    async fetchData() {
+        try {
+            const response = await axios.get('http://localhost:8000/api/data');
+            console.log(response.data.message);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+    }
+
     switchState(state) {
         this.setState({selectedState: state, viewMode: 1});
     }
@@ -34,7 +48,9 @@ class StateDistrictAnalyzer extends React.Component {
         let inputData = [title, data];
         this.setState({tableData: inputData, viewMode: this.state.viewMode});
     }
+
     render() {
+        this.fetchData();
         let name = "Alabama";
         let data = [alabama_precincts, alabama_counties, alabama_congressional_districts];
         let center = [32.3182, -86.9023];
