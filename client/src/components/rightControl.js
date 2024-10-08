@@ -8,7 +8,6 @@ class RightControl extends React.Component {
         this.setView = this.props.setView;
     }
     render() {
-        console.log(this.state.tableData);
         return (
             <div class="rightControl">
                 <RightControlMenu buttonClicked = {this.setView}/>

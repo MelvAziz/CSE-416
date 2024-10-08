@@ -27,6 +27,8 @@ class StateDistrictAnalyzer extends React.Component {
         else if (options === "Ecological") this.setState({viewMode: 5,  tableData: []});
         else if (options === "Ensemble") this.setState({viewMode: 6,  tableData: []});
 
+        console.log(this.state.viewMode); 
+
     }
     setData(title, data) {
         let inputData = [title, data];
