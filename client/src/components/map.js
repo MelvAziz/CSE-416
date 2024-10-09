@@ -26,12 +26,14 @@ class Map extends React.Component {
         // else if(option === ) this.setState({viewMode: option, selected: "pre", sortBy: "sen1"});
       };
       setSort(option) {
+        this.props.setSortEco(option);
         this.setState({sortBy: option, selected: this.state.selected});
       };
       setRange(e) {
         this.setState({min: e.minValue, max: e.maxValue})
       }
     render() {
+        if(this.state.sortBy === "med" && this.state.viewMode === 3) this.setState({sortBy: "gov1"});
         let data = [];
         if(this.state.selected === "pre")       data.push(this.data[0]);
         else if(this.state.selected === "cnt")  data.push(this.data[1]);
