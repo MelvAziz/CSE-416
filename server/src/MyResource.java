@@ -3,6 +3,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @Path("/data")
 public class MyResource {
@@ -10,9 +13,46 @@ public class MyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getData() {
-        String json = "{\"message\": \"Hello from JAX-RS Resource!\"}";
 
-        // Return the response with CORS headers
+        JsonArray plotData = new JsonArray();
+        for (int i = 1; i <= 9; i++) {
+            JsonObject boxPlot = new JsonObject();
+            boxPlot.add("y", new JsonArray());
+            boxPlot.getAsJsonArray("y").add(0.1 + i * 0.01);
+            boxPlot.getAsJsonArray("y").add(0.12 + i * 0.01);
+            boxPlot.getAsJsonArray("y").add(0.18 + i * 0.01);
+            boxPlot.getAsJsonArray("y").add(0.20 + i * 0.01);
+            boxPlot.addProperty("type", "box");
+            boxPlot.addProperty("name", String.valueOf(i));
+            JsonObject marker = new JsonObject();
+            marker.addProperty("color", "blue");
+            boxPlot.add("marker", marker);
+            plotData.add(boxPlot);
+        }
+
+        // Example scatter plot data
+        JsonObject scatterPlot = new JsonObject();
+        scatterPlot.add("x", new JsonArray());
+        scatterPlot.add("y", new JsonArray());
+        scatterPlot.addProperty("mode", "markers");
+        scatterPlot.addProperty("type", "scatter");
+        scatterPlot.addProperty("name", "Current Plan");
+        JsonObject scatterMarker = new JsonObject();
+        scatterMarker.addProperty("color", "red");
+        scatterPlot.add("marker", scatterMarker);
+        
+        for (int i = 1; i <= 9; i++) {
+            scatterPlot.getAsJsonArray("x").add(String.valueOf(i));
+            scatterPlot.getAsJsonArray("y").add(0.1 + (i * 0.01));
+        }
+        plotData.add(scatterPlot);
+
+        JsonObject response = new JsonObject();
+        response.add("plotData", plotData);
+        
+        Gson gson = new Gson();
+        String json = gson.toJson(response);
+        
         return Response.ok(json)
                 .header("Access-Control-Allow-Origin", "http://localhost:3000")
                 .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
