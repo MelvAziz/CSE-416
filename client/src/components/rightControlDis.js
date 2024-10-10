@@ -1,11 +1,20 @@
 import React from 'react'
 import Graphs from "./plots.js"
 import * as ss from 'simple-statistics'
-
+import axios from 'axios'
 class RightControlDis extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {tableData: this.props.tableData}
+        this.state = {tableData: this.props.tableData, fetchedData: {}}
+    }
+
+    async componentDidMount() {
+       
+        if (this.props.show === 6) {
+            const response = await axios.get('http://localhost:8000/api/data');
+            console.log(response.data);
+            this.setState({ fetchedData: response.data});
+        }
     }
     render() {
         let graph;
@@ -178,6 +187,7 @@ class RightControlDis extends React.Component {
             graph = <img className="ei=graph" src={require("../graphs/Density1.png")} alt={"EI graph"}/>
         }
         else if (this.props.show === 6){ //Ensemble
+            /*
             let plotData = [
                 {
                     y: [0.1, 0.12, 0.18, 0.20],
@@ -251,7 +261,8 @@ class RightControlDis extends React.Component {
                 width: 700,
                 height: 600,
             }
-            graph = <Graphs key={this.state.tableData + "_" + this.props.show} data={plotData} layout={plotLayout}/>
+            */
+            graph = <Graphs key={this.state.tableData + "_" + this.props.show} data={this.state.fetchedData.plotData} layout={this.state.fetchedData.plotLayout}/>
         };
         return (
             <div class="rightControlDis">
