@@ -26,7 +26,7 @@ class StateDistrictAnalyzer extends React.Component {
     async fetchData() {
         try {
             const response = await axios.get('http://localhost:8000/api/data');
-            console.log(response.data.message);
+            console.log(response);
           } catch (error) {
             console.error('Error fetching data:', error);
           }
@@ -53,7 +53,7 @@ class StateDistrictAnalyzer extends React.Component {
         else if (options === "Ecological") this.setState({viewMode: 5, tableData: tableData});
         else if (options === "Ensemble") this.setState({viewMode: 6,  tableData: tableData});
 
-        console.log(this.state.viewMode); 
+        console.log(this.state.tableData); 
 
     }
     setData(title, data) {
