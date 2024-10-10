@@ -47,9 +47,28 @@ public class MyResource {
         }
         plotData.add(scatterPlot);
 
+         JsonObject plotLayout = new JsonObject();
+         plotLayout.addProperty("title", "Distribution by Race");
+
+         JsonObject yaxis = new JsonObject();
+         yaxis.addProperty("title", "% of Population Black");
+ 
+         JsonArray yaxisRange = new JsonArray();
+         yaxisRange.add(0);
+         yaxisRange.add(1);
+         yaxis.add("range", yaxisRange);
+         plotLayout.add("yaxis", yaxis);
+         JsonObject xaxis = new JsonObject();
+         xaxis.addProperty("title", "District");
+
+         plotLayout.add("xaxis", xaxis);
+         plotLayout.addProperty("width", 700);
+         plotLayout.addProperty("height", 600);
+ 
         JsonObject response = new JsonObject();
         response.add("plotData", plotData);
-        
+        response.add("plotLayout", plotLayout);
+
         Gson gson = new Gson();
         String json = gson.toJson(response);
         
