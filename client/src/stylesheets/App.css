@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  /* font-family: sans-serif;
+  font-size: 'Roboto'; */
 }
 
 .App-logo {
@@ -356,4 +358,9 @@ p {
 /* Additional selected button state */
 .rightControlMenu .selected {
   background-color: green;
+}
+
+
+.right_sort_button_selected {
+  background-color: green !important;
 }
