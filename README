@@ -1,0 +1,11 @@
+Commands to start the Application:
+
+    cd client
+    npm start
+    cd ..
+    cd server/src
+    ./build-and-run.bat
+    cd ..
+    cd ..
+    mongod --dbpath './database' //This can be anywehere
+    

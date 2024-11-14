@@ -11,7 +11,7 @@ class RightControlDis extends React.Component {
     async componentDidMount() {
        
         if (this.props.show === 6) {
-            const response = await axios.get('http://localhost:8000/api/data');
+            const response = await axios.get('http://localhost:8000/api/ensemble?race=blk&state=' + this.props.tableData[0]);
             console.log(response.data);
             this.setState({ fetchedData: response.data});
         }
