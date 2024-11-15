@@ -42,7 +42,7 @@ public class Ensemble {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getData(@QueryParam("state") String state, @QueryParam("race") String race, @Context UriInfo uriInfo) {
+    public Response getData(@QueryParam("state") String state, @QueryParam("sort") String sort, @Context UriInfo uriInfo) {
         //Set up a connection to MongoDB
         ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017");
         MongoClient mongoClient = MongoClients.create(connectionString);
@@ -66,7 +66,7 @@ public class Ensemble {
                     String index = "" + i;
                     double totalPop = Double.parseDouble(((Document)districtPlan.get(index)).get("P0020001").toString());
                     double selectedPop = 0;
-                    if(race.compareTo("wht") == 0) {
+                    if(sort.compareTo("wht") == 0) {
                         selectedPop += Double.parseDouble(((Document)districtPlan.get(index)).get("P0020005").toString());
                         selectedPop += Double.parseDouble(((Document)districtPlan.get(index)).get("P0020013").toString());
                         selectedPop += Double.parseDouble(((Document)districtPlan.get(index)).get("P0020014").toString());
@@ -74,7 +74,7 @@ public class Ensemble {
                         selectedPop += Double.parseDouble(((Document)districtPlan.get(index)).get("P0020016").toString());
                         selectedPop += Double.parseDouble(((Document)districtPlan.get(index)).get("P0020017").toString());
                     }
-                    else if(race.compareTo("blk") == 0) {
+                    else if(sort.compareTo("blk") == 0) {
                         selectedPop += Double.parseDouble(((Document)districtPlan.get(index)).get("P0020006").toString());
                         selectedPop += Double.parseDouble(((Document)districtPlan.get(index)).get("P0020013").toString());
                         selectedPop += Double.parseDouble(((Document)districtPlan.get(index)).get("P0020018").toString());
