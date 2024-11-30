@@ -108,16 +108,29 @@ p {
 }
 #main_map {
   /* visibility: hidden; */
+  height: 60vh;
+  width: 40vw; 
   position: absolute;
   left: 1rem;
   top: 12vh;
-  height: 60vh;
-  width: 40vw; 
   min-width: 30rem;
   min-height: 20rem;
   border-style: solid;
   border-width: 1px;
 }
+
+#homepage_map {
+  height: 92vh;
+  width:  calc(100vw - 2px);
+  position: absolute;
+  left: 0rem;
+  top: 7.5vh;
+  min-width: 30rem;
+  min-height: 20rem;
+  border-style: solid;
+  border-width: 1px;
+}
+
 
 #map_popup {
   background-color: #ffffff;
@@ -190,6 +203,10 @@ p {
   margin: 0rem;
 
 }
+
+/* button.rightControlMenu {
+  font-size: 10px;
+} */
 
 /* Map Menu  CSS */
 
@@ -312,7 +329,7 @@ p {
   height: 100vh;
 }
 
-.rightControl {
+.data-container {
   flex: 1; /* Adjust flex so the right control takes less space */
   display: flex;
   flex-direction: column; /* Stack items vertically */
@@ -326,7 +343,7 @@ p {
 }
 
 /* Menu inside right control */
-.rightControlMenu {
+.data-menu {
   padding: 10px 10px 0px 0px;
   display: flex;
   flex-direction: row;
@@ -337,10 +354,10 @@ p {
 }
 
 /* Buttons styling inside right control */
-.rightControlMenu button {
+.data-menu button {
   border-radius: 0;
   border-style: solid;
-  font-size: 19px;
+  font-size: 18px;
   padding-top: 0.2rem;
   padding-bottom: 0.1rem;
   padding-left: 1rem;
@@ -350,13 +367,13 @@ p {
   background-color: rgb(178, 249, 146);
 }
 
-.rightControlMenu button:hover {
+.data-menu button:hover {
   cursor: pointer;
   background-color: #118468;
 }
 
 /* Additional selected button state */
-.rightControlMenu .selected {
+.data-menu .selected {
   background-color: green;
 }
 

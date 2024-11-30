@@ -1,61 +1,48 @@
 import React from 'react';
 import NavBar from './navbar.js';
-import Map from './map.js';
-import alabama_precincts from '../GeoData/alabama/alabama_precincts.json'
-import alabama_counties from '../GeoData/alabama/alabama_counties.json'
-import alabama_congressional_districts from '../GeoData/alabama/alabama_congressional_districts.json'
-import massachusetts_precincts from '../GeoData/massachusetts/massachusetts_precincts.json'
-import massachusetts_counties from '../GeoData/massachusetts/massachusetts_counties.json'
-import massachusetts_congressional_districts from '../GeoData/massachusetts/massachusetts_congressional_districts.json'
-import RightControl from './rightControl.js';
-//import axios from 'axios';
+import MapContainer from './mapContainer.js';
+import DataContainer from './dataContainer.js';
+import axios from 'axios'
+import {Page, MapLevel} from '../constants.js';
+
 class StateDistrictAnalyzer extends React.Component {
     constructor(props) {
         super(props);
-        this.switchState = this.switchState.bind(this);
+        this.switchState = this.switchState.bind(this); 
         this.setView = this.setView.bind(this);
         this.setData = this.setData.bind(this);
+        this.setMapLevel = this.setMapLevel.bind(this);
         this.setSortEco = this.setSortEco.bind(this);
-        this.state = {selectedState: "Alabama", viewMode: 1, tableData: [], sortBy: "wht"};
+        this.state = {selectedState: "Alabama", mapLevel: MapLevel.precinct, viewMode: Page.SelectStatePage, tableData: [], sortBy: "wht", currentMap: {}, updated: true, alabamaPrecinctMap: {}, massachusettsPrecinctMap: {}};
+    }
+    async componentDidMount() {
+        const usMap =                       await axios.get('http://localhost:8000/api/map?type=usa');
+        const alabamaPrecinctMap =          await axios.get('http://localhost:8000/api/map?state=Alabama&type=precincts');
+        const massachusettsPrecinctMap =    await axios.get('http://localhost:8000/api/map?state=Massachusetts&type=precincts');
+        this.setState({currentMap: usMap.data, alabamaPrecinctMap: alabamaPrecinctMap.data, massachusettsPrecinctMap: massachusettsPrecinctMap.data});
+    }
+    setMapLevel(option) {
+        this.setState({mapLevel: option, updated:false});
     }
     setSortEco(sort) {
         this.setState({sortBy: sort});
     }
-
-    /*
-    async fetchData() {
-        try {
-            const response = await axios.get('http://localhost:8000/api/data');
-            console.log(response);
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
-    }
-    */
-
     switchState(state) {
         let tableData = [state, undefined]
-        this.setState({selectedState: state, viewMode: 1, tableData: tableData});
+        axios.get('http://localhost:8000/api/map?state=' + state + '&type=congressional_districts').then(response => {this.setState({ selectedState: state, viewMode: Page.OverviewPage, tableData: tableData, currentMap: response.data, updated: true})});
     }
     setView(options) {
         let tableData = [this.state.selectedState, undefined];
-        console.log(tableData);
-        if (options === "Economics") this.setState({viewMode: 1, tableData: tableData});
-        else if (options === "Race") this.setState({viewMode: 2,  tableData: tableData});
-        else if (options === "Election") {
-            if(tableData[0].includes("Senator") || tableData[0].includes("Governor") || tableData[0].includes("President")) {
-                this.setState({viewMode: 3,  tableData: tableData});
-            }
-            else if(this.state.selectedState === "Alabama") tableData = [this.state.selectedState + " (Governor)", undefined];
-            else tableData = [this.state.selectedState + " (President)", undefined];
-            this.setState({viewMode: 3,  tableData: tableData});
+        if (options === Page.ElectionPage) {
+            if(this.state.selectedState === "Alabama") tableData[0] = this.state.selectedState + " (Senator)";
+            else tableData[0] = this.state.selectedState + " (President)";
         }
-        else if (options === "Gingles") this.setState({viewMode: 4,  tableData: tableData});
-        else if (options === "Ecological") this.setState({viewMode: 5, tableData: tableData});
-        else if (options === "Ensemble") this.setState({viewMode: 6,  tableData: tableData});
-
-        console.log(this.state.tableData); 
-
+        if(options === Page.SelectStatePage) 
+            axios.get('http://localhost:8000/api/map?type=usa').then(response => {
+                this.setState({ viewMode: options, tableData: tableData, currentMap: response.data, updated: true})
+            });
+        else if (options === "Overview") this.setState({viewMode: options, mapLevel: "dis", tableData: tableData, updated: false});
+        else this.setState({viewMode: options, mapLevel: MapLevel.precinct, tableData: tableData, updated: false});
     }
     setData(title, data) {
         let inputData = [title, data];
@@ -63,25 +50,45 @@ class StateDistrictAnalyzer extends React.Component {
     }
 
     render() {
-        //this.fetchData();
         let name = "Alabama";
-        let data = [alabama_precincts, alabama_counties, alabama_congressional_districts];
-        let center = [32.3182, -86.9023];
+        let center = [32.3182, -86.9023]; //Apprioriate coordinates for displaying Alabama
         let zoom = 7;
-        let height = "0";
+        let data = this.state.currentMap;
+        if(this.state.updated === false) {
+            if(this.state.viewMode === Page.SelectStatePage)  
+                axios.get('http://localhost:8000/api/map?type=usa').then(response => 
+                {
+                    this.setState({ currentMap: response.data, updated: true})
+                });
+            else if(this.state.viewMode === Page.OverviewPage || this.state.mapLevel === MapLevel.district) 
+                axios.get('http://localhost:8000/api/map?state=' + this.state.selectedState + '&type=congressional_districts').then(response => 
+                {
+                    this.setState({ currentMap: response.data, updated: true})
+                });
+            else if(this.state.mapLevel === MapLevel.county)  
+                axios.get('http://localhost:8000/api/map?state=' + this.state.selectedState + '&type=counties').then(response => 
+                {
+                    this.setState({ currentMap: response.data, updated: true})
+                });
+            else if(this.state.selectedState === "Alabama")  this.setState({ currentMap: this.state.alabamaPrecinctMap, updated: true});     
+            else this.setState({updated: true, currentMap: this.state.massachusettsPrecinctMap});  
+        }
         if(this.state.selectedState === "Massachusetts") {
             name ="Massachusetts";
-            data = [massachusetts_precincts, massachusetts_counties, massachusetts_congressional_districts];
             center = [42.4072, -71.3824];
             zoom = 8;
-            height = "1";
         }
-        let map = <Map key={"map_state_"+name+"_"+this.state.viewMode} setSortEco={this.setSortEco} viewMode={this.state.viewMode} setData={this.setData} center={center} data={data} zoom={zoom} height={height} selectedState={this.state.selectedState}/>;
-        let right = <RightControl key={this.state.tableData + "_" + this.state.viewMode + "_"   } sortBy={this.state.sortBy} data={data} viewMode={this.state.viewMode} tableData={this.state.tableData} setView={this.setView}/>;
+        if(this.state.viewMode === Page.SelectStatePage) {
+            name = "United States";
+            zoom = 5;
+            center = [37.3182, -92.9023];            
+        }
+        let right = "";
+        if(this.state.viewMode !== 0) right = <DataContainer key={this.state.tableData + "_" + this.state.viewMode + "_"   } sortBy={this.state.sortBy} data={data} viewMode={this.state.viewMode} tableData={this.state.tableData} setView={this.setView}/>;
         return (
             <div class="container">
                 <NavBar key={"navbar_"+name+"_"+this.state.sortBy} sortBy={this.state.sortBy} selectedState={this.state.selectedState} selectedStates={["Massachusetts", "Alabama"]} dOptions={this.switchState}/>
-                {map}
+                <MapContainer key={"map_state_"+name+"_"+this.state.viewMode + "_"+this.state.currentMap._id+"_"+this.state.mapLevel} mapLevel={this.state.mapLevel} switchState={this.switchState} setSortEco={this.setSortEco} setMapLevel={this.setMapLevel} viewMode={this.state.viewMode} setData={this.setData} center={center} data={data} zoom={zoom} selectedState={this.state.selectedState}/>;
                 {right}
             </div>
         );
