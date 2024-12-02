@@ -26,19 +26,19 @@ class Map extends React.Component {
         let legend;
         if(this.viewMode !== Page.SelectStatePage) opacity = 0.85;
         if(this.viewMode === Page.EconomicPage  && this.sortBy === "med") //Median Income
-            legend = <MapLegend colors={["#FF0000", "#CC0033", "#990066", "#660099",  "#3300CC",  "#0000FF", "darkblue"]} 
+            legend = <MapLegend colors={["#FF0000", "#CC0033", "#990066", "#660099",  "#3300CC",  "#0000FF", "darkblue"]} //Red -> Dark Blue
                                 labels={ ["<25k",   "25-50k",  "50-75k",  "75-100k",  "100-125k", "125-150k",">150k"]}/>
-        else if((this.viewMode === Page.RacePage || (this.viewMode === Page.EconomicPage && this.sortBy === "inc")) ||  this.sortBy === "ecowht" || this.sortBy === "ecoblk" || this.sortBy === "ecohsp") 
-            legend = <MapLegend colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} 
+        else if((this.viewMode === Page.RacePage || (this.viewMode === Page.EconomicPage && this.sortBy === "inc"))) 
+            legend = <MapLegend colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} // light green -> Dark green
                                 labels={ ["<10%",   "10-20%",  "20-30%",  "30-40%",  "40-50%",  "50-60%",  "60-70%",  "70-80%",  "80-90%",  "90-100"]}/>
         else if(this.viewMode === Page.ElectionPage && (this.sortBy === "elec1")) //Democrats and Republicans
-            legend = <MapLegend colors={[null,          "#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#FF4C4C", "#ff0000", "#CC0000", "#990000", "#660000", null]} 
+            legend = <MapLegend colors={[null,          "#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#FF4C4C", "#ff0000", "#CC0000", "#990000", "#660000", null]} //Blue -> Red
                                 labels={["Democratic",  "90-100%", "75-90%",  "60-75%",  "45-60%",  "30-45%",  "30-45%",  "45-60%",  "60-75%",  "75-90%",  "90-100%", "Republican"]}/>;
         else if(this.viewMode === Page.ElectionPage && (this.sortBy === "elec2")) //Only Deomocrats
-            legend = <MapLegend colors={["#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#6666FF", "#9999FF"]} 
+            legend = <MapLegend colors={["#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#6666FF", "#9999FF"]}  //light blue -> Blue
                                 labels={["90-100%", "75-90%",  "60-75%",  "45-60%",  "30-45%",  "15-30%",  "0-15%"]}/>;
         else if(this.viewMode === Page.ElectionPage && (this.sortBy === "elec3")) //Only Republicans
-            legend = <MapLegend colors={["#660000", "#990000", "#CC0000", "#ff0000", "#FF3333", "#FF6666", "#FF9999"]} 
+            legend = <MapLegend colors={["#660000", "#990000", "#CC0000", "#ff0000", "#FF3333", "#FF6666", "#FF9999"]} //light red -> Red
                                 labels={["90-100%", "75-90%",  "60-75%",  "45-60%",  "30-45%",  "15-30%",  "0-15%"]}/>;
         function readableNum(x) {return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
         const countyHover = (feature, layer) =>{
@@ -54,7 +54,7 @@ class Map extends React.Component {
                 else opacity = layer.options.fillOpacity = 0.2;
                 popup = "";
             }
-            else if(viewMode === Page.EconomicPage || this.sortBy === "ecoinc") {
+            else if(viewMode === Page.EconomicPage) {
                 let brackets = [feature.properties.LESS_10K22 + feature.properties["10K_15K22"] + feature.properties["15K_20K22"] + feature.properties["20K_25K22"], feature.properties["25K_30K22"] + feature.properties["30K_35K22"] + feature.properties["35K_40K22"] + feature.properties["40K_45K22"] +  feature.properties["45K_50K22"], feature.properties["50K_60K22"] + feature.properties["60K_75K22"], feature.properties["75K_100K22"], feature.properties["100_125K22"], feature.properties["125_150K22"], feature.properties["150_200K22"] + feature.properties["200K_MOR22"]];
                 let medianIncome = feature.properties.MEDN_INC22;   
                 let totalHouses =  feature.properties.TOT_HOUS22;
@@ -72,7 +72,7 @@ class Map extends React.Component {
                 }
                 if(feature.properties.MEDN_INC22 !== undefined) popup += "<p>Median Income: $" + readableNum(medianIncome) + "</p>";
                 else popup += "<p>Median Income (Estimate): $" + readableNum(Number(medianIncome).toFixed(0)) + "</p>";
-                if(this.sortBy === "med" || this.sortBy === "ecoinc" ) {
+                if(this.sortBy === "med") {
                     if(medianIncome < 25000) layer.options.fillColor = "#FF0000";
                     else if(medianIncome < 50000) layer.options.fillColor = "#CC0033";
                     else if(medianIncome < 75000) layer.options.fillColor = "#990066";
@@ -109,8 +109,8 @@ class Map extends React.Component {
             else if(viewMode === Page.RacePage || ((viewMode === Page.EcologicalInferencePage || viewMode === Page.GinglesPage || viewMode === Page.EnsemblePage) && this.sortBy !== "ecoinc")) {
                 let totalPopulation = feature.properties.TOT_POP22;
                 let selectedPopulation = feature.properties.WHT_NHSP22;
-                if(this.sortBy === "blk" || this.sortBy === "ecoblk") selectedPopulation = feature.properties.BLK_NHSP22;
-                else if(this.sortBy === "hsp" || this.sortBy === "ecohsp") selectedPopulation = feature.properties.HSP_POP22;
+                if(this.sortBy === "blk") selectedPopulation = feature.properties.BLK_NHSP22;
+                else if(this.sortBy === "hsp") selectedPopulation = feature.properties.HSP_POP22;
                 let frac = ((selectedPopulation/totalPopulation)*100).toFixed(10);
                 if(frac < 10 || selectedPopulation === undefined) layer.options.fillColor = "#ffff3f";
                 else if(frac < 20) layer.options.fillColor = "#eeef20";

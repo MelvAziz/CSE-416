@@ -86,7 +86,11 @@ class DataDisplay extends React.Component {
             let data = this.props.data;
             if (data["name"].split('_')[0] === "alabama") {
                 for (var i = 0; i < data["features"].length; i++) {
-                    const totalVotes = Math.round(data["features"][i]["properties"]["G22USSDBOY"] + data["features"][i]["properties"]["G22USSLSOP"] + data["features"][i]["properties"]["G22USSOWRI"] + data["features"][i]["properties"]["G22USSRBRI"])
+                    const totalVotes = Math.round(
+                        data["features"][i]["properties"]["G22USSDBOY"] 
+                        + data["features"][i]["properties"]["G22USSLSOP"] 
+                        + data["features"][i]["properties"]["G22USSOWRI"] 
+                        + data["features"][i]["properties"]["G22USSRBRI"]);
                     xData.push(Math.round(data["features"][i]["properties"][propName] / data["features"][i]["properties"]["TOT_POP22"] * 100))
                     yData.push(Math.round(data["features"][i]["properties"]["G22USSDBOY"] / totalVotes * 100));
                     yData2.push(Math.round(data["features"][i]["properties"]["G22USSRBRI"] / totalVotes * 100));
@@ -100,7 +104,12 @@ class DataDisplay extends React.Component {
                     G20PREOWRI - Write-in Votes
                 */
                 for (var i = 0; i < data["features"].length; i++) {
-                    const totalVotes = Math.round(data["features"][i]["properties"]["G20PREDBID"] + data["features"][i]["properties"]["G20PRERTRU"] + data["features"][i]["properties"]["G20PRELJOR"] + data["features"][i]["properties"]["G20PREGHAW"] + data["features"][i]["properties"]["G20PREOWRI"])
+                    const totalVotes = Math.round(
+                        data["features"][i]["properties"]["G20PREDBID"] 
+                        + data["features"][i]["properties"]["G20PRERTRU"] 
+                        + data["features"][i]["properties"]["G20PRELJOR"] 
+                        + data["features"][i]["properties"]["G20PREGHAW"] 
+                        + data["features"][i]["properties"]["G20PREOWRI"]);
                     xData.push(Math.round(data["features"][i]["properties"][propName] / data["features"][i]["properties"]["TOT_POP22"] * 100))
                     yData.push(Math.round(data["features"][i]["properties"]["G20PREDBID"] / totalVotes * 100));
                     yData2.push(Math.round(data["features"][i]["properties"]["G20PRERTRU"] / totalVotes * 100));
