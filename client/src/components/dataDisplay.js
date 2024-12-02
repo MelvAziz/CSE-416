@@ -2,46 +2,30 @@ import React from 'react'
 import Graphs from "./plots.js"
 import axios from 'axios'
 import EconomicPage from './economicPage.js';
+import RacePage from './racePage.js';
+
 import {Page, MapLevel} from '../constants.js';
 
 class DataDisplay extends React.Component {
     constructor(props) {
         super(props);
+        this.sortBy = this.props.sortBy;
         this.state = {tableData: this.props.tableData, fetchedData: {}}
     }
 
     async componentDidMount() {
        
-        if (this.props.show === Page.Ensemble) {
-            const response = await axios.get('http://localhost:8000/api/ensemble?sort=blk&state=' + this.props.tableData[0].split('_')[0]);
+        if (this.props.show === Page.EnsemblePage) {
+            const response = await axios.get('http://localhost:8000/api/ensemble?sort=' + this.sortBy + '&state=' + this.props.tableData[0].split('_')[0]);
             this.setState({ fetchedData: response.data});
         }
     }
     render() {
         let graph;
+        let graphTitle = this.props.tableData[0];
         let yAxis = this.props.tableData[1];
-        if(this.props.show === Page.EconomicPage) graph = <EconomicPage key={yAxis} yAxis={yAxis} tableData={this.state.tableData}/>
-        else if (this.props.show === Page.RacePage){ //Race
-            if( yAxis  === undefined) {
-                if(this.props.tableData[0] === "Alabama") yAxis = [3250658, 1314187, 13900, 444662];
-                else yAxis = [4873836, 507888, 31282, 536280]
-            }
-            let plotData = {
-                x: ["White", "Black", "Hispanic", "Other"],
-                y: yAxis,
-                type: 'bar',
-                marker: { color: 'blue' },
-            }
-            let plotLayout = {
-                title: this.props.tableData[0] + ' Pop. by Race',
-                width: 700,
-                height: 600,
-                xaxis: {title: "Race"},
-                yaxis: {title: "Population"},
-                datarevision: this.state.tableData[0],
-            }
-            graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
-        }
+        if(this.props.show === Page.EconomicPage) graph = <EconomicPage key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>
+        else if (this.props.show === Page.RacePage) graph = <RacePage key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>
         else if (this.props.show === Page.ElectionPage){ //Election
             if( yAxis === undefined) {
                 if(this.props.tableData[0].includes("President")) yAxis = [[2382202, 1167202, 81998], ["Joe Biden", "Donald Trump", "Other"]];
@@ -53,7 +37,6 @@ class DataDisplay extends React.Component {
                 x: yAxis[1],
                 y: yAxis[0],
                 type: 'bar',
-                // mode: 'lines+markers',
                 marker: { color: ['blue', 'red', 'orange'] },
             }
             let plotLayout = {
@@ -73,10 +56,10 @@ class DataDisplay extends React.Component {
             let sortBy = this.props.sortBy;
             let propName = "";
             let label = "";
-            if (sortBy === "ecowht") {
+            if (sortBy === "wht") {
                 propName = "WHT_NHSP22";
                 label = "% White Pop";
-            } else if (sortBy === "ecoblk") {
+            } else if (sortBy === "blk") {
                 propName = "BLK_NHSP22";
                 label = "% Black Pop";
             } else {
@@ -95,21 +78,15 @@ class DataDisplay extends React.Component {
                     yData.push(Math.round(data["features"][i]["properties"]["G22USSDBOY"] / totalVotes * 100));
                     yData2.push(Math.round(data["features"][i]["properties"]["G22USSRBRI"] / totalVotes * 100));
                 }
-            } else { // mass 
-                /*
-                    G20PREDBID - Joseph R. Biden (Democratic-Farmer-Labor Party)
-                    G20PRERTRU - Donald J. Trump (Republican Party)
-                    G20PRELJOR - Jo Jorgensen (Libertarian Party)
-                    G20PREGHAW - Howie Hawkins (Green Party)
-                    G20PREOWRI - Write-in Votes
-                */
+            } else {
                 for (var i = 0; i < data["features"].length; i++) {
                     const totalVotes = Math.round(
-                        data["features"][i]["properties"]["G20PREDBID"] 
-                        + data["features"][i]["properties"]["G20PRERTRU"] 
-                        + data["features"][i]["properties"]["G20PRELJOR"] 
-                        + data["features"][i]["properties"]["G20PREGHAW"] 
-                        + data["features"][i]["properties"]["G20PREOWRI"]);
+                        data["features"][i]["properties"]["G20PREDBID"]  //G20PREDBID - Joseph R. Biden (Democratic-Farmer-Labor Party)
+                        + data["features"][i]["properties"]["G20PRERTRU"] //G20PRERTRU - Donald J. Trump (Republican Party)
+                        + data["features"][i]["properties"]["G20PRELJOR"] //G20PRELJOR - Jo Jorgensen (Libertarian Party)
+                        + data["features"][i]["properties"]["G20PREGHAW"] //G20PREGHAW - Howie Hawkins (Green Party)
+                        + data["features"][i]["properties"]["G20PREOWRI"] //G20PREOWRI - Write-in Votes
+                    );
                     xData.push(Math.round(data["features"][i]["properties"][propName] / data["features"][i]["properties"]["TOT_POP22"] * 100))
                     yData.push(Math.round(data["features"][i]["properties"]["G20PREDBID"] / totalVotes * 100));
                     yData2.push(Math.round(data["features"][i]["properties"]["G20PRERTRU"] / totalVotes * 100));
@@ -146,7 +123,12 @@ class DataDisplay extends React.Component {
             graph = <img className="ei=graph" src={require("../graphs/Density1.png")} alt={"EI graph"}/>
         }
         else if (this.props.show === Page.EnsemblePage){ //Ensemble
-            graph = <Graphs key={this.state.tableData + "_" + this.props.show} data={this.state.fetchedData.plotData} layout={this.state.fetchedData.plotLayout}/>
+            graph = 
+            <Graphs 
+                key={this.state.tableData + "_" + this.props.show} 
+                data={this.state.fetchedData.plotData} 
+                layout={this.state.fetchedData.plotLayout}
+            />
         }
         else if(this.props.show === 7){ //Overview
 

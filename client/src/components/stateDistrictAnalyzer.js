@@ -87,8 +87,26 @@ class StateDistrictAnalyzer extends React.Component {
         if(this.state.viewMode !== 0) right = <DataContainer key={this.state.tableData + "_" + this.state.viewMode + "_"   } sortBy={this.state.sortBy} data={data} viewMode={this.state.viewMode} tableData={this.state.tableData} setView={this.setView}/>;
         return (
             <div class="container">
-                <NavBar key={"navbar_"+name+"_"+this.state.sortBy} sortBy={this.state.sortBy} selectedState={this.state.selectedState} selectedStates={["Massachusetts", "Alabama"]} dOptions={this.switchState}/>
-                <MapContainer key={"map_state_"+name+"_"+this.state.viewMode + "_"+this.state.currentMap._id+"_"+this.state.mapLevel} mapLevel={this.state.mapLevel} switchState={this.switchState} setSortEco={this.setSortEco} setMapLevel={this.setMapLevel} viewMode={this.state.viewMode} setData={this.setData} center={center} data={data} zoom={zoom} selectedState={this.state.selectedState}/>;
+                <NavBar 
+                    key={"navbar_"+name+"_"+this.state.sortBy} 
+                    sortBy={this.state.sortBy} 
+                    selectedState={this.state.selectedState} 
+                    selectedStates={["Massachusetts", "Alabama"]} 
+                    dOptions={this.switchState}
+                />
+                <MapContainer 
+                    key={"map_state_"+name+"_"+this.state.viewMode + "_"+this.state.currentMap._id+"_"+this.state.mapLevel} 
+                    mapLevel={this.state.mapLevel} 
+                    switchState={this.switchState} 
+                    setSortEco={this.setSortEco} 
+                    setMapLevel={this.setMapLevel} 
+                    viewMode={this.state.viewMode} 
+                    setData={this.setData} 
+                    center={center} 
+                    data={data} 
+                    zoom={zoom} 
+                    selectedState={this.state.selectedState}
+                />;
                 {right}
             </div>
         );

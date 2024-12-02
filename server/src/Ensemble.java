@@ -124,12 +124,11 @@ public class Ensemble {
             }
 
             plotData.add(scatterPlot);
-
             JsonObject plotLayout = new JsonObject();
             plotLayout.addProperty("title", "Distribution by Race");
-
             JsonObject yaxis = new JsonObject();
-            yaxis.addProperty("title", "% of Population Black");
+            if(sort.compareTo("blk") == 0)       yaxis.addProperty("title", "% of Population Black");
+            else if(sort.compareTo("wht") == 0)  yaxis.addProperty("title", "% of Population White");
     
             JsonArray yaxisRange = new JsonArray();
             yaxisRange.add(0);
