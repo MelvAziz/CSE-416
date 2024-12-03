@@ -36,6 +36,12 @@ p {
 
 /* Navbar stylization */
 
+.navbar_reset_button {
+  margin-top: 1rem;
+  height: 40%;
+  width: 5rem;
+}
+
 .navbar {
   position: absolute;
   top: 0rem;

@@ -4,7 +4,7 @@ import DataDisplay from './dataDisplay';
 class DataContainer extends React.Component {
     constructor(props) {
         super(props); 
-        this.state = {pageShown: this.props.viewMode, tableData: this.props.tableData};
+        this.state = {pageShown: this.props.viewMode, featureData: this.props.featureData};
         this.setView = this.props.setView;
     }
     render() {
@@ -16,11 +16,11 @@ class DataContainer extends React.Component {
                     viewMode={this.state.pageShown}
                 />
                 <DataDisplay 
-                    key={this.props.tableData[0] + "_sortBy" + this.props.sortBy} 
+                    key={this.props.featureData[0] + "_sortBy" + this.props.sortBy} 
                     sortBy={this.props.sortBy} 
                     data={this.props.data} 
-                    show = {this.state.pageShown} 
-                    tableData={this.state.tableData}
+                    viewMode = {this.state.pageShown} 
+                    featureData={this.state.featureData}
                 />
             </div>
         );

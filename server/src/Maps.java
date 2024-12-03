@@ -61,6 +61,7 @@ public class Maps {
             else if(state.compareTo("Massachusetts") == 0 ) 
                 mapReturned = mapCollection.find(eq("name", "massachusetts_counties")).first();
         }
+        //Will be replaced with GridFS chunking
         else if(type.compareTo("precincts") == 0) {
             if(state.compareTo("Alabama") == 0 ) {
                 try {
