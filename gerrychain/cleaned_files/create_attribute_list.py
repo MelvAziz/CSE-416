@@ -1,7 +1,7 @@
 def get_aggregatable_attributes(filter, aggregating):
     attribute_file_prefix = "/gpfs/projects/CSE416/Owls/scripts/attribute-lists"
     race_attribute_file = open(
-        f"{attribute_file_prefix}/attribute_list_hispanic.txt")
+        f"{attribute_file_prefix}/attribute_list_race.txt")
     economic_attribute_file = open(
         f"{attribute_file_prefix}/attribute_list_economic.txt")
     pop_density_attribute_file = open(
