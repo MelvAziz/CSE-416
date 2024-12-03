@@ -27,13 +27,13 @@ class MapMenu extends React.Component {
     }
     render() {        
         let sliderVisible = "hidden";
-        if(this.state.sortBy === "inc") sliderVisible = "visible";
+        if (this.state.sortBy === "inc") sliderVisible = "visible";
         let heatmap_type = "";
-        let map_subdivisions; //Precinct/County/District 
+        let map_subdivisions; // Precinct/County/District 
         let selectedTab = ["", "", ""];
-        if     (this.props.mapLevel === MapLevel.precinct)  selectedTab[0] = "map_type_button_selected";
-        else if(this.props.mapLevel === MapLevel.county)    selectedTab[1] = "map_type_button_selected";
-        else if(this.props.mapLevel === MapLevel.district)  selectedTab[2] = "map_type_button_selected";
+        if      (this.props.mapLevel === MapLevel.precinct)  selectedTab[0] = "map_type_button_selected";
+        else if (this.props.mapLevel === MapLevel.county)    selectedTab[1] = "map_type_button_selected";
+        else if (this.props.mapLevel === MapLevel.district)  selectedTab[2] = "map_type_button_selected";
 
         let selectedSort = ["", "", "", ""];
         
@@ -70,7 +70,7 @@ class MapMenu extends React.Component {
                     step={1}
                     minValue={3}
                     maxValue={6}
-                    labels={[ "0k", "25k", "50k", "75k", "100k", "125k", "150k", "200k", "+"]}
+                    labels={["0k", "25k", "50k", "75k", "100k", "125k", "150k", "200k", "+"]}
                     stepOnly = {true}
                     style={{'font-size': '16px', 'width': 'max(38vw, 28rem)', 'visibility': sliderVisible}}
                     onInput={(e) => {

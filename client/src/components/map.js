@@ -68,16 +68,16 @@ class Map extends React.Component {
             else if (viewMode === Page.economicPage) {
                 let brackets = [
                     feature.properties.LESS_10K22 
-                    + feature.properties["10K_15K22"] 
-                    + feature.properties["15K_20K22"] 
-                    + feature.properties["20K_25K22"], 
+                        + feature.properties["10K_15K22"] 
+                        + feature.properties["15K_20K22"] 
+                        + feature.properties["20K_25K22"], 
                     feature.properties["25K_30K22"] 
-                    + feature.properties["30K_35K22"] 
-                    + feature.properties["35K_40K22"] 
-                    + feature.properties["40K_45K22"] 
-                    + feature.properties["45K_50K22"], 
+                        + feature.properties["30K_35K22"] 
+                        + feature.properties["35K_40K22"] 
+                        + feature.properties["40K_45K22"] 
+                        + feature.properties["45K_50K22"], 
                     feature.properties["50K_60K22"] 
-                    + feature.properties["60K_75K22"], 
+                        + feature.properties["60K_75K22"], 
                     feature.properties["75K_100K22"], 
                     feature.properties["100_125K22"], 
                     feature.properties["125_150K22"], 
@@ -230,36 +230,36 @@ class Map extends React.Component {
                 }
                 if (this.sortBy === SortingMethod.bothPartiesElection) {
                     if (democraticVotes > republicanVotes)  {
-                        if (democraticVotes/totalVotes > 0.9) layer.options.fillColor = "#000066"; //dark blue
+                        if (democraticVotes/totalVotes > 0.9) layer.options.fillColor = "#000066"; // dark blue
                         else if (democraticVotes/totalVotes > 0.75) layer.options.fillColor = "#000099";
                         else if (democraticVotes/totalVotes > 0.6) layer.options.fillColor = "#0000CC";
                         else if (democraticVotes/totalVotes > 0.45) layer.options.fillColor = "#0000ff";
-                        else if (democraticVotes/totalVotes > 0.3) layer.options.fillColor = "#3333FF"; //lighter blue
+                        else if (democraticVotes/totalVotes > 0.3) layer.options.fillColor = "#3333FF"; // lighter blue
                     }
                     else if (republicanVotes > democraticVotes)  {
-                        if (republicanVotes/totalVotes > 0.9) layer.options.fillColor = "#660000"; //dark red
+                        if (republicanVotes/totalVotes > 0.9) layer.options.fillColor = "#660000"; // dark red
                         else if (republicanVotes/totalVotes > 0.75) layer.options.fillColor = "#990000";
                         else if (republicanVotes/totalVotes > 0.6) layer.options.fillColor = "#CC0000";
                         else if (republicanVotes/totalVotes > 0.45) layer.options.fillColor = "#ff0000";
-                        else if (republicanVotes/totalVotes > 0.3) layer.options.fillColor = "#FF4C4C"; //lighter red
+                        else if (republicanVotes/totalVotes > 0.3) layer.options.fillColor = "#FF4C4C"; // lighter red
                     }
                 }
                 else if (this.sortBy === SortingMethod.democraticElection) {
-                    if (democraticVotes/totalVotes > 0.9) layer.options.fillColor = "#000066"; //dark blue
+                    if (democraticVotes/totalVotes > 0.9) layer.options.fillColor = "#000066"; // dark blue
                     else if (democraticVotes/totalVotes > 0.75) layer.options.fillColor = "#000099";
                     else if (democraticVotes/totalVotes > 0.6) layer.options.fillColor = "#0000CC";
                     else if (democraticVotes/totalVotes > 0.45) layer.options.fillColor = "#0000ff";
                     else if (democraticVotes/totalVotes > 0.3) layer.options.fillColor = "#3333FF";
                     else if (democraticVotes/totalVotes > 0.15) layer.options.fillColor = "#6666FF"; // lighter red
-                    else layer.options.fillColor = "#9999FF"; //dark blue
+                    else layer.options.fillColor = "#9999FF"; // dark blue
                 }
                 else {
-                    if (republicanVotes/totalVotes > 0.9) layer.options.fillColor = "#660000"; //dark red
+                    if (republicanVotes/totalVotes > 0.9) layer.options.fillColor = "#660000"; // dark red
                     else if (republicanVotes/totalVotes > 0.75) layer.options.fillColor = "#990000";
                     else if (republicanVotes/totalVotes > 0.6) layer.options.fillColor = "#CC0000";
                     else if (republicanVotes/totalVotes > 0.45) layer.options.fillColor = "#ff0000";
                     else if (republicanVotes/totalVotes > 0.3) layer.options.fillColor = "#FF3333";
-                    else if (republicanVotes/totalVotes > 0.15) layer.options.fillColor = "#FF6666"; //lighter red
+                    else if (republicanVotes/totalVotes > 0.15) layer.options.fillColor = "#FF6666"; // lighter red
                     else layer.options.fillColor = "#FF9999";
                 }
             } 
@@ -294,9 +294,17 @@ class Map extends React.Component {
                         if (viewMode === Page.economicPage)  
                             setData(
                                 barTitle, 
-                                [feature.properties.LESS_10K22 + feature.properties["10K_15K22"] + feature.properties["15K_20K22"] + feature.properties["20K_25K22"], 
-                                feature.properties["25K_30K22"] + feature.properties["30K_35K22"] + feature.properties["35K_40K22"] + feature.properties["40K_45K22"] + feature.properties["45K_50K22"], 
-                                feature.properties["50K_60K22"] + feature.properties["60K_75K22"], 
+                                [feature.properties.LESS_10K22 
+                                    + feature.properties["10K_15K22"] 
+                                    + feature.properties["15K_20K22"] 
+                                    + feature.properties["20K_25K22"], 
+                                feature.properties["25K_30K22"] 
+                                    + feature.properties["30K_35K22"] 
+                                    + feature.properties["35K_40K22"] 
+                                    + feature.properties["40K_45K22"] 
+                                    + feature.properties["45K_50K22"], 
+                                feature.properties["50K_60K22"] 
+                                    + feature.properties["60K_75K22"], 
                                 feature.properties["75K_100K22"], 
                                 feature.properties["100_125K22"], 
                                 feature.properties["125_150K22"], 
