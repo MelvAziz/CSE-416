@@ -14,8 +14,11 @@ class DataDisplay extends React.Component {
 
     async componentDidMount() {
        
-        if (this.props.show === Page.EnsemblePage) {
-            const response = await axios.get('http://localhost:8000/api/ensemble?sort=' + this.sortBy + '&state=' + this.props.tableData[0].split('_')[0]);
+        if (this.props.show === Page.ensemblePage) {
+            const response = await axios.get('http://localhost:8000/api/ensemble?sort=' 
+                + this.sortBy 
+                + '&state=' 
+                + this.props.tableData[0].split('_')[0]);
             this.setState({ fetchedData: response.data});
         }
     }
@@ -23,12 +26,16 @@ class DataDisplay extends React.Component {
         let graph;
         let graphTitle = this.props.tableData[0];
         let yAxis = this.props.tableData[1];
-        if(this.props.show === Page.EconomicPage) graph = <EconomicPage key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>
-        else if (this.props.show === Page.RacePage) graph = <RacePage key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>
-        else if (this.props.show === Page.ElectionPage){ //Election
-            if( yAxis === undefined) {
-                if(this.props.tableData[0].includes("Massachusetts")) yAxis = [[2382202, 1167202, 81998], ["Joe Biden", "Donald Trump", "Other"]];
-                else if(this.props.tableData[0].includes("Alabama")) yAxis = [[436746, 942154, 35338], ["Will Boyd", "Katie Britt", "Other"]];
+        if (this.props.show === Page.economicPage) 
+            graph = <EconomicPage key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>
+        else if (this.props.show === Page.racePage) 
+            graph = <RacePage key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>
+        else if (this.props.show === Page.electionPage) {
+            if (yAxis === undefined) {
+                if (this.props.tableData[0].includes("Massachusetts"))
+                    yAxis = [[2382202, 1167202, 81998], ["Joe Biden", "Donald Trump", "Other"]];
+                else if (this.props.tableData[0].includes("Alabama")) 
+                    yAxis = [[436746, 942154, 35338], ["Will Boyd", "Katie Britt", "Other"]];
             }
             let plotData = {
                 x: yAxis[1],
@@ -46,7 +53,7 @@ class DataDisplay extends React.Component {
             }
             graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
         }
-        else if (this.props.show === Page.GinglesPage){ //Gingles
+        else if (this.props.show === Page.ginglesPage) {
             const xData = [];
             const yDataDemocrat = [];
             const yDataRepublican = [];
@@ -116,10 +123,10 @@ class DataDisplay extends React.Component {
             };
             graph = <Graphs data={plotData} layout={plotLayout}/>
         }
-        else if (this.props.show === Page.EcologicalInferencePage) { // Ecological inference
+        else if (this.props.show === Page.ecologicalInferencePage) {
             graph = <img className="ei=graph" src={require("../graphs/Density1.png")} alt={"EI graph"}/>
         }
-        else if (this.props.show === Page.EnsemblePage){ 
+        else if (this.props.show === Page.ensemblePage) { 
             graph = 
             <Graphs 
                 key={this.state.tableData + "_" + this.props.show} 
@@ -127,8 +134,8 @@ class DataDisplay extends React.Component {
                 layout={this.state.fetchedData.plotLayout}
             />
         }
-        else if(this.props.show === Page.OverviewPage){ //Overview
-            //Add Overview code
+        else if(this.props.show === Page.overviewPage) { 
+            // TODO: Add Overview code
         }
         return (
             <div class="data-display">

@@ -1,13 +1,13 @@
 export const Page = {
-    SelectStatePage: 0,
-    OverviewPage: 1,
-    RacePage: 2,
-    EconomicPage: 3,
-    GinglesPage: 4,
-    ElectionPage: 5,
-    EcologicalInferencePage: 6,
-    EnsemblePage: 7,
-    CompareDistrictsPage: 8,
+    selectStatePage: 0,
+    overviewPage: 1,
+    racePage: 2,
+    economicPage: 3,
+    ginglesPage: 4,
+    electionPage: 5,
+    ecologicalInferencePage: 6,
+    ensemblePage: 7,
+    compareDistrictsPage: 8,
 };
 
 export const MapLevel = {

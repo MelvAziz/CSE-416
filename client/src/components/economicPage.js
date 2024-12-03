@@ -7,7 +7,7 @@ class EconomicPage extends React.Component {
         this.graphTitle = this.props.graphTitle;
     }
     render() {
-        if(this.yAxis === undefined) {
+        if(this.yAxis === undefined) { // Return state-level data
             if(this.graphTitle === "Alabama") this.yAxis = [411314, 408649, 323211, 239693, 166596, 116460, 127890, 124471];
             else this.yAxis = [369303, 353032, 336230, 301312, 256373, 211933, 309177, 512776]
         }
@@ -16,7 +16,7 @@ class EconomicPage extends React.Component {
             y: this.yAxis,
             type: 'bar',
             marker: { color: 'green' },
-            }
+        }
         let plotLayout = {
             title: this.graphTitle.split('_')[0] + ' Income Distribution',
             width: 700,

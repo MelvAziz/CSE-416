@@ -7,7 +7,7 @@ class RacePage extends React.Component {
         this.graphTitle = this.props.graphTitle;
     }
     render() {
-        if(this.yAxis  === undefined) {
+        if(this.yAxis  === undefined) { // Use state-level data as default
             if(this.graphTitle === "Alabama") this.yAxis = [3250658, 1314187, 13900, 444662];
             else this.yAxis = [4873836, 507888, 31282, 536280]
         }
