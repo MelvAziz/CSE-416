@@ -1,5 +1,6 @@
 import React from 'react'
 import Graphs from "./plots.js"
+import TableComponent from './table.js'
 import * as ss from 'simple-statistics'
 import axios from 'axios'
 class RightControlDis extends React.Component {
@@ -39,6 +40,9 @@ class RightControlDis extends React.Component {
                 datarevision: this.state.tableData[0]
             }
             graph = <Graphs key={this.state.tableData[0]} data={[plotData]} layout={plotLayout}/>;
+        }
+        else if (this.props.show === 0){ //Testing graph line
+           //graph =  <TableComponent />
         }
         else if (this.props.show === 2){ //Race
             if( y  === undefined) {
