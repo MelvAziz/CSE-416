@@ -31,7 +31,7 @@ class MapContainer extends React.Component {
   render() {
       let data = this.data;
       let electionModeSelected = this.state.sortBy === SortingMethod.bothPartiesElection || this.state.sortBy === SortingMethod.democraticElection || this.state.sortBy === SortingMethod.republicanElection;
-      if(this.state.viewMode === Page.ElectionPage && !electionModeSelected) 
+      if (this.state.viewMode === Page.electionPage && !electionModeSelected) 
         this.setState({sortBy: "elec1"});
       return (
           <div class="map-options">

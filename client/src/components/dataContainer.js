@@ -11,12 +11,12 @@ class DataContainer extends React.Component {
         return (
             <div class="data-container">
                 <DataMenu 
-                    key={"Control_"+this.state.pageShown} 
+                    key={"Control_" + this.state.pageShown} 
                     buttonClicked = {this.setView} 
                     viewMode={this.state.pageShown}
                 />
                 <DataDisplay 
-                    key={this.props.tableData[0]+"_sortBy"+this.props.sortBy} 
+                    key={this.props.tableData[0] + "_sortBy" + this.props.sortBy} 
                     sortBy={this.props.sortBy} 
                     data={this.props.data} 
                     show = {this.state.pageShown} 

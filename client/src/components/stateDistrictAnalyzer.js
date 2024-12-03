@@ -16,7 +16,7 @@ class StateDistrictAnalyzer extends React.Component {
         this.state = {
             selectedState: "Alabama", 
             mapLevel: MapLevel.precinct, 
-            viewMode: Page.SelectStatePage, 
+            viewMode: Page.selectStatePage, 
             tableData: [], 
             sortBy: SortingMethod.whiteRace, 
             currentMap: {}, 
@@ -43,7 +43,7 @@ class StateDistrictAnalyzer extends React.Component {
             .then(response => {
                 this.setState({   
                     selectedState: state, 
-                    viewMode: Page.OverviewPage, 
+                    viewMode: Page.overviewPage, 
                     tableData: tableData, 
                     currentMap: response.data, 
                     updated: true
@@ -53,12 +53,12 @@ class StateDistrictAnalyzer extends React.Component {
     setView(options) {
         let tableData = [this.state.selectedState, undefined];
         let sortBy = SortingMethod.whiteRace;
-        if (options === Page.ElectionPage) {
+        if (options === Page.electionPage) {
             if(this.state.selectedState === "Alabama") tableData[0] = this.state.selectedState + " (Senator)";
             else tableData[0] = this.state.selectedState + " (President)";
             sortBy = SortingMethod.bothPartiesElection;
         }
-        if(options === Page.SelectStatePage) 
+        if(options === Page.selectStatePage) 
             axios.get('http://localhost:8000/api/map?type=usa').then(response => {
                 this.setState({ viewMode: options, tableData: tableData, currentMap: response.data, updated: true})
             });
@@ -76,12 +76,12 @@ class StateDistrictAnalyzer extends React.Component {
         let zoom = 7;
         let data = this.state.currentMap;
         if(this.state.updated === false) {
-            if(this.state.viewMode === Page.SelectStatePage)  
+            if(this.state.viewMode === Page.selectStatePage)  
                 axios.get('http://localhost:8000/api/map?type=usa').then(response => 
                 {
                     this.setState({ currentMap: response.data, updated: true})
                 });
-            else if(this.state.viewMode === Page.OverviewPage || this.state.mapLevel === MapLevel.district) 
+            else if(this.state.viewMode === Page.overviewPage || this.state.mapLevel === MapLevel.district) 
                 axios.get('http://localhost:8000/api/map?state=' + this.state.selectedState + '&type=congressional_districts').then(response => 
                 {
                     this.setState({ currentMap: response.data, updated: true})
@@ -99,7 +99,7 @@ class StateDistrictAnalyzer extends React.Component {
             center = [42.4072, -71.3824];
             zoom = 8;
         }
-        if(this.state.viewMode === Page.SelectStatePage) {
+        if(this.state.viewMode === Page.selectStatePage) {
             name = "United States";
             center = [37.3182, -92.9023];      
             zoom = 5;

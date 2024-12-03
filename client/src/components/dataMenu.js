@@ -16,13 +16,13 @@ class DataMenu extends React.Component {
         selectedTab[this.props.viewMode] = "right_sort_button_selected";
         return (
             <div class="data-menu">
-                <button class={selectedTab[Page.OverviewPage]}          onClick={() => this.buttonPushed(Page.OverviewPage)}> Overview</button>
-                <button class={selectedTab[Page.EconomicPage]}          onClick={() => this.buttonPushed(Page.EconomicPage)}> Economics </button>
-                <button class={selectedTab[Page.RacePage]}              onClick={() => this.buttonPushed(Page.RacePage)}> Race </button>
-                <button class={selectedTab[Page.ElectionPage]}          onClick={() => this.buttonPushed(Page.ElectionPage)}> Politics </button>
-                <button class={selectedTab[Page.GinglesPage]}           onClick={() => this.buttonPushed(Page.GinglesPage)}> Gingles </button>
-                <button class={selectedTab[Page.EcologicalInferencePage]} onClick={() => this.buttonPushed(Page.EcologicalInferencePage)}> Ecological Inference </button>
-                <button class={selectedTab[Page.EnsemblePage]}          onClick={() => this.buttonPushed(Page.EnsemblePage)}> Ensemble Plan</button>
+                <button class={selectedTab[Page.overviewPage]}          onClick={() => this.buttonPushed(Page.overviewPage)}> Overview</button>
+                <button class={selectedTab[Page.economicPage]}          onClick={() => this.buttonPushed(Page.economicPage)}> Economics </button>
+                <button class={selectedTab[Page.racePage]}              onClick={() => this.buttonPushed(Page.racePage)}> Race </button>
+                <button class={selectedTab[Page.electionPage]}          onClick={() => this.buttonPushed(Page.electionPage)}> Politics </button>
+                <button class={selectedTab[Page.ginglesPage]}           onClick={() => this.buttonPushed(Page.ginglesPage)}> Gingles </button>
+                <button class={selectedTab[Page.ecologicalInferencePage]} onClick={() => this.buttonPushed(Page.ecologicalInferencePage)}> Ecological Inference </button>
+                <button class={selectedTab[Page.ensemblePage]}          onClick={() => this.buttonPushed(Page.ensemblePage)}> Ensemble Plan</button>
             </div>
         );
     }
