@@ -3,7 +3,7 @@ import DataMenu from './dataMenu';
 import DataDisplay from './dataDisplay';
 class DataContainer extends React.Component {
     constructor(props) {
-        super(props);
+        super(props); 
         this.state = {pageShown: this.props.viewMode, tableData: this.props.tableData};
         this.setView = this.props.setView;
     }
