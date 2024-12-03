@@ -1,7 +1,7 @@
 import React from 'react'
 import Map from './map.js'
 import MapMenu from './mapMenu.js'
-import {Page, MapLevel} from '../constants.js';
+import {Page, MapLevel, SortingMethod} from '../constants.js';
 
 
 class MapContainer extends React.Component {
@@ -16,7 +16,7 @@ class MapContainer extends React.Component {
       this.setSort = this.setSort.bind(this);
       this.setMapLevel = this.setMapLevel.bind(this);
       this.setRange = this.setRange.bind(this);
-      this.state = {state: this.props.selectedState, viewMode: this.props.viewMode, sortBy: "med", min: 3, max: 10};
+      this.state = {state: this.props.selectedState, viewMode: this.props.viewMode, sortBy: SortingMethod.medianIncome, min: 3, max: 10};
   }
   setMapLevel(option) {
     this.setMapLevel(option);
@@ -30,7 +30,8 @@ class MapContainer extends React.Component {
   }
   render() {
       let data = this.data;
-      if(this.state.viewMode === Page.ElectionPage && (this.state.sortBy !== "elec1" && this.state.sortBy !== "elec2" && this.state.sortBy !== "elec3")) 
+      let electionModeSelected = this.state.sortBy === SortingMethod.bothPartiesElection || this.state.sortBy === SortingMethod.democraticElection || this.state.sortBy === SortingMethod.republicanElection;
+      if(this.state.viewMode === Page.ElectionPage && !electionModeSelected) 
         this.setState({sortBy: "elec1"});
       return (
           <div class="map-options">

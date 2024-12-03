@@ -3,7 +3,7 @@ import NavBar from './navbar.js';
 import MapContainer from './mapContainer.js';
 import DataContainer from './dataContainer.js';
 import axios from 'axios'
-import {Page, MapLevel} from '../constants.js';
+import {Page, MapLevel, SortingMethod} from '../constants.js';
 
 class StateDistrictAnalyzer extends React.Component {
     constructor(props) {
@@ -13,7 +13,17 @@ class StateDistrictAnalyzer extends React.Component {
         this.setData = this.setData.bind(this);
         this.setMapLevel = this.setMapLevel.bind(this);
         this.setSortEco = this.setSortEco.bind(this);
-        this.state = {selectedState: "Alabama", mapLevel: MapLevel.precinct, viewMode: Page.SelectStatePage, tableData: [], sortBy: "wht", currentMap: {}, updated: true, alabamaPrecinctMap: {}, massachusettsPrecinctMap: {}};
+        this.state = {
+            selectedState: "Alabama", 
+            mapLevel: MapLevel.precinct, 
+            viewMode: Page.SelectStatePage, 
+            tableData: [], 
+            sortBy: SortingMethod.whiteRace, 
+            currentMap: {}, 
+            updated: true, 
+            alabamaPrecinctMap: {}, 
+            massachusettsPrecinctMap: {}
+        };
     }
     async componentDidMount() {
         const usMap =                       await axios.get('http://localhost:8000/api/map?type=usa');
@@ -29,20 +39,31 @@ class StateDistrictAnalyzer extends React.Component {
     }
     switchState(state) {
         let tableData = [state, undefined]
-        axios.get('http://localhost:8000/api/map?state=' + state + '&type=congressional_districts').then(response => {this.setState({ selectedState: state, viewMode: Page.OverviewPage, tableData: tableData, currentMap: response.data, updated: true})});
+        axios.get('http://localhost:8000/api/map?state=' + state + '&type=congressional_districts')
+            .then(response => {
+                this.setState({   
+                    selectedState: state, 
+                    viewMode: Page.OverviewPage, 
+                    tableData: tableData, 
+                    currentMap: response.data, 
+                    updated: true
+                })
+            });
     }
     setView(options) {
         let tableData = [this.state.selectedState, undefined];
+        let sortBy = SortingMethod.whiteRace;
         if (options === Page.ElectionPage) {
             if(this.state.selectedState === "Alabama") tableData[0] = this.state.selectedState + " (Senator)";
             else tableData[0] = this.state.selectedState + " (President)";
+            sortBy = SortingMethod.bothPartiesElection;
         }
         if(options === Page.SelectStatePage) 
             axios.get('http://localhost:8000/api/map?type=usa').then(response => {
                 this.setState({ viewMode: options, tableData: tableData, currentMap: response.data, updated: true})
             });
         else if (options === "Overview") this.setState({viewMode: options, mapLevel: "dis", tableData: tableData, updated: false});
-        else this.setState({viewMode: options, mapLevel: MapLevel.precinct, tableData: tableData, updated: false});
+        else this.setState({viewMode: options, mapLevel: MapLevel.precinct, tableData: tableData, updated: false, sortBy: sortBy});
     }
     setData(title, data) {
         let inputData = [title, data];
@@ -80,11 +101,19 @@ class StateDistrictAnalyzer extends React.Component {
         }
         if(this.state.viewMode === Page.SelectStatePage) {
             name = "United States";
+            center = [37.3182, -92.9023];      
             zoom = 5;
-            center = [37.3182, -92.9023];            
         }
-        let right = "";
-        if(this.state.viewMode !== 0) right = <DataContainer key={this.state.tableData + "_" + this.state.viewMode + "_"   } sortBy={this.state.sortBy} data={data} viewMode={this.state.viewMode} tableData={this.state.tableData} setView={this.setView}/>;
+        let dataPage = "";
+        if(this.state.viewMode !== 0) 
+            dataPage = <DataContainer 
+                        key={this.state.tableData + "_" + this.state.viewMode + "_"} 
+                        sortBy={this.state.sortBy} 
+                        data={data} 
+                        viewMode={this.state.viewMode} 
+                        tableData={this.state.tableData} 
+                        setView={this.setView}
+                    />;
         return (
             <div class="container">
                 <NavBar 
@@ -107,7 +136,7 @@ class StateDistrictAnalyzer extends React.Component {
                     zoom={zoom} 
                     selectedState={this.state.selectedState}
                 />;
-                {right}
+                {dataPage}
             </div>
         );
     }

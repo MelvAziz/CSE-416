@@ -2,7 +2,7 @@ import React from 'react'
 import * as turf from '@turf/turf';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
 import MapLegend from './mapLegend';
-import {Page, MapLevel} from '../constants.js';
+import {Page, MapLevel, SortingMethod} from '../constants.js';
 
 
 class Map extends React.Component {
@@ -25,27 +25,27 @@ class Map extends React.Component {
         let selectedFeatureColor;
         let legend;
         if(this.viewMode !== Page.SelectStatePage) opacity = 0.85;
-        if(this.viewMode === Page.EconomicPage  && this.sortBy === "med") //Median Income
+        if(this.viewMode === Page.EconomicPage  && this.sortBy === SortingMethod.medianIncome) 
             legend = <MapLegend 
                         colors={["#FF0000", "#CC0033", "#990066", "#660099",  "#3300CC",  "#0000FF", "darkblue"]} //Red -> Dark Blue
                         labels={ ["<25k",   "25-50k",  "50-75k",  "75-100k",  "100-125k", "125-150k",">150k"]}
                     />
-        else if((this.viewMode === Page.RacePage || (this.viewMode === Page.EconomicPage && this.sortBy === "inc"))) 
+        else if((this.viewMode === Page.RacePage || (this.viewMode === Page.EconomicPage && this.sortBy === SortingMethod.incomeBracket))) 
             legend = <MapLegend 
                         colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} // light green -> Dark green
                         labels={ ["<10%",   "10-20%",  "20-30%",  "30-40%",  "40-50%",  "50-60%",  "60-70%",  "70-80%",  "80-90%",  "90-100"]}
                     />
-        else if(this.viewMode === Page.ElectionPage && (this.sortBy === "elec1")) //Democrats and Republicans
+        else if(this.viewMode === Page.ElectionPage && (this.sortBy === SortingMethod.bothPartiesElection)) 
             legend = <MapLegend 
                         colors={[null,          "#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#FF4C4C", "#ff0000", "#CC0000", "#990000", "#660000", null]} //Blue -> Red
                         labels={["Democratic",  "90-100%", "75-90%",  "60-75%",  "45-60%",  "30-45%",  "30-45%",  "45-60%",  "60-75%",  "75-90%",  "90-100%", "Republican"]}
                     />;
-        else if(this.viewMode === Page.ElectionPage && (this.sortBy === "elec2")) //Only Deomocrats
+        else if(this.viewMode === Page.ElectionPage && (this.sortBy === SortingMethod.democraticElection)) 
             legend = <MapLegend 
                         colors={["#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#6666FF", "#9999FF"]}  //light blue -> Blue
                         labels={["90-100%", "75-90%",  "60-75%",  "45-60%",  "30-45%",  "15-30%",  "0-15%"]}
                     />;
-        else if(this.viewMode === Page.ElectionPage && (this.sortBy === "elec3")) //Only Republicans
+        else if(this.viewMode === Page.ElectionPage && (this.sortBy === SortingMethod.republicanElection)) 
             legend = <MapLegend 
                         colors={["#660000", "#990000", "#CC0000", "#ff0000", "#FF3333", "#FF6666", "#FF9999"]} //light red -> Red
                         labels={["90-100%", "75-90%",  "60-75%",  "45-60%",  "30-45%",  "15-30%",  "0-15%"]}
@@ -90,7 +90,7 @@ class Map extends React.Component {
                 }
                 if(feature.properties.MEDN_INC22 !== undefined) popup += "<p>Median Income: $" + readableNum(medianIncome) + "</p>";
                 else popup += "<p>Median Income (Estimate): $" + readableNum(Number(medianIncome).toFixed(0)) + "</p>";
-                if(this.sortBy === "med") {
+                if(this.sortBy === SortingMethod.medianIncome) {
                     if(medianIncome < 25000) layer.options.fillColor = "#FF0000";
                     else if(medianIncome < 50000) layer.options.fillColor = "#CC0033";
                     else if(medianIncome < 75000) layer.options.fillColor = "#990066";
@@ -99,7 +99,7 @@ class Map extends React.Component {
                     else if(medianIncome < 150000) layer.options.fillColor = "#0000FF";
                     else layer.options.fillColor = "darkblue";
                 }
-                else if(this.sortBy === "rur") {
+                else if(this.sortBy === SortingMethod.urbanRural) {
                     //https://www.mass.gov/doc/rural-definition-detail-0/download
                     let area = turf.area(layer.toGeoJSON())/(1000000);
                     let popDensity = feature.properties.TOT_POP22/area;
@@ -124,7 +124,7 @@ class Map extends React.Component {
                     else layer.options.fillColor = "darkgreen";
                 }
             }
-            else if(viewMode === Page.RacePage || ((viewMode === Page.EcologicalInferencePage || viewMode === Page.GinglesPage || viewMode === Page.EnsemblePage) && this.sortBy !== "inc")) {
+            else if(viewMode === Page.RacePage || ((viewMode === Page.EcologicalInferencePage || viewMode === Page.GinglesPage || viewMode === Page.EnsemblePage) && this.sortBy !== SortingMethod.incomeBrackets)) {
                 let totalPopulation = feature.properties.TOT_POP22;
                 let selectedPopulation = feature.properties.WHT_NHSP22;
                 if(this.sortBy === "blk")       selectedPopulation = feature.properties.BLK_NHSP22;
@@ -218,38 +218,38 @@ class Map extends React.Component {
                             + "%</td></tr>";
                     popup   += "</tbody></table>";
                 }
-                if(this.sortBy === "elec1") {
+                if(this.sortBy === SortingMethod.bothPartiesElection) {
                     if(democraticVotes > republicanVotes)  {
-                        if(democraticVotes/totalVotes > 0.9) layer.options.fillColor = "#000066";
+                        if(democraticVotes/totalVotes > 0.9) layer.options.fillColor = "#000066"; //dark blue
                         else if(democraticVotes/totalVotes > 0.75) layer.options.fillColor = "#000099";
                         else if(democraticVotes/totalVotes > 0.6) layer.options.fillColor = "#0000CC";
                         else if(democraticVotes/totalVotes > 0.45) layer.options.fillColor = "#0000ff";
-                        else if(democraticVotes/totalVotes > 0.3) layer.options.fillColor = "#3333FF";
+                        else if(democraticVotes/totalVotes > 0.3) layer.options.fillColor = "#3333FF"; //lighter blue
                     }
                     else if(republicanVotes > democraticVotes)  {
-                        if(republicanVotes/totalVotes > 0.9) layer.options.fillColor = "#660000";
+                        if(republicanVotes/totalVotes > 0.9) layer.options.fillColor = "#660000"; //dark red
                         else if(republicanVotes/totalVotes > 0.75) layer.options.fillColor = "#990000";
                         else if(republicanVotes/totalVotes > 0.6) layer.options.fillColor = "#CC0000";
                         else if(republicanVotes/totalVotes > 0.45) layer.options.fillColor = "#ff0000";
-                        else if(republicanVotes/totalVotes > 0.3) layer.options.fillColor = "#FF4C4C";
+                        else if(republicanVotes/totalVotes > 0.3) layer.options.fillColor = "#FF4C4C"; //lighter red
                     }
                 }
-                else if(this.sortBy === "elec2") {
-                    if(democraticVotes/totalVotes > 0.9) layer.options.fillColor = "#000066";
+                else if(this.sortBy === SortingMethod.democraticElection) {
+                    if(democraticVotes/totalVotes > 0.9) layer.options.fillColor = "#000066"; //dark blue
                     else if(democraticVotes/totalVotes > 0.75) layer.options.fillColor = "#000099";
                     else if(democraticVotes/totalVotes > 0.6) layer.options.fillColor = "#0000CC";
                     else if(democraticVotes/totalVotes > 0.45) layer.options.fillColor = "#0000ff";
                     else if(democraticVotes/totalVotes > 0.3) layer.options.fillColor = "#3333FF";
-                    else if(democraticVotes/totalVotes > 0.15) layer.options.fillColor = "#6666FF";
-                    else layer.options.fillColor = "#9999FF";
+                    else if(democraticVotes/totalVotes > 0.15) layer.options.fillColor = "#6666FF"; // lighter red
+                    else layer.options.fillColor = "#9999FF"; //dark blue
                 }
                 else {
-                    if(republicanVotes/totalVotes > 0.9) layer.options.fillColor = "#660000";
+                    if(republicanVotes/totalVotes > 0.9) layer.options.fillColor = "#660000"; //dark red
                     else if(republicanVotes/totalVotes > 0.75) layer.options.fillColor = "#990000";
                     else if(republicanVotes/totalVotes > 0.6) layer.options.fillColor = "#CC0000";
                     else if(republicanVotes/totalVotes > 0.45) layer.options.fillColor = "#ff0000";
                     else if(republicanVotes/totalVotes > 0.3) layer.options.fillColor = "#FF3333";
-                    else if(republicanVotes/totalVotes > 0.15) layer.options.fillColor = "#FF6666";
+                    else if(republicanVotes/totalVotes > 0.15) layer.options.fillColor = "#FF6666"; //lighter red
                     else layer.options.fillColor = "#FF9999";
                 }
             } 

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Page, MapLevel} from '../constants.js';
+import {Page, MapLevel, SortingMethod} from '../constants.js';
 import MultiRangeSlider from "multi-range-slider-react";
 
 class MapMenu extends React.Component {
@@ -27,7 +27,7 @@ class MapMenu extends React.Component {
     }
     render() {        
         let sliderVisible = "hidden";
-        if(this.state.sortBy === "inc") sliderVisible = "visible";
+        if(this.state.sortBy === SortingMethod.incomeBrackets) sliderVisible = "visible";
         let heatmap_type = "";
         let map_subdivisions; //Precinct/County/District 
         let selectedTab = ["", "", ""];
@@ -40,28 +40,68 @@ class MapMenu extends React.Component {
         if(this.props.viewMode === Page.EconomicPage) {
             map_subdivisions = 
             <div class="map_type_container"> 
-                <input  class={"map_type_button " + selectedTab[0]} type="button" value="Precinct" onClick={(e) =>  this.switchMap(MapLevel.precinct)}/>
-                <input  class={"map_type_button " + selectedTab[1]} type="button" value="County" onClick={(e) =>    this.switchMap(MapLevel.county)}/>
+                <input  
+                    class={"map_type_button " + selectedTab[0]} 
+                    type="button" 
+                    value="Precinct" 
+                    onClick={(e) => this.switchMap(MapLevel.precinct)}
+                />
+                <input  
+                    class={"map_type_button " + selectedTab[1]} 
+                    type="button" 
+                    value="County" 
+                    onClick={(e) => this.switchMap(MapLevel.county)}
+                />
             </div>;
         }
-        else if(this.props.viewMode === Page.RacePage) map_subdivisions = 
+        else if(this.state.viewMode === Page.RacePage) map_subdivisions = 
             <div class="map_type_container"> 
-                <input  class={"map_type_button " + selectedTab[0]} type="button" value="Precinct" onClick={(e) =>  this.switchMap(MapLevel.precinct)}/>
-                <input  class={"map_type_button " + selectedTab[1]} type="button" value="County" onClick={(e) =>    this.switchMap(MapLevel.county)}/>
-                <input  class={"map_type_button " + selectedTab[2]} type="button" value="District" onClick={(e) =>  this.switchMap(MapLevel.district)}/>
+                <input  
+                    class={"map_type_button " + selectedTab[0]} 
+                    type="button" 
+                    value="Precinct" 
+                    onClick={(e) =>  this.switchMap(MapLevel.precinct)}
+                />
+                <input  
+                    class={"map_type_button " + selectedTab[1]} 
+                    type="button" 
+                    value="County" 
+                    onClick={(e) =>    this.switchMap(MapLevel.county)}
+                />
+                <input  
+                    class={"map_type_button " + selectedTab[2]} 
+                    type="button" 
+                    value="District" 
+                    onClick={(e) =>  this.switchMap(MapLevel.district)}
+                />
             </div>;
 
 
         if(this.props.viewMode === Page.EconomicPage) {
-            if(this.state.sortBy === "med")         selectedSort[0] = "map_sort_button_selected";
-            else if(this.state.sortBy === "inc")    selectedSort[1] = "map_sort_button_selected";
-            else if(this.state.sortBy === "rur")    selectedSort[2] = "map_sort_button_selected";
+            if(this.state.sortBy === SortingMethod.medianIncome)        selectedSort[0] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.incomeBrackets) selectedSort[1] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.urbanRural)     selectedSort[2] = "map_sort_button_selected";
             heatmap_type = 
             <div class="map_economic_sort_upper_container"> 
                 <div class="map_sort_container map_economic_sort_container">
-                    <input  class={"map_sort_buttons map_economic_sort_buttons " + selectedSort[0]} type="button" value="Median Income" onClick={(e) => this.switchSort("med")}/>
-                    <input  class={"map_sort_buttons map_economic_sort_buttons " + selectedSort[1]} type="button" value="Income Brackets" onClick={(e) => this.switchSort("inc")}/>
-                    <input  class={"map_sort_buttons map_economic_sort_buttons " + selectedSort[2]} type="button" value="Rural vs. Urban" onClick={(e) => this.switchSort("rur")}/>
+                    <input  
+                        class={"map_sort_buttons map_economic_sort_buttons " + selectedSort[0]} 
+                        type="button" 
+                        value="Median Income" 
+                        onClick={(e) => this.switchSort(SortingMethod.medianIncome)}
+                    />
+                    <input  
+                        class={"map_sort_buttons map_economic_sort_buttons " + selectedSort[1]} 
+                        type="button" 
+                        value="Income Brackets" 
+                        onClick={(e) => this.switchSort(SortingMethod.incomeBrackets)}
+                    />
+                    <input 
+                        class={"map_sort_buttons map_economic_sort_buttons " + selectedSort[2]} 
+                        type="button" 
+                        value="Rural vs. Urban" 
+                        onClick={(e) => this.switchSort(SortingMethod.urbanRural)}
+                    />
                 </div>
                 <MultiRangeSlider
                     class = {"economic_slider"}
@@ -80,49 +120,109 @@ class MapMenu extends React.Component {
             </div>
         }
         else if(this.props.viewMode === Page.RacePage)  {
-            if(this.state.sortBy === "wht")         selectedSort[0] = "map_sort_button_selected";
-            else if(this.state.sortBy === "blk")    selectedSort[1] = "map_sort_button_selected";
-            else if(this.state.sortBy === "hsp")    selectedSort[2] = "map_sort_button_selected";
+            if(this.state.sortBy === SortingMethod.whiteRace)         selectedSort[0] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.blackRace)    selectedSort[1] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.hispanicRace) selectedSort[2] = "map_sort_button_selected";
             heatmap_type = 
             <div class="map_sort_container map_race_sort_container">
-                <input  class={"map_sort_buttons " + selectedSort[0]} type="button" value="White" onClick={(e) =>       this.switchSort("wht")}/>
-                <input  class={"map_sort_buttons " + selectedSort[1]} type="button" value="Black" onClick={(e) =>       this.switchSort("blk")}/> 
-                <input  class={"map_sort_buttons " + selectedSort[2]} type="button" value="Hispanic" onClick={(e) =>    this.switchSort("hsp")}/>
+                <input  
+                    class={"map_sort_buttons " + selectedSort[0]} 
+                    type="button" 
+                    value="White" 
+                    onClick={(e) => this.switchSort(SortingMethod.whiteRace)}
+                />
+                <input  
+                    class={"map_sort_buttons " + selectedSort[1]} 
+                    type="button" 
+                    value="Black" 
+                    onClick={(e) => this.switchSort(SortingMethod.blackRace)}
+                /> 
+                <input  
+                    class={"map_sort_buttons " + selectedSort[2]} 
+                    type="button" 
+                    value="Hispanic" 
+                    onClick={(e) => this.switchSort(SortingMethod.hispanicRace)}
+                />
             </div>
         }
         else if(this.props.viewMode === Page.ElectionPage) {
-            if(this.state.sortBy === "elec1")        selectedSort[0] = "map_sort_button_selected";
-            else if(this.state.sortBy === "elec2")   selectedSort[1] = "map_sort_button_selected";
-            else if(this.state.sortBy === "elec3")   selectedSort[2] = "map_sort_button_selected";
+            if(this.state.sortBy === SortingMethod.bothPartiesElection)     selectedSort[0] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.democraticElection) selectedSort[1] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.republicanElection) selectedSort[2] = "map_sort_button_selected";
             let elecTitle = "2020 President ";
             if(this.selectedState === "Alabama") elecTitle = "2022 Senator ";
             heatmap_type = 
             <div class="map_sort_container map_election_sort_container">
-                <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[0]} type="button" value={elecTitle + "(General)"} onClick={(e) =>       this.switchSort("elec1")}/>
-                <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[1]} type="button" value={elecTitle + "(Democratic)"} onClick={(e) =>    this.switchSort("elec2")}/>
-                <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[2]} type="button" value={elecTitle + "(Republican)"} onClick={(e) =>    this.switchSort("elec3")}/>
+                <input  
+                    class={"map_sort_buttons map_election_sort_button " + selectedSort[0]} 
+                    type="button" 
+                    value={elecTitle + "(General)"} 
+                    onClick={(e) => this.switchSort(SortingMethod.bothPartiesElection)}
+                />
+                <input  
+                    class={"map_sort_buttons map_election_sort_button " + selectedSort[1]} 
+                    type="button" 
+                    value={elecTitle + "(Democratic)"} 
+                    onClick={(e) =>   this.switchSort(SortingMethod.democraticElection)}
+                />
+                <input  
+                    class={"map_sort_buttons map_election_sort_button " + selectedSort[2]} 
+                    type="button" 
+                    value={elecTitle + "(Republican)"} 
+                    onClick={(e) =>    this.switchSort(SortingMethod.republicanElection)}
+                />
             </div>
         }
         else if(this.props.viewMode === Page.EcologicalInferencePage || this.props.viewMode === Page.GinglesPage) {
-            if(this.state.sortBy === "wht")         selectedSort[0] = "map_sort_button_selected";
-            else if(this.state.sortBy === "blk")    selectedSort[1] = "map_sort_button_selected";
-            else if(this.state.sortBy === "hsp")    selectedSort[2] = "map_sort_button_selected"; 
-            else if(this.state.sortBy === "inc")    selectedSort[3] = "map_sort_button_selected";
+            if(this.state.sortBy === SortingMethod.whiteRace)           selectedSort[0] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.blackRace)      selectedSort[1] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.hispanicRace)   selectedSort[2] = "map_sort_button_selected"; 
+            else if(this.state.sortBy === SortingMethod.incomeBrackets) selectedSort[3] = "map_sort_button_selected";
             heatmap_type = 
             <div class="map_sort_container map_eco_sort_container">
-                <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[0]} type="button" value="White" onClick={(e) =>       this.switchSort("wht")}/>
-                <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[1]} type="button" value="Black" onClick={(e) =>       this.switchSort("blk")}/>
-                <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[2]} type="button" value="Hispanic" onClick={(e) =>    this.switchSort("hsp")}/>
-                <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[3]} type="button" value="Economic" onClick={(e) =>    this.switchSort("inc")}/> 
+                <input  
+                    class={"map_sort_buttons map_eco_sort_button " + selectedSort[0]} 
+                    type="button" 
+                    value="White" 
+                    onClick={(e) => this.switchSort(SortingMethod.whiteRace)}
+                />
+                <input  
+                    class={"map_sort_buttons map_eco_sort_button " + selectedSort[1]} 
+                    type="button" 
+                    value="Black" 
+                    onClick={(e) => this.switchSort(SortingMethod.blackRace)}
+                />
+                <input  
+                    class={"map_sort_buttons map_eco_sort_button " + selectedSort[2]} 
+                    type="button" 
+                    value="Hispanic" 
+                    onClick={(e) => this.switchSort(SortingMethod.hispanicRace)}
+                />
+                <input  
+                    class={"map_sort_buttons map_eco_sort_button " + selectedSort[3]} 
+                    type="button" 
+                    value="Economic" 
+                    onClick={(e) => this.switchSort(SortingMethod.incoemBracket)}
+                /> 
             </div>
         }
         else if(this.props.viewMode === Page.EnsemblePage) {
-            if(this.state.sortBy === "wht")         selectedSort[0] = "map_sort_button_selected";
-            else if(this.state.sortBy === "blk")    selectedSort[1] = "map_sort_button_selected";
+            if(this.state.sortBy === SortingMethod.whiteRace)         selectedSort[0] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.blackRace)    selectedSort[1] = "map_sort_button_selected";
             heatmap_type = 
             <div class="map_sort_container map_election_sort_container">
-                <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[0]} type="button" value="White" onClick={(e) =>    this.switchSort("wht")}/>
-                <input  class={"map_sort_buttons map_eco_sort_button " + selectedSort[1]} type="button" value="Black" onClick={(e) =>    this.switchSort("blk")}/>
+                <input  
+                    class={"map_sort_buttons map_eco_sort_button " + selectedSort[0]} 
+                    type="button" 
+                    value="White" 
+                    onClick={(e) => this.switchSort(SortingMethod.whiteRace)}
+                />
+                <input 
+                    class={"map_sort_buttons map_eco_sort_button " + selectedSort[1]} 
+                    type="button" 
+                    value="Black" 
+                    onClick={(e) => this.switchSort(SortingMethod.blackRace)}
+                />
             </div>
         }
         return (

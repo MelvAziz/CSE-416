@@ -8,22 +8,22 @@ class RacePage extends React.Component {
     }
     render() {
         if(this.yAxis  === undefined) {
-            if(this.graphTitle === "Alabama") this.yAxis = [411314, 408649, 323211, 239693, 166596, 116460, 127890, 124471];
-            else this.yAxis = [369303, 353032, 336230, 301312, 256373, 211933, 309177, 512776]
+            if(this.graphTitle === "Alabama") this.yAxis = [3250658, 1314187, 13900, 444662];
+            else this.yAxis = [4873836, 507888, 31282, 536280]
         }
         let plotData = {
-            x: ["<25K", "25K-50K", "50K-75K", "75K-100K", "100K-125K", "125K-150K", "150K-200K", ">200K"],
+            x: ["White", "Black", "Hispanic", "Other"],
             y: this.yAxis,
             type: 'bar',
-            marker: { color: 'green' },
-            }
+            marker: { color: 'blue' },
+        }
         let plotLayout = {
-            title: this.graphTitle.split('_')[0] + ' Income Distribution',
+            title: this.graphTitle + ' Pop. by Race',
             width: 700,
             height: 600,
-            xaxis: {title: "Economic Brackets"},
-            yaxis: {title: "# of Households"},
-            datarevision: this.graphTitle
+            xaxis: {title: "Race"},
+            yaxis: {title: "Population"},
+            datarevision: this.graphTitle,
         }
         return <Graphs key={this.graphTitle} data={[plotData]} layout={plotLayout}/>;
     }

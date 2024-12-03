@@ -15,3 +15,16 @@ export const MapLevel = {
     county: "cnt",
     district: "dis"
 }
+
+export const SortingMethod = {
+    medianIncome: "med",
+    incomeBrackets: "inc",
+    whiteRace: "wht",
+    blackRace: "blk",
+    hispanicRace: "hsp",
+    urbanRural: "rur",
+    bothPartiesElection: "elec1",
+    democraticElection: "elec2",
+    republicanElection: "elec3"
+
+}
