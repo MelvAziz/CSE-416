@@ -1,15 +1,9 @@
 import sys
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import json
 
-# 7029917
-def get_precinct_pop_data(test_index, df, census_blocks, county_to_census_block, mapping):
-    blocks_to_check = []
-    for i in mapping[str(test_index)]:
-        for j in county_to_census_block[i]:
-            blocks_to_check.append(j)
-    # blocks_to_check = county_to_census_block[df.iloc[test_index].COUNTYFP]
+def get_precinct_pop_data(test_index, df, census_blocks, county_to_census_block):
+    blocks_to_check = county_to_census_block[df.iloc[test_index].COUNTYFP20]
     blocks = []
     area_percent = []
     # print(blocks_to_check)
@@ -21,13 +15,13 @@ def get_precinct_pop_data(test_index, df, census_blocks, county_to_census_block,
             blocks.append(i)
             area_percent.append(series_int.area.item() / series2.area.item())
     
-    g = open("/gpfs/scratch/mborczuk/gerrychain/prop_list_race.txt", "r")
+    g = open("/gpfs/scratch/mborczuk/gerrychain/prop_list_ur.txt", "r")
     for k in g.readlines():
         prop = k[:-1]
         data = []
         for j in range(0, len(blocks)):
             data.append([df.iloc[test_index].UNIQUE_ID, getattr(census_blocks.iloc[blocks[j]], prop) * area_percent[j]])
-        f = open(f"/gpfs/scratch/mborczuk/gerryfiles-mass/{prop}/{test_index}.txt", "w")
+        f = open(f"/gpfs/scratch/mborczuk/gerryfiles/{prop}/{test_index}.txt", "w")
         sum = 0
         for d in data:
             f.write(f"{d[0]},{d[1]}\n")
@@ -37,32 +31,18 @@ def get_precinct_pop_data(test_index, df, census_blocks, county_to_census_block,
         f.close()
 
 
-file = "./mass_census_blocks_race.geojson"
+file = "./alabama_census_block_ur.geojson"
 census_blocks = gpd.read_file(file)
 
-
-# f = open("./prop_list_economic.txt", "w")
-# print(census_blocks.iloc[0].T)
-# for i in [a for a in dir(census_blocks.iloc[0]) if not a.startswith('__')]:
-#     f.write(i)
-#     f.write("\n")
-# f.close()
-
-
-sum = 0
-for i in range(0, len(census_blocks)):
-    sum += census_blocks.iloc[i].P0010001
-
-print(sum)
 # set file path
-file = "./mass_precincts.geojson"
+file = "./alabama_precincts.json"
 
 # read in all geodata
 df = gpd.read_file(file)
 print(len(df))
 county_to_census_block = {}
 for i in range(0, len(census_blocks)):
-    county = census_blocks.iloc[i].COUNTY
+    county = census_blocks.iloc[i].COUNTYFP20
     if county in county_to_census_block.keys():
         county_to_census_block[county].append(i)
     else:
@@ -70,12 +50,9 @@ for i in range(0, len(census_blocks)):
 
 print("Done reading")
 
-f = open("./mass_precincts_to_counties.json")
-mapping = json.load(f)
-
 test_index = int(sys.argv[1])
 
-get_precinct_pop_data(test_index, df, census_blocks, county_to_census_block, mapping)
+get_precinct_pop_data(test_index, df, census_blocks, county_to_census_block)
 
 
         
