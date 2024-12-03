@@ -1,1 +1,18 @@
-{"state": "massachusetts", "type": "general_data", "attributes": {"TOT_POP": 7028258, "REP_VOTE_SHARE": 32.14, "DEM_VOTE_SHARE": 65.60, "REDIST_PARTY": "DEM", "Urban": 6547629, "Rural": 525640}}
+{
+    "state": "massachusetts", 
+    "type": "general_data", 
+    "attributes": {
+        "TOT_POP22": 7028258, 
+        "REP_VOTE_SHARE": 32.14, 
+        "DEM_VOTE_SHARE": 65.60, 
+        "REDIST_PARTY": "DEM", 
+        "URBAN_POP": 4336840, 
+        "SUBURBAN_POP": 2210789, 
+        "RURAL_POP": 525640, 
+        "WHT_NHSP22": 4873836,
+        "BLK_NHSP22": 507888,
+        "HSP_POP22": 31282,
+        "OTH_POP22": 536280,
+        "INCOME_BRACKETS": [369303, 353032, 336230, 301312, 256373, 211933, 309177, 512776]
+    }
+}
