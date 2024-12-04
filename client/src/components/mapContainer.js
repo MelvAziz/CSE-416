@@ -12,6 +12,7 @@ class MapContainer extends React.Component {
       this.center = this.props.center;
       this.setData = this.props.setData;
       this.setMapLevel = this.props.setMapLevel;
+      this.changeSort = this.props.changeSort;
       this.mapLevel = this.props.mapLevel;
       this.setSort = this.setSort.bind(this);
       this.setMapLevel = this.setMapLevel.bind(this);
@@ -22,7 +23,7 @@ class MapContainer extends React.Component {
     this.setMapLevel(option);
   }
   setSort(option) {
-    this.props.setSortEco(option);
+    this.changeSort(option);
     this.setState({sortBy: option});
   };
   setRange(e) {
@@ -31,8 +32,9 @@ class MapContainer extends React.Component {
   render() {
       let data = this.data;
       let electionModeSelected = this.state.sortBy === SortingMethod.bothPartiesElection || this.state.sortBy === SortingMethod.democraticElection || this.state.sortBy === SortingMethod.republicanElection;
-      if (this.state.viewMode === Page.electionPage && !electionModeSelected) 
-        this.setState({sortBy: "elec1"});
+      let raceModeSelected = this.state.sortBy === SortingMethod.whiteRace || this.state.sortBy === SortingMethod.blackRace || this.state.sortBy === SortingMethod.hispanicRace;
+      if (this.state.viewMode === Page.electionPage && !electionModeSelected) this.setState({sortBy: SortingMethod.bothPartiesElection});
+      if (this.state.viewMode === Page.racePage && !raceModeSelected) this.setState({sortBy: SortingMethod.whiteRace});
       return (
           <div class="map-options">
               <Map 

@@ -1,10 +1,12 @@
 import React from 'react'
+import {Page, MapLevel, SortingMethod} from '../constants.js';
 
 class NavBar extends React.Component {
     constructor(props) {
         super(props);
         this.selectedStates = this.props.selectedStates;
-        this.switchState = this.props.dOptions;
+        this.switchState = this.props.switchState;
+        this.setView = this.props.setView;
         this.state = {selectedState: this.props.selectedState};
     }
     render() {
@@ -19,6 +21,13 @@ class NavBar extends React.Component {
                 <div class="navbar_button_container">
                     {statesList}
                 </div>
+                <input 
+                    key={"navbar_reset_button"} 
+                    class="navbar_reset_button" 
+                    type="button"
+                    onClick={(e) => this.setView(Page.selectStatePage)} 
+                    value={"Reset"}
+                />
             </div>
         );
     }

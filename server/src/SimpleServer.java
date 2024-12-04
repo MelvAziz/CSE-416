@@ -14,7 +14,7 @@ public class SimpleServer {
     // Start the Grizzly server
     public static HttpServer startServer() {
         // Register your JAX-RS resource classes with the ResourceConfig
-        final ResourceConfig rc = new ResourceConfig(MyResource.class, Ensemble.class, Maps.class);
+        final ResourceConfig rc = new ResourceConfig(Attributes.class, Ensemble.class, Maps.class);
         
         // Create and start a new Grizzly HTTP server listening at the base URI
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
