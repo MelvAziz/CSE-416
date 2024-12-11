@@ -141,7 +141,7 @@ class StateDistrictAnalyzer extends React.Component {
                     data={data} 
                     zoom={zoom} 
                     selectedState={this.state.selectedState}
-                />;
+                />
                 {dataPage}
             </div>
         );

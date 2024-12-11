@@ -48,7 +48,7 @@ class MapContainer extends React.Component {
                 data={data} 
                 viewMode={this.state.viewMode} 
                 sortBy={this.state.sortBy}
-              />;  
+              />
               <MapMenu 
                 selectedState={this.state.state} 
                 setRange={this.setRange} 
@@ -59,7 +59,7 @@ class MapContainer extends React.Component {
                 viewMode={this.state.viewMode} 
                 setMapLevel={this.setMapLevel} 
                 mapLevel={this.mapLevel}
-              />; 
+              />
           </div>
       ); 
   }

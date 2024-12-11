@@ -22,9 +22,19 @@ export const SortingMethod = {
     whiteRace: "wht",
     blackRace: "blk",
     hispanicRace: "hsp",
-    urbanRural: "rur",
+    urbanRural: "usr",
+    urban: "urb",
+    suburban: "sub",
+    rural: "rur",
+    politicalIncome: "polinc",
     bothPartiesElection: "elec1",
     democraticElection: "elec2",
-    republicanElection: "elec3"
-
+    republicanElection: "elec3",
+    E0to25: "E0_25k",
+    E25to50: "E25_50k",
+    E50to75: "E50_75k",
+    E75to100: "E75_100k",
+    E100to125: "E100_125k",
+    E125to150: "E125_150k",
+    E150more: "E150k_MOR",
 }

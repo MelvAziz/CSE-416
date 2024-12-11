@@ -5,24 +5,36 @@ class RacePage extends React.Component {
         super(props);
         this.yAxis = this.props.yAxis;
         this.graphTitle = this.props.graphTitle;
+        this.smallDisplay = this.props.smallDisplay;
     }
     render() {
         if(this.yAxis  === undefined) { // Use state-level data as default
-            if(this.graphTitle === "Alabama") this.yAxis = [3250658, 1314187, 13900, 444662];
-            else this.yAxis = [4873836, 507888, 31282, 536280]
+            if(this.graphTitle === "Alabama") this.yAxis = [3250658, 1314187, 458562];
+            else this.yAxis = [4873836, 507888, 567562]
+        }
+        let yAxis = this.yAxis;
+        let width = 700;
+        let height = 600;
+        let yAxisTitle = "Population";
+        if(this.smallDisplay === true) {
+            let total = yAxis[0] + yAxis[1] + yAxis[2];
+            this.yAxis = [yAxis[0]/total, yAxis[1]/total, yAxis[2]/total];
+            width = 300;
+            height = 300;
+            yAxisTitle = "% of Population"
         }
         let plotData = {
-            x: ["White", "Black", "Hispanic", "Other"],
+            x: ["White", "Black", "Other"],
             y: this.yAxis,
             type: 'bar',
             marker: { color: 'blue' },
         }
         let plotLayout = {
             title: this.graphTitle + ' Pop. by Race',
-            width: 700,
-            height: 600,
+            width: width,
+            height: height,
             xaxis: {title: "Race"},
-            yaxis: {title: "Population"},
+            yaxis: {title: yAxisTitle},
             datarevision: this.graphTitle,
         }
         return <Graphs key={this.graphTitle} data={[plotData]} layout={plotLayout}/>;

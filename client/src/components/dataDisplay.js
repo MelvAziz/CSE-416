@@ -3,7 +3,10 @@ import Graphs from "./plots.js"
 import axios from 'axios'
 import EconomicPage from './economicPage.js';
 import RacePage from './racePage.js';
+import OverviewPage from './overviewPage.js';
 import {Page, MapLevel, SortingMethod} from '../constants.js';
+import ElectionPage from './electionPage.js';
+
 
 class DataDisplay extends React.Component {
     constructor(props) {
@@ -37,29 +40,8 @@ class DataDisplay extends React.Component {
             display = <EconomicPage key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>
         else if (this.viewMode === Page.racePage) 
             display = <RacePage key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>
-        else if (this.viewMode === Page.electionPage) {
-            if (yAxis === undefined) {
-                if (this.props.featureData[0].includes("Massachusetts"))
-                    yAxis = [[2382202, 1167202, 81998], ["Joe Biden", "Donald Trump", "Other"]];
-                else if (this.props.featureData[0].includes("Alabama")) 
-                    yAxis = [[436746, 942154, 35338], ["Will Boyd", "Katie Britt", "Other"]];
-            }
-            let plotData = {
-                x: yAxis[1],
-                y: yAxis[0],
-                type: 'bar',
-                marker: { color: ['blue', 'red', 'orange'] },
-            }
-            let plotLayout = {
-                title: this.props.featureData[0] + ' Votes',
-                width: 700,
-                height: 600,
-                xaxis: {title: "Candidate"},
-                yaxis: {title: "Votes"},
-                datarevision: this.state.featureData[0],
-            }
-            display = <Graphs key={this.state.featureData[0]} data={[plotData]} layout={plotLayout}/>;
-        }
+        else if (this.viewMode === Page.electionPage) 
+            display = <ElectionPage key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>
         else if (this.viewMode === Page.ginglesPage) {
             const xData = [];
             const yDataDemocrat = [];
@@ -143,40 +125,40 @@ class DataDisplay extends React.Component {
             />
         }
         else if(this.viewMode === Page.overviewPage) { 
-            let stateName = this.state.fetchedData.state;
-            let attributes = this.state.fetchedData.attributes;
-            if(stateName !== undefined) {
-                let redistrictingParty = "Republican Party"
-                if(attributes["REDIST_PARTY"] === "DEM") 
-                    redistrictingParty = "Democratic Party"
-                let totalHouses = attributes["E0_25K22"]
-                                + attributes["E25_50K22"]
-                                + attributes["E50_75K22"]
-                                + attributes["E75_100K22"]
-                                + attributes["E100_125K22"]
-                                + attributes["E125_150K22"]
-                                + attributes["E150_200K22"]
-                                + attributes["E200K_MOR22"];                           
-                display = <div class="overview_container">
-                    <h3>{stateName.substring(0, 1).toUpperCase() + stateName.substr(1, stateName.length)}</h3>
-                    <p>Total Population: {attributes["TOT_POP22"]}</p>
-                    <p>Democrat Vote Share: {attributes["DEM_VOTE_SHARE"]}%</p>
-                    <p>Republican Vote Share: {attributes["REP_VOTE_SHARE"]}%</p>
-                    <p>Redistricting Party: {redistrictingParty}</p>
-                    <p>Race:</p>
-                    <p>White Population: {((attributes["WHT_NHSP22"]/attributes["TOT_POP22"])*100).toFixed(2)}%</p>
-                    <p>Black Population: {((attributes["BLK_NHSP22"]/attributes["TOT_POP22"])*100).toFixed(2)}%</p>
-                    <p>Economics:</p>
-                    <p>0-25K: {((attributes["E0_25K22"]/totalHouses)*100).toFixed(2)}%</p>
-                    <p>25-50K: {((attributes["E25_50K22"]/totalHouses)*100).toFixed(2)}%</p>
-                    <p>50-75K: {((attributes["E50_75K22"]/totalHouses)*100).toFixed(2)}%</p>
-                    <p>75-100K: {((attributes["E75_100K22"]/totalHouses)*100).toFixed(2)}%</p>
-                    <p>100-125K: {((attributes["E100_125K22"]/totalHouses)*100).toFixed(2)}%</p>
-                    <p>125-150K: {((attributes["E125_150K22"]/totalHouses)*100).toFixed(2)}%</p>
-                    <p>150-200K: {((attributes["E150_200K22"]/totalHouses)*100).toFixed(2)}%</p>
-                    <p>200K+: {((attributes["E200K_MOR22"]/totalHouses)*100).toFixed(2)}%</p>
-                </div>
-            }
+            display = <OverviewPage  key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>;
+            // let stateName = this.state.fetchedData.state;
+            // let attributes = this.state.fetchedData.attributes;
+            // if(stateName !== undefined) {
+            //     let redistrictingParty = "Republican Party"
+            //     if(attributes["REDIST_PARTY"] === "DEM") 
+            //         redistrictingParty = "Democratic Party"
+            //     let totalHouses = attributes["E0_25K22"]
+            //                     + attributes["E25_50K22"]
+            //                     + attributes["E50_75K22"]
+            //                     + attributes["E75_100K22"]
+            //                     + attributes["E100_125K22"]
+            //                     + attributes["E125_150K22"]
+            //                     + attributes["E150_MOR"];
+            //     display = <div class="overview_container">
+            //         <h3>{stateName.substring(0, 1).toUpperCase() + stateName.substr(1, stateName.length)}</h3>
+            //         <p>Total Population: {attributes["TOT_POP22"]}</p>
+            //         <p>Democrat Vote Share: {attributes["DEM_VOTE_SHARE"]}%</p>
+            //         <p>Republican Vote Share: {attributes["REP_VOTE_SHARE"]}%</p>
+            //         <p>Redistricting Party: {redistrictingParty}</p>
+            //         <p>Race:</p>
+            //         <p>White Population: {((attributes["WHT_NHSP22"]/attributes["TOT_POP22"])*100).toFixed(2)}%</p>
+            //         <p>Black Population: {((attributes["BLK_NHSP22"]/attributes["TOT_POP22"])*100).toFixed(2)}%</p>
+            //         <p>Economics:</p>
+            //         <p>0-25K: {((attributes["E0_25K22"]/totalHouses)*100).toFixed(2)}%</p>
+            //         <p>25-50K: {((attributes["E25_50K22"]/totalHouses)*100).toFixed(2)}%</p>
+            //         <p>50-75K: {((attributes["E50_75K22"]/totalHouses)*100).toFixed(2)}%</p>
+            //         <p>75-100K: {((attributes["E75_100K22"]/totalHouses)*100).toFixed(2)}%</p>
+            //         <p>100-125K: {((attributes["E100_125K22"]/totalHouses)*100).toFixed(2)}%</p>
+            //         <p>125-150K: {((attributes["E125_150K22"]/totalHouses)*100).toFixed(2)}%</p>
+            //         <p>150-200K: {((attributes["E150_200K22"]/totalHouses)*100).toFixed(2)}%</p>
+            //         <p>200K+: {((attributes["E200K_MOR22"]/totalHouses)*100).toFixed(2)}%</p>
+            //     </div>
+            // }
         }
         return (
             <div class="data-display">
