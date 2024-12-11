@@ -6,11 +6,13 @@ from gerrychain.constraints import contiguous
 from functools import partial
 import json
 import random
+import os
 
 
 state = sys.argv[1].lower()
-district_plan_index = int(sys.argv[2])
-random.seed(904 + district_plan_index)
+ensemble_plan_index = int(sys.argv[2])
+district_plan_index = int(sys.argv[3])
+random.seed(904 + 5000 * ensemble_plan_index + district_plan_index)
 num_districts = 0
 graph = None
 state_information_json_file = None
@@ -41,7 +43,7 @@ for population_attribute in state_information_dict["nodes"][0].keys():
 initial_partition = Partition.from_random_assignment(
     graph,
     n_parts=num_districts,
-    epsilon=0.1,
+    epsilon=0.05,
     pop_col="P0020001",
     updaters=aggregation_functions
 )
@@ -74,8 +76,11 @@ for district_index in range(0, num_districts):
     for precinct_index in list(precinct_district_mappings[9999].parts[district_index]):
         district_plan_data[district_index]["PRECINCT_INDEX_LIST"].append(
             precinct_index)
+prefix = f"/gpfs/projects/CSE416/Owls/{state}/district-plans-{ensemble_plan_index}"
+if not os.path.exists(prefix):
+    os.mkdir(prefix)
 district_plan_output_file = open(
-    f"/gpfs/projects/CSE416/Owls/{state}/district-plans/{state}-district-plan-{district_plan_index}.json", "w")
+    f"/gpfs/projects/CSE416/Owls/{state}/district-plans-{ensemble_plan_index}/{state}-district-plan-{district_plan_index}.json", "w")
 json.dump(district_plan_data, district_plan_output_file)
 state_information_json_file.close()
 district_plan_output_file.close()
