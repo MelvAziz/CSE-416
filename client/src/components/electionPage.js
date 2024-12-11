@@ -18,11 +18,17 @@ class ElectionPage extends React.Component {
         let width = 700;
         let height = 600;
         let yAxisTitle = "Votes";
+        let title = this.graphTitle + " Election Results"
         if(this.smallDisplay === true) {
-            width = 300;
-            height = 300;
-            let total = yAxis[0][0] +  yAxis[0][1] +  yAxis[0][2];
-            yAxis[0] = [yAxis[0][0]/total, yAxis[0][1]/total, yAxis[0][2]/total];
+            if (this.graphTitle.includes("Massachusetts"))
+                yAxis = [[2382202, 1167202], ["Dem", "Rep"]];
+            else if (this.graphTitle.includes("Alabama")) 
+                yAxis = [[436746, 942154], ["Dem", "Rep"]];
+            width = 210;
+            height = 325;
+            title = "Vote Share"
+            let total = yAxis[0][0] +  yAxis[0][1];
+            yAxis[0] = [yAxis[0][0]/total, yAxis[0][1]/total];
             yAxisTitle = "% of Votes";
         }
         let plotData = {
@@ -32,7 +38,7 @@ class ElectionPage extends React.Component {
             marker: { color: ['blue', 'red', 'orange'] },
         }
         let plotLayout = {
-            title: this.graphTitle + ' Votes',
+            title: title,
             width: width,
             height: height,
             xaxis: {title: "Candidate"},

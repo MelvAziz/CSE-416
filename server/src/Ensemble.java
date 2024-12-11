@@ -8,6 +8,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
+
 import jakarta.ws.rs.core.Response;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -97,10 +99,37 @@ public class Ensemble {
         scatterMarker.addProperty("color", "red");
         scatterPlot.add("marker", scatterMarker);
 
-        //Add current points later
+        Double[] currentDistrictValues = new Double[districtNumber];
+        MongoCollection<Document> mapsCollection = database.getCollection("maps");
+        Document mapData = new Document();
+        if(state.compareTo("Alabama") == 0) {
+            mapData = mapsCollection.find(eq("name", "alabama_congressional_districts")).first();
+        }
+        else mapData = mapsCollection.find(eq("name", "massachusetts_congressional_districts")).first();
+        List<Document> features = (List<Document>)(mapData.get("features"));
+        for (int i = 0; i < districtNumber; i++) {
+            double currentData = 0;
+            mapData = (Document)(((Document)features.get(i)).get("properties"));
+            double totalPop = Double.parseDouble((mapData.get("TOT_POP22")).toString());
+            double totalHous = Double.parseDouble((mapData.get("TOT_HOUS22")).toString());
+            if(sort.compareTo("wht") == 0)              currentData = Double.parseDouble(mapData.get("WHT_NHSP22").toString()) /totalPop;
+            else if(sort.compareTo("blk") == 0)         currentData = Double.parseDouble(mapData.get("BLK_NHSP22").toString()) /totalPop;
+            else if(sort.compareTo("E0_25k") == 0)      currentData = (Double.parseDouble(mapData.get("LESS_10K22").toString()) + Double.parseDouble(mapData.get("E10K_15K22").toString()) + Double.parseDouble(mapData.get("E15K_20K22").toString()) + Double.parseDouble(mapData.get("E20K_25K22").toString())) /totalHous;
+            else if(sort.compareTo("E25_50k") == 0)     currentData = (Double.parseDouble(mapData.get("E25K_30K22").toString()) + Double.parseDouble(mapData.get("E30K_35K22").toString()) + Double.parseDouble(mapData.get("E35K_40K22").toString()) + Double.parseDouble(mapData.get("E40K_45K22").toString()) + Double.parseDouble(mapData.get("E45K_50K22").toString())) /totalHous;
+            else if(sort.compareTo("E50_75k") == 0)     currentData = (Double.parseDouble(mapData.get("E50K_60K22").toString()) + Double.parseDouble(mapData.get("E60K_75K22").toString())) /totalHous;
+            else if(sort.compareTo("E75_100k") == 0)    currentData = (Double.parseDouble(mapData.get("E75K_100K22").toString())) /totalHous;
+            else if(sort.compareTo("E100_125k") == 0)   currentData = (Double.parseDouble(mapData.get("E100_125K22").toString())) /totalHous;
+            else if(sort.compareTo("E125_150k") == 0)   currentData = (Double.parseDouble(mapData.get("E125_150K22").toString())) /totalHous;
+            else if(sort.compareTo("E150k_MOR") == 0)   currentData = (Double.parseDouble(mapData.get("E150_200K22").toString()) + Double.parseDouble(mapData.get("E200K_MOR22").toString())) /totalHous;
+            else if(sort.compareTo("urb") == 0)         currentData = Double.parseDouble(mapData.get("URBAN_POP").toString())    /totalPop;
+            else if(sort.compareTo("sub") == 0)         currentData = Double.parseDouble(mapData.get("SUBURBAN_POP").toString()) /totalPop;
+            else if(sort.compareTo("rur") == 0)         currentData = Double.parseDouble(mapData.get("RURAL_POP").toString())    /totalPop;
+            currentDistrictValues[i] = currentData;
+        }
+        Arrays.sort(currentDistrictValues);
         for (int i = 0; i < districtNumber; i++) {
             scatterPlot.getAsJsonArray("x").add(String.valueOf(i));
-            scatterPlot.getAsJsonArray("y").add(Double.parseDouble(((Document)(boxPlotData.get(""+i+""))).get("MED").toString()));
+            scatterPlot.getAsJsonArray("y").add(currentDistrictValues[i]);
         
         }
 
@@ -108,8 +137,18 @@ public class Ensemble {
         JsonObject plotLayout = new JsonObject();
         plotLayout.addProperty("title", "Distribution by Race");
         JsonObject yaxis = new JsonObject();
-        if(sort.compareTo("blk") == 0)       yaxis.addProperty("title", "% of Population Black");
-        else if(sort.compareTo("wht") == 0)  yaxis.addProperty("title", "% of Population White");
+        if(sort.compareTo("blk") == 0)              yaxis.addProperty("title","% of Population Black");
+        else if(sort.compareTo("wht") == 0)         yaxis.addProperty("title","% of Population White");
+        else if(sort.compareTo("E0_25k") == 0)      yaxis.addProperty("title","% with income >25K");
+        else if(sort.compareTo("E25_50k") == 0)     yaxis.addProperty("title","% with income 25-50K");
+        else if(sort.compareTo("E50_75k") == 0)     yaxis.addProperty("title","% with income 50-75K");
+        else if(sort.compareTo("E75_100k") == 0)    yaxis.addProperty("title","% with income 75-100K");
+        else if(sort.compareTo("E100_125k") == 0)   yaxis.addProperty("title","% with income 100-125K");
+        else if(sort.compareTo("E125_150k") == 0)   yaxis.addProperty("title","% with income 125-150K");
+        else if(sort.compareTo("E150k_MOR") == 0)   yaxis.addProperty("title","% with income <150k");
+        else if(sort.compareTo("urb") == 0)         yaxis.addProperty("title","% of Population Urban");
+        else if(sort.compareTo("sub") == 0)         yaxis.addProperty("title","% of Population Suburban");
+        else if(sort.compareTo("rur") == 0)         yaxis.addProperty("title","% of Population Rural");
 
         JsonArray yaxisRange = new JsonArray();
         yaxisRange.add(0);

@@ -125,40 +125,41 @@ class DataDisplay extends React.Component {
             />
         }
         else if(this.viewMode === Page.overviewPage) { 
-            display = <OverviewPage  key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>;
-            // let stateName = this.state.fetchedData.state;
-            // let attributes = this.state.fetchedData.attributes;
-            // if(stateName !== undefined) {
-            //     let redistrictingParty = "Republican Party"
-            //     if(attributes["REDIST_PARTY"] === "DEM") 
-            //         redistrictingParty = "Democratic Party"
-            //     let totalHouses = attributes["E0_25K22"]
-            //                     + attributes["E25_50K22"]
-            //                     + attributes["E50_75K22"]
-            //                     + attributes["E75_100K22"]
-            //                     + attributes["E100_125K22"]
-            //                     + attributes["E125_150K22"]
-            //                     + attributes["E150_MOR"];
-            //     display = <div class="overview_container">
-            //         <h3>{stateName.substring(0, 1).toUpperCase() + stateName.substr(1, stateName.length)}</h3>
-            //         <p>Total Population: {attributes["TOT_POP22"]}</p>
-            //         <p>Democrat Vote Share: {attributes["DEM_VOTE_SHARE"]}%</p>
-            //         <p>Republican Vote Share: {attributes["REP_VOTE_SHARE"]}%</p>
-            //         <p>Redistricting Party: {redistrictingParty}</p>
-            //         <p>Race:</p>
-            //         <p>White Population: {((attributes["WHT_NHSP22"]/attributes["TOT_POP22"])*100).toFixed(2)}%</p>
-            //         <p>Black Population: {((attributes["BLK_NHSP22"]/attributes["TOT_POP22"])*100).toFixed(2)}%</p>
-            //         <p>Economics:</p>
-            //         <p>0-25K: {((attributes["E0_25K22"]/totalHouses)*100).toFixed(2)}%</p>
-            //         <p>25-50K: {((attributes["E25_50K22"]/totalHouses)*100).toFixed(2)}%</p>
-            //         <p>50-75K: {((attributes["E50_75K22"]/totalHouses)*100).toFixed(2)}%</p>
-            //         <p>75-100K: {((attributes["E75_100K22"]/totalHouses)*100).toFixed(2)}%</p>
-            //         <p>100-125K: {((attributes["E100_125K22"]/totalHouses)*100).toFixed(2)}%</p>
-            //         <p>125-150K: {((attributes["E125_150K22"]/totalHouses)*100).toFixed(2)}%</p>
-            //         <p>150-200K: {((attributes["E150_200K22"]/totalHouses)*100).toFixed(2)}%</p>
-            //         <p>200K+: {((attributes["E200K_MOR22"]/totalHouses)*100).toFixed(2)}%</p>
-            //     </div>
-            // }
+            // display = <OverviewPage  key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>;
+            let stateName = this.state.fetchedData.state;
+            let attributes = this.state.fetchedData.attributes;
+            let representatives = this.state.fetchedData.representatives;
+
+            if(stateName !== undefined) {
+                let redistrictingParty = "Republican Party"
+                if(attributes["REDIST_PARTY"] === "DEM") 
+                    redistrictingParty = "Democratic Party"
+
+                display = <div class="overview_container">
+                    <h3>{stateName.substring(0, 1).toUpperCase() + stateName.substr(1, stateName.length)}</h3>
+                        <p>Total Population: {attributes["TOT_POP22"]}</p>
+                        <p>Redistricting Party: {redistrictingParty}</p>
+                        <div class="summary_table_container">
+                            <table class="ensemble_plan_container">
+                                <thead><tr><th>Ensemble ID</th><th>Number of District Plans</th><th>Equality Threshold</th></tr></thead>
+                                <tbody>
+                                    <tr><td>0</td><td>5,000</td><td>10%</td></tr>
+                                    <tr><td>1</td><td>5,000</td><td>10%</td></tr>
+                                    <tr><td>2</td><td>5,000</td><td>10%</td></tr>
+                                    <tr><td>3</td><td>5,000</td><td>10%</td></tr>
+                                    <tr><td>4</td><td>5,000</td><td>10%</td></tr>
+                                </tbody>
+                            </table>
+                            <table class="ensemble_plan_container">
+                                <thead><tr><th>District Number</th><th>Representative</th></tr></thead>
+                                <tbody>
+                                    {representatives.map((rep, index) => <tr><td>{index+1}</td><td>{rep}</td></tr>)}
+                                </tbody>
+                            </table>
+                        </div>
+                        <OverviewPage  key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>
+                 </div>
+            }
         }
         return (
             <div class="data-display">

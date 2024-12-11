@@ -3,6 +3,7 @@ import Graphs from "./plots.js"
 import EconomicPage from './economicPage.js';
 import RacePage from './racePage.js';
 import ElectionPage from './electionPage.js';
+import RegionPage from './regionPage.js';
 class OverviewPage extends React.Component {
     constructor(props) {
         super(props);
@@ -14,6 +15,7 @@ class OverviewPage extends React.Component {
             <RacePage graphTitle={this.graphTitle} smallDisplay={true} />
             <EconomicPage graphTitle={this.graphTitle} smallDisplay={true} />
             <ElectionPage graphTitle={this.graphTitle} smallDisplay={true}/>
+            <RegionPage graphTitle={this.graphTitle} smallDisplay={true}/>
         </div>;
     }
 }

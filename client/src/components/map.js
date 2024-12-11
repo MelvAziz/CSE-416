@@ -357,6 +357,14 @@ class Map extends React.Component {
                 }
                 else document.getElementById("map_popup").style.visibility = 'hidden';
             })
+            if(this.props.selectedElement === feature.properties.NAME) {
+                selectedFeature = layer;
+                if (selectedFeature !== undefined) selectedFeature.setStyle({fillColor: selectedFeatureColor, fillOpacity: opacity});
+                selectedFeature = layer;
+                selectedFeatureColor = layer.options.fillColor;
+                layer.setStyle({fillColor: "black", fillOpacity: "1"});
+                console.log(selectedFeature);
+            }
             layer.on('click', function (e) {
                 if (viewMode === Page.selectStatePage) {
                     switchState(feature.properties.name);

@@ -16,11 +16,13 @@ class RacePage extends React.Component {
         let width = 700;
         let height = 600;
         let yAxisTitle = "Population";
+        let title = this.graphTitle + ' Pop. by Race';
         if(this.smallDisplay === true) {
             let total = yAxis[0] + yAxis[1] + yAxis[2];
             this.yAxis = [yAxis[0]/total, yAxis[1]/total, yAxis[2]/total];
-            width = 300;
-            height = 300;
+            title = 'Pop. by Race';
+            width = 225;
+            height = 325;
             yAxisTitle = "% of Population"
         }
         let plotData = {
@@ -30,7 +32,7 @@ class RacePage extends React.Component {
             marker: { color: 'blue' },
         }
         let plotLayout = {
-            title: this.graphTitle + ' Pop. by Race',
+            title: title,
             width: width,
             height: height,
             xaxis: {title: "Race"},

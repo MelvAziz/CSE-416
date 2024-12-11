@@ -16,21 +16,23 @@ class EconomicPage extends React.Component {
         let width = 700;
         let height = 600;
         let yAxisTitle = "# of Households";
+        let title = this.graphTitle.split('_')[0] + ' Income Distribution';
         if(this.smallDisplay === true) {
             let total = yAxis[0] + yAxis[1] + yAxis[2] + yAxis[3] + yAxis[4] + yAxis[5] + yAxis[6];
             this.yAxis = [yAxis[0]/total, yAxis[1]/total, yAxis[2]/total, yAxis[3]/total, yAxis[4]/total, yAxis[5]/total, yAxis[6]/total]
-            width = 350;
-            height = 300;
+            width = 310;
+            height = 325;
             yAxisTitle = "% of Households";
+            title = "Income Distribution";
         }
         let plotData = {
-            x: ["<25K", "25K-50K", "50K-75K", "75K-100K", "100K-125K", "125K-150K", ">150K"],
+            x: ["<25K", "25K-50K", "50K-75K", "75K-100K", "100-125K", "125-150K", ">150K"],
             y: this.yAxis,
             type: 'bar',
             marker: { color: 'green' },
         }
         let plotLayout = {
-            title: this.graphTitle.split('_')[0] + ' Income Distribution',
+            title: title,
             width: width,
             height: height,
             xaxis: {title: "Economic Brackets"},

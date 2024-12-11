@@ -17,7 +17,8 @@ class MapContainer extends React.Component {
       this.setSort = this.setSort.bind(this);
       this.setMapLevel = this.setMapLevel.bind(this);
       this.setRange = this.setRange.bind(this);
-      this.state = {state: this.props.selectedState, viewMode: this.props.viewMode, sortBy: SortingMethod.medianIncome, min: 3, max: 10};
+      this.setSelectedFeature = this.setSelectedFeature.bind(this);
+      this.state = {state: this.props.selectedState, viewMode: this.props.viewMode, sortBy: SortingMethod.medianIncome, min: 3, max: 10, selectedFeature: null};
   }
   setMapLevel(option) {
     this.setMapLevel(option);
@@ -29,16 +30,23 @@ class MapContainer extends React.Component {
   setRange(e) {
     this.setState({min: e.minValue, max: e.maxValue})
   }
+  setSelectedFeature(name) {
+    this.setState({selectedFeature: name})
+  }
   render() {
       let data = this.data;
       let electionModeSelected = this.state.sortBy === SortingMethod.bothPartiesElection || this.state.sortBy === SortingMethod.democraticElection || this.state.sortBy === SortingMethod.republicanElection;
       let raceModeSelected = this.state.sortBy === SortingMethod.whiteRace || this.state.sortBy === SortingMethod.blackRace || this.state.sortBy === SortingMethod.hispanicRace;
       if (this.state.viewMode === Page.electionPage && !electionModeSelected) this.setState({sortBy: SortingMethod.bothPartiesElection});
       if (this.state.viewMode === Page.racePage && !raceModeSelected) this.setState({sortBy: SortingMethod.whiteRace});
+      let selectedElement = null;
+      if(this.state.viewMode === Page.overviewPage) {
+        selectedElement = this.state.selectedFeature;
+      }
       return (
           <div class="map-options">
               <Map 
-                key={"_" + data.name + "_" + this.mapLevel + "_" + this.state.sortBy + "_" + this.state.min + "_" + this.state.max}
+                key={"_" + data.name + "_" + this.mapLevel + "_" + this.state.sortBy + "_" + this.state.min + "_" + this.state.max + "_" + selectedElement}
                 switchState={this.props.switchState} 
                 setData={this.setData} 
                 min={this.state.min} 
@@ -48,9 +56,11 @@ class MapContainer extends React.Component {
                 data={data} 
                 viewMode={this.state.viewMode} 
                 sortBy={this.state.sortBy}
+                selectedElement={selectedElement}
               />
               <MapMenu 
                 selectedState={this.state.state} 
+                setSelectedFeature={this.setSelectedFeature}
                 setRange={this.setRange} 
                 setSort={this.setSort} 
                 setCheck={this.setCheck} 
@@ -59,6 +69,7 @@ class MapContainer extends React.Component {
                 viewMode={this.state.viewMode} 
                 setMapLevel={this.setMapLevel} 
                 mapLevel={this.mapLevel}
+                overviewData={data.features}
               />
           </div>
       ); 

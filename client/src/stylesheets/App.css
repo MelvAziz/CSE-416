@@ -30,7 +30,7 @@
   color: #61dafb;
 }
 
-p {
+p,tr,td {
   font-size: 14px;
 }
 
@@ -114,7 +114,7 @@ p {
 }
 #main_map {
   /* visibility: hidden; */
-  height: 60vh;
+  height: 56vh;
   width: 40vw; 
   position: absolute;
   left: 1rem;
@@ -138,7 +138,7 @@ p {
 }
 
 #overview_map {
-  height: 86vh;
+  height: 56vh;
   /* width:  calc(100vw - 2px); */
   width: 48vw; 
   position: absolute;
@@ -193,8 +193,8 @@ p {
   font-size: 14px;
   position: absolute;
   left: 1rem;
-  width: 20rem;
-  bottom: calc(2vh - 2px);
+  width: 30rem;
+  bottom: calc(32vh - 2px);
   max-height: 20%;
   padding-bottom: 1rem;
   z-index: 10000;
@@ -214,11 +214,6 @@ p {
   font-size: 20px;
 }
 
-.map_menu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 .map_subdivisions {
   display: flex;
@@ -266,13 +261,28 @@ p {
 /* Map Menu  CSS */
 
 .map_menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: absolute;
   left: 1rem;
   bottom: 1rem;
   border-width: 1px;
   border-style: solid;
-  height: 24vh;
+  height: 28vh;
   width: max(40vw, 30rem);
+}
+.overview_map_menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  border-width: 1px;
+  border-style: solid;
+  height: 28vh;
+  width: max(48vw, 30rem);
 }
 
 .map_type_container {
@@ -436,4 +446,13 @@ p {
 
 .right_sort_button_selected {
   background-color: green !important;
+}
+
+.ensemble_plan_container {
+  width: 400px;
+}
+
+.summary_table_container {
+  display: flex;
+  justify-content: space-around;
 }
