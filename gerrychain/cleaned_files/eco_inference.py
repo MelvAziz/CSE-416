@@ -178,6 +178,7 @@ def ei_analysis(type, state, precincts, elec_type):
     # Check if each row sum is close to 1.0
     is_close = np.isclose(row_sums, 1.0)
     values_clean = values[is_close]
+    df = df[is_close]
 
 
     demographic_group_names_rbyc = ['0-25K', '25-50K', '50-75K', '75K-100K', '100-125K','125K-150K', '150K+']
