@@ -8,6 +8,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
+
 import jakarta.ws.rs.core.Response;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -33,6 +35,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.io.IOException;
 import java.nio.file.Paths;
+// import java.util.stream.Gatherer;
 // import javax.swing.text.Document;
 
 @Path("/attributes")
@@ -45,13 +48,31 @@ public class Attributes {
         MongoClient client = MongoClients.create(connectionString);
         MongoDatabase database = client.getDatabase("CSE416");
         MongoCollection<Document> statesCollection = database.getCollection("states");
-        MongoCollection<Document> mapCollection = database.getCollection("map");
+        MongoCollection<Document> mapCollection = database.getCollection("maps");
         Document dataReturned = new Document();
         if(type.compareTo("summary") == 0) {
-            if(state.compareTo("alabama") == 0 ) 
+            Document mapData = new Document();
+            int districtNumber = 0;
+            if(state.compareTo("alabama") == 0 ) {
                 dataReturned = statesCollection.find(eq("state", "alabama")).first();
-            else if(state.compareTo("massachusetts") == 0 ) 
+                mapData = mapCollection.find(eq("name", "alabama_congressional_districts")).first();
+                districtNumber = 7;
+            }
+            else if(state.compareTo("massachusetts") == 0 ) {
                 dataReturned = statesCollection.find(eq("state", "massachusetts")).first();
+                mapData = mapCollection.find(eq("name", "massachusetts_congressional_districts")).first();
+                districtNumber = 9;
+
+            }
+            List<Document> features = (List<Document>)(mapData.get("features"));
+            String[] currentRepresentatives = new String[districtNumber];
+            for (int i = 0; i < districtNumber; i++) {
+                double currentData = 0;
+                mapData = (Document)(((Document)features.get(i)).get("properties"));
+                currentRepresentatives[Integer.parseInt((mapData.get("ID")).toString()) - 1] = (mapData.get("REPRESENTATIVE")).toString() + " (" + (mapData.get("PARTY")).toString() + ")";
+            }
+            dataReturned.append("representatives", currentRepresentatives);
+            
             Gson gson = new Gson();
             String json = gson.toJson(dataReturned);
             return Response.ok(json)

@@ -95,6 +95,7 @@ class StateDistrictAnalyzer extends React.Component {
                 {
                     this.setState({ currentMap: response.data, updated: true})
                 });
+            //We'll make a live call here at some point instead of calling it earlier 
             else if(this.state.selectedState === "Alabama")  this.setState({ currentMap: this.state.alabamaPrecinctMap, updated: true});     
             else this.setState({updated: true, currentMap: this.state.massachusettsPrecinctMap});  
         }
@@ -140,7 +141,7 @@ class StateDistrictAnalyzer extends React.Component {
                     data={data} 
                     zoom={zoom} 
                     selectedState={this.state.selectedState}
-                />;
+                />
                 {dataPage}
             </div>
         );

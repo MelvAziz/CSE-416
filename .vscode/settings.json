@@ -1,5 +1,7 @@
 {
-    "workbench.preferredDarkColorTheme": "Default High Contrast Light",
-    "workbench.preferredHighContrastColorTheme": "Default High Contrast Light",
-    "workbench.colorTheme": "Default Light Modern"
+    "workbench.preferredDarkColorTheme": "Default Dark Modern",
+    "workbench.preferredHighContrastColorTheme": "Default Dark Modern",
+    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.preferredHighContrastLightColorTheme": "Default Dark Modern",
+    "workbench.preferredLightColorTheme": "Default Dark Modern"
 }
