@@ -194,7 +194,7 @@ class MapMenu extends React.Component {
             mapMenuClass = "overview_map_menu";
             heatmap_type = 
             <table>
-                <thead><tr><th>District Number</th><th>Representative</th><th>Party</th><th>Ethnicity</th><th>Avg. Inc($)</th><th>Poverty(%)</th><th>Urban(%)</th><th>Suburban(%)</th><th>Rural(%)</th><th>Democratic(%)</th><th>Republican(%)</th></tr></thead>
+                <thead><tr><th>District Number</th><th>Representative</th><th>Party</th><th>Avg. Inc($)</th><th>Poverty(%)</th><th>Urban(%)</th><th>Suburban(%)</th><th>Rural(%)</th><th>Democratic(%)</th><th>Republican(%)</th></tr></thead>
                 <tbody>
                     {this.props.overviewData.map((district, index)=> {
                         function readableNum(x) {
@@ -256,7 +256,6 @@ class MapMenu extends React.Component {
                         <td>{district.properties.ID}</td>
                         <td>{district.properties["REPRESENTATIVE"]}</td>
                         <td>{district.properties["PARTY"]}</td>
-                        <td>{district.properties["REPRESENTATIVE_RACE"]}</td>
                         <td>${readableNum(location.toFixed(0))}</td>
                         <td>{((povertyLine/district.properties["TOT_HOUS22"])*100).toFixed(2)}%</td>
                         <td>{((district.properties["URBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
@@ -264,10 +263,6 @@ class MapMenu extends React.Component {
                         <td>{((district.properties["RURAL_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
                         <td>{((demVotes/totalVotes)*100).toFixed(2)}%</td>
                         <td>{((repVotes/totalVotes)*100).toFixed(2)}%</td>
-
-
-
-
                     </tr>
                     }
                     )}
