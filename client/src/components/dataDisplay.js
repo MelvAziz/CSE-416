@@ -4,6 +4,7 @@ import axios from 'axios'
 import EconomicPage from './economicPage.js';
 import RacePage from './racePage.js';
 import OverviewPage from './overviewPage.js';
+import KDEChart from './eiPlots.js';
 import {Page, MapLevel, SortingMethod} from '../constants.js';
 import ElectionPage from './electionPage.js';
 
@@ -113,8 +114,7 @@ class DataDisplay extends React.Component {
             display = <Graphs data={plotData} layout={plotLayout}/>
         }
         else if (this.viewMode === Page.ecologicalInferencePage) {
-            //Placeholder
-            display = <img className="ei=display" src={require("../graphs/Density1.png")} alt={"EI display"}/>
+            <KDEChart data={dummyData} />
         }
         else if (this.viewMode === Page.ensemblePage) { 
             display = 
