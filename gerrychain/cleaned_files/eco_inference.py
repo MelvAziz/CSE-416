@@ -72,7 +72,7 @@ def ei_analysis(type, state, precincts, elec_type):
     df['pct_hispanic'] = df['Hispanic'] / df['adjusted_total']
     values = df[['pct_white', 'pct_black', 'pct_hispanic']]
     row_sums = values.sum(axis=1)  # Compute the sum of each row
-
+    print(row_sums.shape)
     # Check if each row sum is close to 1.0
     is_close = np.isclose(row_sums, 1.0)
     values_clean = values[is_close]
@@ -81,17 +81,54 @@ def ei_analysis(type, state, precincts, elec_type):
     demographic_group_names_rbyc = ['white', 'black', 'hispanic']
 
   elif type == "regional":
-    df['adjusted_total'] = (df['Rural'] + df['Urban'])
-    df['pct_rural'] = df['Rural'] / df['adjusted_total']
-    df['pct_urban'] = df['Urban'] / df['adjusted_total']
-    values = df[['pct_rural', 'pct_urban']]
+
+    # Initialize the new columns with 0
+    df[['rural_pop', 'suburban_pop', 'urban_pop']] = 0
+
+    # Use .loc to set values conditionally
+    df.loc[df['REGION'] == 'S', 'suburban_pop'] = df['Total'].astype(int)
+    df.loc[df['REGION'] == 'U', 'urban_pop'] = df['Total'].astype(int)
+    df.loc[df['REGION'] == 'R', 'rural_pop'] = df['Total'].astype(int)
+
+    # Check for "U" regions and non-zero sum
+    if df['REGION'].isin(['U']).any():
+        print("Regions with 'U' exist.")
+        urban_sum = df.loc[df['REGION'] == 'U', 'urban_pop'].sum()
+        if urban_sum != 0:
+            print("The sum of urban populations for 'U' regions is not zero.")
+        else:
+            print("Warning: The sum of urban populations for 'U' regions is zero.")
+    else:
+        print("No regions with 'U' found.")
+
+    df['adjusted_total'] = df['rural_pop'] + df['suburban_pop'] + df['urban_pop']
+    df['pct_rural'] = df['rural_pop'] / df['adjusted_total']
+    df['pct_suburban'] = df['suburban_pop'] / df['adjusted_total']
+    df['pct_urban'] = df['urban_pop'] / df['adjusted_total']
+
+    values = df[['pct_rural', 'pct_suburban','pct_urban']]
     row_sums = values.sum(axis=1)
 
     # Check if each row sum is close to 1.0
     is_close = np.isclose(row_sums, 1.0)
+    rows_not_close = df[~is_close]
+    print("\nRows where the sum is not close to 1.0:")
+    print(rows_not_close)
     values_clean = values[is_close]
 
-    demographic_group_names_rbyc = ['rural', 'urban']
+    # Identify columns with sum equal to 0
+    zero_sum_columns = values_clean.columns[values_clean.sum(axis=0) == 0]
+
+    # Drop columns with sum equal to 0
+    values_clean = values_clean.drop(zero_sum_columns, axis=1)
+
+    # Get a list of remaining column names
+    remaining_columns = values_clean.columns.tolist()
+
+    print(values_clean.head(10))
+    df = df[is_close]
+
+    demographic_group_names_rbyc = remaining_columns
 
   elif type == "economic":
     '''
@@ -141,15 +178,13 @@ def ei_analysis(type, state, precincts, elec_type):
     # Check if each row sum is close to 1.0
     is_close = np.isclose(row_sums, 1.0)
     values_clean = values[is_close]
-    
+    df = df[is_close]
+
 
     demographic_group_names_rbyc = ['0-25K', '25-50K', '50-75K', '75K-100K', '100-125K','125K-150K', '150K+']
 
   else:
     raise ValueError
-
-  #percentage of groups
-  group_fractions_rbyc = np.array(values_clean).T
 
   if state == "mass":
     if elec_type != "senator":
@@ -160,7 +195,7 @@ def ei_analysis(type, state, precincts, elec_type):
       candidate_names_rbyc = ['biden', 'trump']
     else:
       df['vote_total'] = df['Markey_D'] + df['Oconnor_R']
-      df['pct_vote_markey'] = df['Markey_d'] / df['vote_total']
+      df['pct_vote_markey'] = df['Markey_D'] / df['vote_total']
       df['pct_vote_oconnor'] = df['Oconnor_R'] / df['vote_total']
       values = df[['pct_vote_markey', 'pct_vote_oconnor']]
       candidate_names_rbyc = ['markey', 'oconnor']
@@ -190,11 +225,17 @@ def ei_analysis(type, state, precincts, elec_type):
     # Check if each row sum is close to 1.0
     is_close = np.isclose(row_sums, 1.0)
     votes_clean = values[is_close]
+    values_clean = values_clean[is_close]
     df = df[is_close]
+
+    
+
 
 
   precinct_pops = np.array(df['adjusted_total'].astype(int))
   precinct_names = np.array(df['UNIQUE_ID'])
+  #percentage of groups
+  group_fractions_rbyc = np.array(values_clean).T
   votes_fractions_rbyc = np.array(votes_clean).T
 
   print(f"group_fractions_rbyc shape: {group_fractions_rbyc.shape}")
@@ -210,6 +251,8 @@ def ei_analysis(type, state, precincts, elec_type):
        candidate_names=candidate_names_rbyc,
        #precinct_names=precinct_names,
   )
+
+  #ei.plot()
 
   data = ei.sampled_voting_prefs
   processed_data = []
