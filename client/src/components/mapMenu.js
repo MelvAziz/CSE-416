@@ -83,13 +83,39 @@ class MapMenu extends React.Component {
         else if(this.props.viewMode === Page.racePage)  {
             if(this.state.sortBy === SortingMethod.whiteRace)         selectedSort[0] = "map_sort_button_selected";
             else if(this.state.sortBy === SortingMethod.blackRace)    selectedSort[1] = "map_sort_button_selected";
-            else if(this.state.sortBy === SortingMethod.hispanicRace) selectedSort[2] = "map_sort_button_selected";
+            // else if(this.state.sortBy === SortingMethod.hispanicRace) selectedSort[2] = "map_sort_button_selected";
             
             heatmap_type = 
             <div class="map_sort_container map_race_sort_container">
                 <input  class={"map_sort_buttons " + selectedSort[0]} type="button" value="White" onClick={(e) =>       this.switchSort(SortingMethod.whiteRace)}/>
                 <input  class={"map_sort_buttons " + selectedSort[1]} type="button" value="Black" onClick={(e) =>       this.switchSort(SortingMethod.blackRace)}/> 
-                <input  class={"map_sort_buttons " + selectedSort[2]} type="button" value="Hispanic" onClick={(e) =>    this.switchSort(SortingMethod.hispanicRace)}/>
+                {/* <input  class={"map_sort_buttons " + selectedSort[2]} type="button" value="Hispanic" onClick={(e) =>    this.switchSort(SortingMethod.hispanicRace)}/> */}
+            </div>
+        }
+        else if(this.props.viewMode === Page.ginglesPage)  {
+            if(this.state.sortBy === SortingMethod.whiteRace)               selectedSort[0] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.whiteRaceIncome)    selectedSort[1] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.blackRace)          selectedSort[2] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.blackRaceIncome)    selectedSort[3] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.politicalIncome)    selectedSort[4] = "map_sort_button_selected";
+            else if(this.state.sortBy === SortingMethod.urbanRural)         selectedSort[5] = "map_sort_button_selected";
+
+            
+            heatmap_type = 
+            <div class="map_sort_container map_race_sort_container">
+                <div class="col_1">
+                    <input  class={"map_sort_buttons " + selectedSort[0]} type="button" value="White" onClick={(e) =>               this.switchSort(SortingMethod.whiteRace)}/>
+                    <input  class={"map_sort_buttons " + selectedSort[1]} type="button" value="White/Income" onClick={(e) =>        this.switchSort(SortingMethod.whiteRaceIncome)}/>
+                </div>
+                <div class="col_2">
+                    <input  class={"map_sort_buttons " + selectedSort[2]} type="button" value="Black" onClick={(e) =>               this.switchSort(SortingMethod.blackRace)}/> 
+                    <input  class={"map_sort_buttons " + selectedSort[3]} type="button" value="Black/Income" onClick={(e) =>        this.switchSort(SortingMethod.blackRaceIncome)}/> 
+                </div>
+                <div class="col_3">
+                    <input  class={"map_sort_buttons " + selectedSort[4]} type="button" value="Political/Income" onClick={(e) =>    this.switchSort(SortingMethod.politicalIncome)}/>
+                    <input  class={"map_sort_buttons " + selectedSort[5]} type="button" value="Urban/Suburban/Rural" onClick={(e) =>    this.switchSort(SortingMethod.urbanRural)}/>
+                </div>
+
             </div>
         }
         else if(this.props.viewMode === Page.electionPage) {
@@ -105,10 +131,10 @@ class MapMenu extends React.Component {
                 <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[2]} type="button" value={elecTitle + "(Republican)"} onClick={(e) =>    this.switchSort(SortingMethod.republicanElection)}/>
             </div>
         }
-        else if(this.props.viewMode === Page.ecologicalInferencePage || this.props.viewMode === Page.ginglesPage || this.props.viewMode === Page.ensemblePage) {
+        else if(this.props.viewMode === Page.ecologicalInferencePage || this.props.viewMode === Page.ensemblePage) {
             if(this.state.sortBy === SortingMethod.whiteRace)         selectedSort[0] = "map_sort_button_selected";
             else if(this.state.sortBy === SortingMethod.blackRace)    selectedSort[1] = "map_sort_button_selected";
-            else if(this.state.sortBy === SortingMethod.hispanicRace) selectedSort[2] = "map_sort_button_selected";
+            // else if(this.state.sortBy === SortingMethod.hispanicRace) selectedSort[2] = "map_sort_button_selected";
             else if(this.state.sortBy === SortingMethod.E0to25)       selectedSort[6] = "map_sort_button_selected";
             else if(this.state.sortBy === SortingMethod.E25to50)      selectedSort[7] = "map_sort_button_selected";
             else if(this.state.sortBy === SortingMethod.E50to75)      selectedSort[8] = "map_sort_button_selected";
