@@ -6,6 +6,7 @@ import RacePage from './racePage.js';
 import OverviewPage from './overviewPage.js';
 import {Page, MapLevel, SortingMethod} from '../constants.js';
 import ElectionPage from './electionPage.js';
+import * as turf from '@turf/turf';
 
 
 class DataDisplay extends React.Component {
@@ -13,7 +14,7 @@ class DataDisplay extends React.Component {
         super(props);
         this.sortBy = this.props.sortBy;
         this.viewMode = this.props.viewMode;
-        this.state = {featureData: this.props.featureData, fetchedData: {}}
+        this.state = {featureData: this.props.featureData, fetchedData: {}, selectedPlan: 0}
     }
 
     async componentDidMount() {
@@ -21,14 +22,14 @@ class DataDisplay extends React.Component {
         if (this.viewMode === Page.ensemblePage) {
             const response = await axios.get('http://localhost:8000/api/ensemble?sort=' 
                 + this.sortBy 
-                + '&state=' 
+                + '&plan=1&state=' 
                 + this.state.featureData[0].split('_')[0]);
+            console.log(response.data);
             this.setState({fetchedData: response.data});
         }
         else if(this.viewMode === Page.overviewPage) {
             const response = await axios.get('http://localhost:8000/api/attributes?type=summary&state=' 
                 + (this.state.featureData[0].split('_')[0]).toLowerCase());
-            console.log(response.data);
             this.setState({fetchedData: response.data});
         }
     }
@@ -55,35 +56,122 @@ class DataDisplay extends React.Component {
             } else if (sortBy === SortingMethod.blackRace) {
                 propName = "BLK_NHSP22";
                 label = "% Black Pop";
-            } else {
-                propName = "HSP_POP22";
-                label = "% Hispanic Pop";
-            }
+            } else if (sortBy === SortingMethod.politicalIncome) {
+                propName = "TOT_POP22";
+                label = "Median Income";
+            } else if (sortBy === SortingMethod.whiteRaceIncome) {
+                propName = "WHT_NHSP22";
+                label = "White + Income";
+            } else if (sortBy === SortingMethod.blackRaceIncome) {
+                propName = "BLK_NHSP22";
+                label = "Black + Income";
+            } 
+            else if (sortBy === SortingMethod.urbanRural) {
+                propName = "TOT_POP22";
+                label = "Population Density";
+            } 
             let data = this.props.data;
-            if (data["name"].split('_')[0] === "alabama") {
+            let totalVotes = 0;
+            let highestIncome = 0;
+            if(sortBy === SortingMethod.blackRaceIncome || sortBy === SortingMethod.whiteRaceIncome) {
                 for (var i = 0; i < data["features"].length; i++) {
-                    const totalVotes = Math.round(
+                    let brackets = [
+                        data["features"][i]["properties"].LESS_10K22 
+                            + data["features"][i]["properties"]["10K_15K22"] 
+                            + data["features"][i]["properties"]["15K_20K22"] 
+                            + data["features"][i]["properties"]["20K_25K22"], 
+                        data["features"][i]["properties"]["25K_30K22"] 
+                            + data["features"][i]["properties"]["30K_35K22"] 
+                            + data["features"][i]["properties"]["35K_40K22"] 
+                            + data["features"][i]["properties"]["40K_45K22"] 
+                            + data["features"][i]["properties"]["45K_50K22"], 
+                        data["features"][i]["properties"]["50K_60K22"] 
+                            + data["features"][i]["properties"]["60K_75K22"], 
+                        data["features"][i]["properties"]["75K_100K22"], 
+                        data["features"][i]["properties"]["100_125K22"], 
+                        data["features"][i]["properties"]["125_150K22"], 
+                        data["features"][i]["properties"]["150_200K22"] 
+                            + data["features"][i]["properties"]["200K_MOR22"]
+                    ];
+                    let medianIncome = data["features"][i]["properties"].MEDN_INC22;   
+                    let totalHouses =  data["features"][i]["properties"].TOT_HOUS22;
+                    if (medianIncome === undefined) {
+                        totalHouses = 0;
+                        for (let i = 0; i < 6; i++) totalHouses += Number(brackets[i]);
+                        let count = 0;
+                        for (let i = 0; i < 6; i++) {
+                            count+=Number(brackets[i]);
+                            if(count > totalHouses/2) {
+                                medianIncome = count + 25000*(i + (totalHouses/2 - (count - Number(brackets[i])))/Number(brackets[i]));
+                                break;
+                            }
+                        }
+                    }
+                    if(medianIncome > highestIncome) highestIncome = medianIncome;
+                }
+            }
+            for (var i = 0; i < data["features"].length; i++) {
+                if(data["name"].split('_')[0] === "alabama") {
+                    totalVotes = Math.round(
                         data["features"][i]["properties"]["G22USSDBOY"] 
                         + data["features"][i]["properties"]["G22USSLSOP"] 
                         + data["features"][i]["properties"]["G22USSOWRI"] 
                         + data["features"][i]["properties"]["G22USSRBRI"]);
-                    xData.push(Math.round(data["features"][i]["properties"][propName] / data["features"][i]["properties"]["TOT_POP22"] * 100))
                     yDataDemocrat.push(Math.round(data["features"][i]["properties"]["G22USSDBOY"] / totalVotes * 100));
                     yDataRepublican.push(Math.round(data["features"][i]["properties"]["G22USSRBRI"] / totalVotes * 100));
                 }
-            } else {
-                for (var i = 0; i < data["features"].length; i++) {
-                    const totalVotes = Math.round(
+                else {
+                    totalVotes = Math.round(
                         data["features"][i]["properties"]["G20PREDBID"]  //G20PREDBID - Joseph R. Biden (Democratic-Farmer-Labor Party)
                         + data["features"][i]["properties"]["G20PRERTRU"] //G20PRERTRU - Donald J. Trump (Republican Party)
                         + data["features"][i]["properties"]["G20PRELJOR"] //G20PRELJOR - Jo Jorgensen (Libertarian Party)
                         + data["features"][i]["properties"]["G20PREGHAW"] //G20PREGHAW - Howie Hawkins (Green Party)
                         + data["features"][i]["properties"]["G20PREOWRI"] //G20PREOWRI - Write-in Votes
                     );
-                    xData.push(Math.round(data["features"][i]["properties"][propName] / data["features"][i]["properties"]["TOT_POP22"] * 100))
                     yDataDemocrat.push(Math.round(data["features"][i]["properties"]["G20PREDBID"] / totalVotes * 100));
                     yDataRepublican.push(Math.round(data["features"][i]["properties"]["G20PRERTRU"] / totalVotes * 100));
                 }
+                if(sortBy === SortingMethod.urbanRural) {
+                    xData.push((data["features"][i]["properties"]["TOT_POP22"])/(data["features"][i]["properties"]["ALAND20"]/1000000))
+                }
+                else if (sortBy !== SortingMethod.whiteRace && sortBy !== SortingMethod.blackRace) {
+                    let brackets = [
+                        data["features"][i]["properties"].LESS_10K22 
+                            + data["features"][i]["properties"]["10K_15K22"] 
+                            + data["features"][i]["properties"]["15K_20K22"] 
+                            + data["features"][i]["properties"]["20K_25K22"], 
+                        data["features"][i]["properties"]["25K_30K22"] 
+                            + data["features"][i]["properties"]["30K_35K22"] 
+                            + data["features"][i]["properties"]["35K_40K22"] 
+                            + data["features"][i]["properties"]["40K_45K22"] 
+                            + data["features"][i]["properties"]["45K_50K22"], 
+                        data["features"][i]["properties"]["50K_60K22"] 
+                            + data["features"][i]["properties"]["60K_75K22"], 
+                        data["features"][i]["properties"]["75K_100K22"], 
+                        data["features"][i]["properties"]["100_125K22"], 
+                        data["features"][i]["properties"]["125_150K22"], 
+                        data["features"][i]["properties"]["150_200K22"] 
+                            + data["features"][i]["properties"]["200K_MOR22"]
+                    ];
+                    let medianIncome = data["features"][i]["properties"].MEDN_INC22;   
+                    let totalHouses =  data["features"][i]["properties"].TOT_HOUS22;
+                    if (medianIncome === undefined) {
+                        totalHouses = 0;
+                        for (let i = 0; i < 6; i++) totalHouses += Number(brackets[i]);
+                        let count = 0;
+                        for (let i = 0; i < 6; i++) {
+                            count+=Number(brackets[i]);
+                            if(count > totalHouses/2) {
+                                medianIncome = count + 25000*(i + (totalHouses/2 - (count - Number(brackets[i])))/Number(brackets[i]));
+                                break;
+                            }
+                        }
+                    }
+                    if(sortBy === SortingMethod.whiteRaceIncome || sortBy === SortingMethod.blackRaceIncome) 
+                        xData.push((data["features"][i]["properties"][propName] / (data["features"][i]["properties"]["TOT_POP22"]*2)) + (medianIncome/(2*highestIncome)));
+                    else xData.push(Math.round(medianIncome))
+                }
+                else xData.push(Math.round(data["features"][i]["properties"][propName] / data["features"][i]["properties"]["TOT_POP22"] * 100))
             }
             let plotData = [
                 {
@@ -117,15 +205,32 @@ class DataDisplay extends React.Component {
             display = <img className="ei=display" src={require("../graphs/Density1.png")} alt={"EI display"}/>
         }
         else if (this.viewMode === Page.ensemblePage) { 
-            display = 
+            display = <div>
+            <select name="ensemble_plan_dropdown" id="ensemble_plan_dropdown" onChange={async e =>
+                {
+                    const response = await axios.get('http://localhost:8000/api/ensemble?sort=' 
+                        + this.sortBy 
+                        + '&plan=' 
+                        + e.target.value
+                        + '&state=' 
+                        + this.state.featureData[0].split('_')[0]);
+                    return this.setState({fetchedData: response.data, selectedPlan: e.target.value});
+                }
+            }>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
             <Graphs 
                 key={this.state.featureData + "_" + this.viewMode} 
                 data={this.state.fetchedData.plotData} 
                 layout={this.state.fetchedData.plotLayout}
             />
+            </div>
         }
         else if(this.viewMode === Page.overviewPage) { 
-            // display = <OverviewPage  key={yAxis} yAxis={yAxis} graphTitle={graphTitle}/>;
             let stateName = this.state.fetchedData.state;
             let attributes = this.state.fetchedData.attributes;
             let representatives = this.state.fetchedData.representatives;

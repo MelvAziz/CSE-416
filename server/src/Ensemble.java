@@ -28,6 +28,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import org.w3c.dom.TypeInfo;
 import static com.mongodb.client.model.Filters.eq;
+import com.mongodb.client.model.Filters;
 
 
 @Path("/ensemble")
@@ -35,18 +36,31 @@ public class Ensemble {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getData(@QueryParam("state") String state, @QueryParam("sort") String sort, @Context UriInfo uriInfo) {
+    public Response getData(@QueryParam("state") String state, @QueryParam("sort") String sort, @QueryParam("plan") Integer plan, @Context UriInfo uriInfo) {
         ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017");
         MongoClient client = MongoClients.create(connectionString);
         MongoDatabase database = client.getDatabase("CSE416");
         MongoCollection<Document> boxplotsCollection = database.getCollection("boxplots");
+        if(plan == null) plan = 0;
+        // Build the filter
+        Bson filterA = Filters.and(
+                Filters.eq("state", "Alabama"),
+                Filters.eq("plan", plan)
+        );
+        Bson filterB = Filters.and(
+                Filters.eq("state", "Mass"),
+                Filters.eq("plan", plan)
+        );
         Document boxPlotData = new Document();
         Integer districtNumber = 9;
         if(state.compareTo("Alabama") == 0) {
-            boxPlotData = boxplotsCollection.find(eq("state", "Alabama")).first();
+            // boxPlotData = boxplotsCollection.find(eq("state", "Alabama")).first();
+            boxPlotData = boxplotsCollection.find(filterA).first();
             districtNumber = 7;
         }
-        else boxPlotData = boxplotsCollection.find(eq("state", "Mass")).first();
+        // else boxPlotData = boxplotsCollection.find(eq("state", "Mass")).first();
+        else boxPlotData = boxplotsCollection.find(filterB).first();
+
 
         if(sort.compareTo("wht") == 0) boxPlotData = (Document)(boxPlotData.get("WHITE"));
         else if(sort.compareTo("blk") == 0) boxPlotData = (Document)(boxPlotData.get("BLACK"));

@@ -178,7 +178,7 @@ p,tr,td {
   position: absolute;
   left: 1rem;
   width: 20rem;
-  bottom: calc(28vh - 2px);
+  bottom: calc(32vh - 2px);
   max-height: 20%;
   padding-bottom: 1rem;
   z-index: 10000;

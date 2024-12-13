@@ -47,7 +47,7 @@ class Map extends React.Component {
             labels={["Democratic",  "150k+",   "125-150k","100-125k","75-100k", "50-75k",  "25-50k",  ">25k",    ">25k",    "25-50k",  "50-75k",  "75-100k", "100-125k","125-150k","150k+", "Republican"]}
         />;
         }
-        else if (this.sortBy === SortingMethod.whiteRace || this.sortBy === SortingMethod.blackRace || this.sortBy === SortingMethod.hispanicRace) 
+        else if (this.sortBy === SortingMethod.whiteRace || this.sortBy === SortingMethod.blackRace || this.sortBy === SortingMethod.whiteRaceIncome || this.sortBy === SortingMethod.blackRaceIncome) 
             legend = <MapLegend 
                         colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} // Light Green -> Dark Green
                         labels={["<10%",    "10-20%",  "20-30%",  "30-40%",  "40-50%",  "50-60%",  "60-70%",  "70-80%",  "80-90%",  "90-100"]}
@@ -137,12 +137,15 @@ class Map extends React.Component {
                 }
                 else if (urbanMap) {
                     // https://www.mass.gov/doc/rural-definition-detail-0/download
-                    let area = turf.area(layer.toGeoJSON())/(1000000);
-                    let popDensity = feature.properties.TOT_POP22/area;
-                    if (popDensity < 200 && feature.properties.TOT_POP22 < 10000) layer.options.fillColor = "yellow";
-                    else if (popDensity < 1000) layer.options.fillColor = "darkorange";
-                    else layer.options.fillColor = "purple";
+                    // let area = turf.area(layer.toGeoJSON())/(1000000);
+                    let popDensity = feature.properties.TOT_POP22/(Number(feature.properties.ALAND20)/1000000);
+                    console.log(feature.properties.REGION);
+                    if(feature.properties.REGION === "U") layer.options.fillColor = "purple";
+                    else if(feature.properties.REGION === "S") layer.options.fillColor = "darkorange";
+                    else if(feature.properties.REGION === "R") layer.options.fillColor = "yellow";
+
                     popup += "<p>Pop. Density: " + Number(popDensity).toFixed(2) + "</p>";
+
                 }
                 else {
                     let count = 0;
@@ -160,11 +163,11 @@ class Map extends React.Component {
                     else layer.options.fillColor = "darkgreen";
                 }
             }
-            else if (this.sortBy === SortingMethod.whiteRace || this.sortBy === SortingMethod.blackRace || this.sortBy === SortingMethod.hispanicRace) {
+            else if (this.sortBy === SortingMethod.whiteRace || this.sortBy === SortingMethod.blackRace || this.sortBy === SortingMethod.whiteRaceIncome || this.sortBy === SortingMethod.blackRaceIncome) {
                 let totalPopulation = feature.properties.TOT_POP22;
                 let selectedPopulation = feature.properties.WHT_NHSP22;
-                if (this.sortBy === "blk")       selectedPopulation = feature.properties.BLK_NHSP22;
-                else if (this.sortBy === "hsp")  selectedPopulation = feature.properties.HSP_POP22;
+                if (this.sortBy === SortingMethod.blackRace || this.sortBy === SortingMethod.blackRaceIncome)       selectedPopulation = feature.properties.BLK_NHSP22;
+                // else if (this.sortBy === "hsp")  selectedPopulation = feature.properties.HSP_POP22;
                 let frac = ((selectedPopulation/totalPopulation)*100).toFixed(10);
                 if (frac < 10 || selectedPopulation === undefined) layer.options.fillColor = "#ffff3f";
                 else if (frac < 20) layer.options.fillColor = "#eeef20";
