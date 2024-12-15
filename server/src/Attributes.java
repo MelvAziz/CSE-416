@@ -26,11 +26,15 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.gridfs.GridFSBuckets;
 import com.mongodb.client.gridfs.model.GridFSFile;
+import com.mongodb.client.model.Filters;
+import org.bson.types.ObjectId;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import org.w3c.dom.TypeInfo;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.io.IOException;
@@ -49,6 +53,7 @@ public class Attributes {
         MongoDatabase database = client.getDatabase("CSE416");
         MongoCollection<Document> statesCollection = database.getCollection("states");
         MongoCollection<Document> mapCollection = database.getCollection("maps");
+        GridFSBucket gridFSBucket = GridFSBuckets.create(database); 
         Document dataReturned = new Document();
         if(type.compareTo("summary") == 0) {
             Document mapData = new Document();
@@ -96,29 +101,30 @@ public class Attributes {
         }
         //Will be replaced with GridFS chunking
         else if(type.compareTo("precincts") == 0) {
-            if(state.compareTo("alabama") == 0 ) {
-                try {
-                    String jsonFile = Files.readString(
-                        Paths.get("C:\\Users\\Melvin\\SBU\\CSE-416\\client\\src\\GeoData\\alabama\\alabama_precincts.json")
-                    );
-                    dataReturned = Document.parse(jsonFile);
-                }
-                catch (IOException e) {
-                    System.out.println("Error reading file: " + e.getMessage());
-                }
+            String gridFileName = null;
+            if(state.compareTo("Alabama") == 0 ) {
+                gridFileName = "alabama_precincts.json";                             
+            }
+            else if(state.compareTo("Massachusetts") == 0 ) {
+                gridFileName = "massachusetts_precincts.json";
+            }
 
-            }
-            else if(state.compareTo("massachusetts") == 0 ) {
-                try {
-                    String jsonFile = Files.readString(
-                        Paths.get("C:\\Users\\Melvin\\SBU\\CSE-416\\client\\src\\GeoData\\massachusetts\\massachusetts_precincts.json")
-                    );
-                    dataReturned = Document.parse(jsonFile);
+            if (gridFileName != null) {
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+               // Load file from GridFS
+               GridFSFile file = gridFSBucket.find(Filters.eq("filename", gridFileName)).first();
+               if (file != null) {
+                    ObjectId fileId = file.getObjectId();
+                    gridFSBucket.downloadToStream(fileId, outputStream);
+                    String fileContents = outputStream.toString("UTF-8");
+                    //System.out.println(fileContents);
+                    dataReturned = Document.parse(fileContents);
                 }
-                catch (IOException e) {
-                    System.out.println("Error reading file: " + e.getMessage());
-                }
+            } 
+            catch (IOException e) {
+               System.out.println("Error reading file from GridFS: " + e.getMessage());
             }
+         }
         }
         Document features = ((Document)dataReturned.get("features"));
         //TO DO: Process features and return the feature defined by featureName
