@@ -13,6 +13,7 @@ class StateDistrictAnalyzer extends React.Component {
         this.setData = this.setData.bind(this);
         this.setMapLevel = this.setMapLevel.bind(this);
         this.changeSort = this.changeSort.bind(this);
+        this.setSelectedFeature = this.setSelectedFeature.bind(this);
         this.state = {
             selectedState: "Alabama", 
             mapLevel: MapLevel.precinct, 
@@ -22,7 +23,8 @@ class StateDistrictAnalyzer extends React.Component {
             currentMap: {}, 
             updated: true, 
             alabamaPrecinctMap: {}, 
-            massachusettsPrecinctMap: {}
+            massachusettsPrecinctMap: {},
+            selectedFeature: null
         };
     }
     async componentDidMount() {
@@ -34,6 +36,10 @@ class StateDistrictAnalyzer extends React.Component {
             alabamaPrecinctMap: alabamaPrecinctMap.data, 
             massachusettsPrecinctMap: massachusettsPrecinctMap.data
         });
+    }
+    setSelectedFeature(name) {
+        console.log("test");
+        this.setState({selectedFeature: name, sortBy: this.state.sortBy})
     }
     setMapLevel(option) {
         this.setState({mapLevel: option, updated:false});
@@ -117,6 +123,8 @@ class StateDistrictAnalyzer extends React.Component {
                         data={data} 
                         viewMode={this.state.viewMode} 
                         featureData={this.state.featureData} 
+                        setSelectedFeature={this.setSelectedFeature}
+                        selectedFeature={this.state.selectedFeature}
                         setView={this.setView}
                     />;
         return (
@@ -130,7 +138,8 @@ class StateDistrictAnalyzer extends React.Component {
                     switchState={this.switchState}
                 />
                 <MapContainer 
-                    key={"map_state_"+name+"_"+this.state.viewMode + "_"+this.state.currentMap._id+"_"+this.state.mapLevel} 
+                    key={"map_state_"+name+"_"+this.state.viewMode + "_"+this.state.currentMap._id+"_"+this.state.mapLevel+"_"+this.state.selectedFeature} 
+                    sortBy={this.state.sortBy} 
                     mapLevel={this.state.mapLevel} 
                     switchState={this.switchState} 
                     changeSort={this.changeSort} 
@@ -141,6 +150,8 @@ class StateDistrictAnalyzer extends React.Component {
                     data={data} 
                     zoom={zoom} 
                     selectedState={this.state.selectedState}
+                    setSelectedFeature={this.setSelectedFeature}
+                    selectedFeature={this.state.selectedFeature}
                 />
                 {dataPage}
             </div>

@@ -12,7 +12,11 @@ class MapMenu extends React.Component {
         this.selectedState = this.props.selectedState;
         this.switchMap = this.switchMap.bind(this);
         this.switchView = this.switchView.bind(this);
-        this.state = {mapLevel: this.props.mapLevel, viewMode: this.props.viewMode, sortBy: this.props.sortBy};
+        this.state = {
+            mapLevel: this.props.mapLevel, 
+            viewMode: this.props.viewMode, 
+            sortBy: this.props.sortBy
+        };
     }
     switchMap(option) {
         this.setMapLevel(option);
@@ -251,19 +255,22 @@ class MapMenu extends React.Component {
                             repVotes = district.properties["G22USSRBRI"];
                             totalVotes = demVotes + repVotes + district.properties["G22USSLSOP"] + district.properties["G22USSOWRI"];
                         }
-
-                        return <tr onClick={() => this.props.setSelectedFeature(district.properties.NAME)}>
-                        <td>{district.properties.ID}</td>
-                        <td>{district.properties["REPRESENTATIVE"]}</td>
-                        <td>{district.properties["PARTY"]}</td>
-                        <td>${readableNum(location.toFixed(0))}</td>
-                        <td>{((povertyLine/district.properties["TOT_HOUS22"])*100).toFixed(2)}%</td>
-                        <td>{((district.properties["URBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
-                        <td>{((district.properties["SUBURBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
-                        <td>{((district.properties["RURAL_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
-                        <td>{((demVotes/totalVotes)*100).toFixed(2)}%</td>
-                        <td>{((repVotes/totalVotes)*100).toFixed(2)}%</td>
-                    </tr>
+                        let selectedClass="";
+                        if(this.props.selectedElement === district.properties.NAME) {
+                            selectedClass = "selected_tabular_display"
+                        }
+                        return <tr class={selectedClass} onClick={() => this.props.setSelectedFeature(district.properties.NAME)}>
+                            <td>{district.properties.ID}</td>
+                            <td>{district.properties["REPRESENTATIVE"]}</td>
+                            <td>{district.properties["PARTY"]}</td>
+                            <td>${readableNum(location.toFixed(0))}</td>
+                            <td>{((povertyLine/district.properties["TOT_HOUS22"])*100).toFixed(2)}%</td>
+                            <td>{((district.properties["URBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
+                            <td>{((district.properties["SUBURBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
+                            <td>{((district.properties["RURAL_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
+                            <td>{((demVotes/totalVotes)*100).toFixed(2)}%</td>
+                            <td>{((repVotes/totalVotes)*100).toFixed(2)}%</td>
+                        </tr>
                     }
                     )}
                 </tbody>

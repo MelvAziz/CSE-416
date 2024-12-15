@@ -18,7 +18,7 @@ class MapContainer extends React.Component {
       this.setMapLevel = this.setMapLevel.bind(this);
       this.setRange = this.setRange.bind(this);
       this.setSelectedFeature = this.setSelectedFeature.bind(this);
-      this.state = {state: this.props.selectedState, viewMode: this.props.viewMode, sortBy: SortingMethod.medianIncome, min: 3, max: 10, selectedFeature: null};
+      this.state = {state: this.props.selectedState, viewMode: this.props.viewMode, sortBy: this.props.sortBy, min: 3, max: 10, selectedFeature: this.props.selectedFeature};
   }
   setMapLevel(option) {
     this.setMapLevel(option);
@@ -31,7 +31,7 @@ class MapContainer extends React.Component {
     this.setState({min: e.minValue, max: e.maxValue})
   }
   setSelectedFeature(name) {
-    this.setState({selectedFeature: name})
+    this.props.setSelectedFeature(name);
   }
   render() {
       let data = this.data;
@@ -40,8 +40,8 @@ class MapContainer extends React.Component {
       if (this.state.viewMode === Page.electionPage && !electionModeSelected) this.setState({sortBy: SortingMethod.bothPartiesElection});
       if (this.state.viewMode === Page.racePage && !raceModeSelected) this.setState({sortBy: SortingMethod.whiteRace});
       let selectedElement = null;
-      if(this.state.viewMode === Page.overviewPage) {
-        selectedElement = this.state.selectedFeature;
+      if(this.state.viewMode === Page.overviewPage || this.state.viewMode === Page.ginglesPage) {
+        selectedElement = this.props.selectedFeature;
       }
       return (
           <div class="map-options">
@@ -61,6 +61,7 @@ class MapContainer extends React.Component {
               <MapMenu 
                 selectedState={this.state.state} 
                 setSelectedFeature={this.setSelectedFeature}
+                selectedElement={selectedElement}
                 setRange={this.setRange} 
                 setSort={this.setSort} 
                 setCheck={this.setCheck} 

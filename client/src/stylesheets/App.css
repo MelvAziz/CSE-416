@@ -456,3 +456,27 @@ p,tr,td {
   display: flex;
   justify-content: space-around;
 }
+
+.gingles_tabular_display {
+  display: block;
+  table-layout: fixed;
+  max-height: 200px;
+  height: 200px;
+  overflow-y: scroll;
+  width: 800px;
+  margin-left: 100px;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+.selected_tabular_display {
+  background-color: lightgray;
+}
+
+select {
+  background-color: #3ed0ac;
+  padding: 8px;
+  border: 1px solid black;
+}

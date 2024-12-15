@@ -15,7 +15,11 @@ class DataDisplay extends React.Component {
         super(props);
         this.sortBy = this.props.sortBy;
         this.viewMode = this.props.viewMode;
-        this.state = {featureData: this.props.featureData, fetchedData: {}, selectedPlan: 0}
+        this.state = {
+            featureData: this.props.featureData, 
+            fetchedData: {}, 
+            selectedPlan: 0, 
+        }
     }
 
     async componentDidMount() {
@@ -34,7 +38,10 @@ class DataDisplay extends React.Component {
             this.setState({fetchedData: response.data});
         }
     }
-    render() {
+    render() {        
+        function readableNum(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
         let display;
         let graphTitle = this.props.featureData[0];
         let yAxis = this.props.featureData[1];
@@ -48,6 +55,7 @@ class DataDisplay extends React.Component {
             const xData = [];
             const yDataDemocrat = [];
             const yDataRepublican = [];
+            const ids = [];
             let sortBy = this.props.sortBy;
             let propName = "";
             let label = "";
@@ -66,8 +74,7 @@ class DataDisplay extends React.Component {
             } else if (sortBy === SortingMethod.blackRaceIncome) {
                 propName = "BLK_NHSP22";
                 label = "Black + Income";
-            } 
-            else if (sortBy === SortingMethod.urbanRural) {
+            } else if (sortBy === SortingMethod.urbanRural) {
                 propName = "TOT_POP22";
                 label = "Population Density";
             } 
@@ -111,73 +118,11 @@ class DataDisplay extends React.Component {
                     if(medianIncome > highestIncome) highestIncome = medianIncome;
                 }
             }
-            for (var i = 0; i < data["features"].length; i++) {
-                if(data["name"].split('_')[0] === "alabama") {
-                    totalVotes = Math.round(
-                        data["features"][i]["properties"]["G22USSDBOY"] 
-                        + data["features"][i]["properties"]["G22USSLSOP"] 
-                        + data["features"][i]["properties"]["G22USSOWRI"] 
-                        + data["features"][i]["properties"]["G22USSRBRI"]);
-                    yDataDemocrat.push(Math.round(data["features"][i]["properties"]["G22USSDBOY"] / totalVotes * 100));
-                    yDataRepublican.push(Math.round(data["features"][i]["properties"]["G22USSRBRI"] / totalVotes * 100));
-                }
-                else {
-                    totalVotes = Math.round(
-                        data["features"][i]["properties"]["G20PREDBID"]  //G20PREDBID - Joseph R. Biden (Democratic-Farmer-Labor Party)
-                        + data["features"][i]["properties"]["G20PRERTRU"] //G20PRERTRU - Donald J. Trump (Republican Party)
-                        + data["features"][i]["properties"]["G20PRELJOR"] //G20PRELJOR - Jo Jorgensen (Libertarian Party)
-                        + data["features"][i]["properties"]["G20PREGHAW"] //G20PREGHAW - Howie Hawkins (Green Party)
-                        + data["features"][i]["properties"]["G20PREOWRI"] //G20PREOWRI - Write-in Votes
-                    );
-                    yDataDemocrat.push(Math.round(data["features"][i]["properties"]["G20PREDBID"] / totalVotes * 100));
-                    yDataRepublican.push(Math.round(data["features"][i]["properties"]["G20PRERTRU"] / totalVotes * 100));
-                }
-                if(sortBy === SortingMethod.urbanRural) {
-                    xData.push((data["features"][i]["properties"]["TOT_POP22"])/(data["features"][i]["properties"]["ALAND20"]/1000000))
-                }
-                else if (sortBy !== SortingMethod.whiteRace && sortBy !== SortingMethod.blackRace) {
-                    let brackets = [
-                        data["features"][i]["properties"].LESS_10K22 
-                            + data["features"][i]["properties"]["10K_15K22"] 
-                            + data["features"][i]["properties"]["15K_20K22"] 
-                            + data["features"][i]["properties"]["20K_25K22"], 
-                        data["features"][i]["properties"]["25K_30K22"] 
-                            + data["features"][i]["properties"]["30K_35K22"] 
-                            + data["features"][i]["properties"]["35K_40K22"] 
-                            + data["features"][i]["properties"]["40K_45K22"] 
-                            + data["features"][i]["properties"]["45K_50K22"], 
-                        data["features"][i]["properties"]["50K_60K22"] 
-                            + data["features"][i]["properties"]["60K_75K22"], 
-                        data["features"][i]["properties"]["75K_100K22"], 
-                        data["features"][i]["properties"]["100_125K22"], 
-                        data["features"][i]["properties"]["125_150K22"], 
-                        data["features"][i]["properties"]["150_200K22"] 
-                            + data["features"][i]["properties"]["200K_MOR22"]
-                    ];
-                    let medianIncome = data["features"][i]["properties"].MEDN_INC22;   
-                    let totalHouses =  data["features"][i]["properties"].TOT_HOUS22;
-                    if (medianIncome === undefined) {
-                        totalHouses = 0;
-                        for (let i = 0; i < 6; i++) totalHouses += Number(brackets[i]);
-                        let count = 0;
-                        for (let i = 0; i < 6; i++) {
-                            count+=Number(brackets[i]);
-                            if(count > totalHouses/2) {
-                                medianIncome = count + 25000*(i + (totalHouses/2 - (count - Number(brackets[i])))/Number(brackets[i]));
-                                break;
-                            }
-                        }
-                    }
-                    if(sortBy === SortingMethod.whiteRaceIncome || sortBy === SortingMethod.blackRaceIncome) 
-                        xData.push((data["features"][i]["properties"][propName] / (data["features"][i]["properties"]["TOT_POP22"]*2)) + (medianIncome/(2*highestIncome)));
-                    else xData.push(Math.round(medianIncome))
-                }
-                else xData.push(Math.round(data["features"][i]["properties"][propName] / data["features"][i]["properties"]["TOT_POP22"] * 100))
-            }
             let plotData = [
                 {
                     x: xData,
                     y: yDataDemocrat,
+                    ids: ids,
                     mode: 'markers',
                     type: 'scatter',
                     name: 'Democratic',
@@ -186,6 +131,7 @@ class DataDisplay extends React.Component {
                 {
                     x: xData,
                     y: yDataRepublican,
+                    ids: ids,
                     mode: 'markers',
                     type: 'scatter',
                     name: 'Republican',
@@ -196,13 +142,110 @@ class DataDisplay extends React.Component {
                 title: '',
                 xaxis: { title: label },
                 yaxis: { title: '% Votes' },
-                width: 900,
-                height: 700
+                width: 600,
+                height: 500
             };
-            display = <Graphs data={plotData} layout={plotLayout}/>
+            let tabularDisplay =  data["features"].map((d, i) => {
+                ids.push(d["properties"]["NAME"]);
+                let demVotes = 0;
+                let repVotes = 0;
+                let medianIncome = 0;
+                if(data["name"].split('_')[0] === "alabama") {
+                    totalVotes = Math.round(
+                        d["properties"]["G22USSDBOY"] 
+                        + d["properties"]["G22USSLSOP"] 
+                        + d["properties"]["G22USSOWRI"] 
+                        + d["properties"]["G22USSRBRI"]);
+                    demVotes = d["properties"]["G22USSDBOY"];
+                    repVotes = d["properties"]["G22USSRBRI"];
+                    yDataDemocrat.push(Math.round(d["properties"]["G22USSDBOY"] / totalVotes * 100));
+                    yDataRepublican.push(Math.round(d["properties"]["G22USSRBRI"] / totalVotes * 100));
+                }
+                else {
+                    totalVotes = Math.round(
+                        d["properties"]["G20PREDBID"]  //G20PREDBID - Joseph R. Biden (Democratic-Farmer-Labor Party)
+                        + d["properties"]["G20PRERTRU"] //G20PRERTRU - Donald J. Trump (Republican Party)
+                        + d["properties"]["G20PRELJOR"] //G20PRELJOR - Jo Jorgensen (Libertarian Party)
+                        + d["properties"]["G20PREGHAW"] //G20PREGHAW - Howie Hawkins (Green Party)
+                        + d["properties"]["G20PREOWRI"] //G20PREOWRI - Write-in Votes
+                    );
+                    demVotes = d["properties"]["G20PREDBID"];
+                    repVotes = d["properties"]["G20PRERTRU"];
+                    yDataDemocrat.push(Math.round(d["properties"]["G20PREDBID"] / totalVotes * 100));
+                    yDataRepublican.push(Math.round(d["properties"]["G20PRERTRU"] / totalVotes * 100));
+                }
+                let brackets = [
+                    d["properties"].LESS_10K22 
+                        + d["properties"]["10K_15K22"] 
+                        + d["properties"]["15K_20K22"] 
+                        + d["properties"]["20K_25K22"], 
+                    d["properties"]["25K_30K22"] 
+                        + d["properties"]["30K_35K22"] 
+                        + d["properties"]["35K_40K22"] 
+                        + d["properties"]["40K_45K22"] 
+                        + d["properties"]["45K_50K22"], 
+                    d["properties"]["50K_60K22"] 
+                        + d["properties"]["60K_75K22"], 
+                    d["properties"]["75K_100K22"], 
+                    d["properties"]["100_125K22"], 
+                    d["properties"]["125_150K22"], 
+                    d["properties"]["150_200K22"] 
+                        + d["properties"]["200K_MOR22"]
+                ];
+                medianIncome = d["properties"].MEDN_INC22;   
+                let totalHouses =  d["properties"].TOT_HOUS22;
+                if (medianIncome === undefined) {
+                    totalHouses = 0;
+                    for (let index = 0; index < 6; index++) totalHouses += Number(brackets[index]);
+                    let count = 0;
+                    for (let index = 0; index < 6; index++) {
+                        count+=Number(brackets[index]);
+                        if(count > totalHouses/2) {
+                            medianIncome = count + 25000*(index + (totalHouses/2 - (count - Number(brackets[index])))/Number(brackets[index]));
+                            break;
+                        }
+                    }
+                }
+                if(sortBy === SortingMethod.urbanRural) {
+                    xData.push((d["properties"]["TOT_POP22"])/(d["properties"]["ALAND20"]/1000000))
+                }
+                else if (sortBy !== SortingMethod.whiteRace && sortBy !== SortingMethod.blackRace) {
+                    if(sortBy === SortingMethod.whiteRaceIncome || sortBy === SortingMethod.blackRaceIncome) 
+                        xData.push((d["properties"][propName] / (d["properties"]["TOT_POP22"]*2)) + (medianIncome/(2*highestIncome)));
+                    else xData.push(Math.round(medianIncome))
+                }
+                else xData.push(Math.round(d["properties"][propName] / d["properties"]["TOT_POP22"] * 100))
+                let selectedClass="";
+                if(this.props.selectedFeature === d.properties.NAME) {
+                    selectedClass = "selected_tabular_display"
+                }
+                return <tr class={selectedClass} id={d.properties.NAME}>
+                    <td>{d.properties.NAME}</td>
+                    <td>{readableNum(d.properties["TOT_POP22"])}</td>
+                    <td>{d.properties["REGION"]}</td>
+                    <td>{readableNum(d.properties["BLK_NHSP22"])}</td>
+                    <td>${readableNum(Number(medianIncome).toFixed(2))}</td>
+                    <td>{readableNum(demVotes)}</td>
+                    <td>{readableNum(repVotes)}</td>
+
+                </tr>
+            })
+            display = 
+            <div>
+                <Graphs data={plotData} layout={plotLayout}  onClick={e => {
+                    console.log(e.points["0"].id)
+                    return this.props.setSelectedFeature(e.points["0"].id)}}/>
+                <table class="gingles_tabular_display">
+                    <thead><tr><th>Precinct Name</th><th>Population</th><th>Region</th><th>Black Pop.(%)</th><th>Avg. Income</th><th>Republican Votes</th><th>DemocraticVotes</th></tr></thead>
+                    <tbody>
+                        {tabularDisplay}
+                    </tbody>
+                </table>
+            </div>;
+            window.location.hash = this.props.selectedFeature;
         }
         else if (this.viewMode === Page.ecologicalInferencePage) {
-            <KDEChart data={dummyData} />
+            // <KDEChart data={dummyData} />
         }
         else if (this.viewMode === Page.ensemblePage) { 
             display = <div>

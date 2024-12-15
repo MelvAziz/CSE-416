@@ -139,7 +139,7 @@ class Map extends React.Component {
                     // https://www.mass.gov/doc/rural-definition-detail-0/download
                     // let area = turf.area(layer.toGeoJSON())/(1000000);
                     let popDensity = feature.properties.TOT_POP22/(Number(feature.properties.ALAND20)/1000000);
-                    console.log(feature.properties.REGION);
+                    // console.log(feature.properties.REGION);
                     if(feature.properties.REGION === "U") layer.options.fillColor = "purple";
                     else if(feature.properties.REGION === "S") layer.options.fillColor = "darkorange";
                     else if(feature.properties.REGION === "R") layer.options.fillColor = "yellow";
@@ -361,12 +361,11 @@ class Map extends React.Component {
                 else document.getElementById("map_popup").style.visibility = 'hidden';
             })
             if(this.props.selectedElement === feature.properties.NAME) {
-                selectedFeature = layer;
+                selectedPopup = popup;
                 if (selectedFeature !== undefined) selectedFeature.setStyle({fillColor: selectedFeatureColor, fillOpacity: opacity});
                 selectedFeature = layer;
                 selectedFeatureColor = layer.options.fillColor;
                 layer.setStyle({fillColor: "black", fillOpacity: "1"});
-                console.log(selectedFeature);
             }
             layer.on('click', function (e) {
                 if (viewMode === Page.selectStatePage) {
