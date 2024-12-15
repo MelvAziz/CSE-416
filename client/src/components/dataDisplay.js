@@ -7,6 +7,7 @@ import OverviewPage from './overviewPage.js';
 import KDEChart from './eiPlots.js';
 import {Page, MapLevel, SortingMethod} from '../constants.js';
 import ElectionPage from './electionPage.js';
+import eiData from '../ei/mass/racial-president.json';
 import * as turf from '@turf/turf';
 
 
@@ -202,7 +203,7 @@ class DataDisplay extends React.Component {
             display = <Graphs data={plotData} layout={plotLayout}/>
         }
         else if (this.viewMode === Page.ecologicalInferencePage) {
-            <KDEChart data={dummyData} />
+            <KDEChart data={eiData} />
         }
         else if (this.viewMode === Page.ensemblePage) { 
             display = <div>
