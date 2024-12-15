@@ -13,8 +13,8 @@ class RacePage extends React.Component {
             else this.yAxis = [4873836, 507888, 567562]
         }
         let yAxis = this.yAxis;
-        let width = 700;
-        let height = 600;
+        let width = 450;
+        let height = 350;
         let yAxisTitle = "Population";
         let title = this.graphTitle + ' Pop. by Race';
         if(this.smallDisplay === true) {

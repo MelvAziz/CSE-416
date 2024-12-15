@@ -463,8 +463,8 @@ p,tr,td {
   max-height: 200px;
   height: 200px;
   overflow-y: scroll;
-  width: 800px;
-  margin-left: 100px;
+  width: 850px;
+  margin-left: 50px;
 }
 
 table, th, td {
@@ -479,4 +479,24 @@ select {
   background-color: #3ed0ac;
   padding: 8px;
   border: 1px solid black;
+}
+
+.precinct_col_1, .precinct_col_2 {
+  display: flex;
+}
+
+.precinct_dropdown {
+  /* display: flex; */
+  width: 250px;
+  border-radius: 20px;
+}
+.precinct_dropdown_container {
+  display: flex;
+  /* width: 1000vw; */
+  justify-content: space-around;
+  margin: 3%;
+}
+.map_precinct_analysis_sort_container {
+  display: flex;
+  flex-direction: column;
 }

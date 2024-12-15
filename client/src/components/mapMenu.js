@@ -15,7 +15,9 @@ class MapMenu extends React.Component {
         this.state = {
             mapLevel: this.props.mapLevel, 
             viewMode: this.props.viewMode, 
-            sortBy: this.props.sortBy
+            sortBy: this.props.sortBy,
+            dropDownA: SortingMethod.whiteRace,
+            dropDownB: SortingMethod.whiteRace,
         };
     }
     switchMap(option) {
@@ -27,7 +29,7 @@ class MapMenu extends React.Component {
     }
     switchSort(option) {
         this.setSort(option);
-        this.setState({sortBy: option})
+        this.setState({sortBy: option, })
     }
     render() {   
         let mapMenuClass = "map_menu";     
@@ -117,7 +119,7 @@ class MapMenu extends React.Component {
                 </div>
                 <div class="col_3">
                     <input  class={"map_sort_buttons " + selectedSort[4]} type="button" value="Political/Income" onClick={(e) =>    this.switchSort(SortingMethod.politicalIncome)}/>
-                    <input  class={"map_sort_buttons " + selectedSort[5]} type="button" value="Urban/Suburban/Rural" onClick={(e) =>    this.switchSort(SortingMethod.urbanRural)}/>
+                    <input  class={"map_sort_buttons " + selectedSort[5]} type="button" value="Urban/Rural" onClick={(e) =>         this.switchSort(SortingMethod.urbanRural)}/>
                 </div>
 
             </div>
@@ -134,6 +136,59 @@ class MapMenu extends React.Component {
                 <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[1]} type="button" value={elecTitle + "(Democratic)"} onClick={(e) =>    this.switchSort(SortingMethod.democraticElection)}/>
                 <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[2]} type="button" value={elecTitle + "(Republican)"} onClick={(e) =>    this.switchSort(SortingMethod.republicanElection)}/>
             </div>
+        }
+        else if(this.props.viewMode === Page.precinctAnalysis) {
+            let sortingOptionsA = [SortingMethod.whiteRace, SortingMethod.medianIncome, SortingMethod.bothPartiesElection]
+            let sortingOptionsBA = [SortingMethod.whiteRace, SortingMethod.blackRace];
+            let sortingOptionsBB = ["White Heatmap", "Black Heatmap"];
+            let elecTitle = "2020 President ";
+            if(this.selectedState === "Alabama") elecTitle = "2022 Senator ";
+            let selected = ["selected", "", ""];
+            if(this.state.sortBy === SortingMethod.whiteRace || this.state.sortBy ===  SortingMethod.blackRace) {
+                sortingOptionsA[0] = this.state.sortBy;
+            }
+            else if(this.state.sortBy === SortingMethod.medianIncome || this.state.sortBy ===  SortingMethod.incomeBrackets || this.state.sortBy ===  SortingMethod.urbanRural || this.state.sortBy ===  SortingMethod.poverty) {
+                selected = ["", "selected", ""];
+                sortingOptionsBA = [SortingMethod.medianIncome, SortingMethod.incomeBrackets, SortingMethod.urbanRural, SortingMethod.poverty];
+                sortingOptionsBB = ["Median Income", "Income Bracket", "Urban/Rural", "Poverty"];
+                sortingOptionsA[1] = this.state.sortBy;
+            }
+           else if(this.state.sortBy === SortingMethod.bothPartiesElection || this.state.sortBy === SortingMethod.democraticElection || this.state.sortBy === SortingMethod.republicanElection) {
+                selected = ["", "", "selected"];
+                sortingOptionsBA = [SortingMethod.politicalIncome, SortingMethod.bothPartiesElection, SortingMethod.democraticElection, SortingMethod.republicanElection];
+                sortingOptionsBB = ["Political/Income", elecTitle + " (General)", elecTitle + " (Democratic)", elecTitle + " (Republican)"];
+                sortingOptionsA[2] = this.state.sortBy;
+            }
+            let secondDropDown = sortingOptionsBB.map((value, index) => {
+                return <option value={index}>{value}</option>
+            })
+            heatmap_type = 
+            <div class="map_sort_container  map_precinct_analysis_sort_container">
+                <div class="precinct_dropdown_container">
+                    <select name="precinct_dropdown_1" class="precinct_dropdown" id="precinct_dropdown_1"  onClick={(e) =>       this.switchSort(sortingOptionsA[e.target.value])}>
+                        <option value={0} {...selected[0]}>Race Heatmap</option>
+                        <option value={1} {...selected[1]}>Economic Heatmap</option>
+                        <option value={2} {...selected[2]}>Political Heatmap</option>
+                    </select>
+                    <select name="precinct_dropdown_2"  class="precinct_dropdown" id="precinct_dropdown_2"  onClick={(e) =>       this.switchSort(sortingOptionsBA[e.target.value])}>
+                        {secondDropDown}
+                    </select>
+                </div>
+                <MultiRangeSlider
+                    class = {"economic_slider"}
+                    min={0}
+                    max={7}
+                    step={1}
+                    minValue={3}
+                    maxValue={6}
+                    labels={["0k", "25k", "50k", "75k", "100k", "125k", "150k", "+"]}
+                    stepOnly = {true}
+                    style={{'font-size': '16px', 'width': 'max(38vw, 28rem)', 'visibility': sliderVisible}}
+                    onInput={(e) => {
+                        this.setRange(e);
+                    }}
+                />
+            </div>            
         }
         else if(this.props.viewMode === Page.ecologicalInferencePage || this.props.viewMode === Page.ensemblePage) {
             if(this.state.sortBy === SortingMethod.whiteRace)         selectedSort[0] = "map_sort_button_selected";

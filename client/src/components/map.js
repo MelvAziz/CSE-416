@@ -52,17 +52,17 @@ class Map extends React.Component {
                         colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} // Light Green -> Dark Green
                         labels={["<10%",    "10-20%",  "20-30%",  "30-40%",  "40-50%",  "50-60%",  "60-70%",  "70-80%",  "80-90%",  "90-100"]}
                     />
-        else if (this.viewMode === Page.electionPage && this.sortBy === SortingMethod.bothPartiesElection) 
+        else if (this.sortBy === SortingMethod.bothPartiesElection) 
             legend = <MapLegend 
                         colors={[null,          "#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#FF4C4C", "#ff0000", "#CC0000", "#990000", "#660000", null]} // Blue -> Red
                         labels={["Democratic",  "90-100%", "75-90%",  "60-75%",  "45-60%",  "30-45%",  "30-45%",  "45-60%",  "60-75%",  "75-90%",  "90-100%", "Republican"]}
                     />;
-        else if (this.viewMode === Page.electionPage && this.sortBy === SortingMethod.democraticElection) 
+        else if (this.sortBy === SortingMethod.democraticElection) 
             legend = <MapLegend 
                         colors={["#000066", "#000099", "#0000CC", "#0000ff", "#3333FF", "#6666FF", "#9999FF"]}  //light blue -> Blue
                         labels={["90-100%", "75-90%",  "60-75%",  "45-60%",  "30-45%",  "15-30%",  "0-15%"]}
                     />;
-        else if (this.viewMode === Page.electionPage && this.sortBy === SortingMethod.republicanElection) 
+        else if (this.sortBy === SortingMethod.republicanElection) 
             legend = <MapLegend 
                         colors={["#660000", "#990000", "#CC0000", "#ff0000", "#FF3333", "#FF6666", "#FF9999"]} //light red -> Red
                         labels={["90-100%", "75-90%",  "60-75%",  "45-60%",  "30-45%",  "15-30%",  "0-15%"]}
@@ -72,6 +72,12 @@ class Map extends React.Component {
                         colors={["yellow", "darkorange", "purple"]} 
                         labels={["Rural",  "Suburban",   "Urban"]}
                     />;
+        else if(this.sortBy === SortingMethod.poverty) {
+            legend = <MapLegend 
+                colors={["pink", "gold"]} 
+                labels={["Poverty",  "Above Poverty Line"]}
+            />;
+        }
         function readableNum(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
@@ -92,7 +98,7 @@ class Map extends React.Component {
                 layer.options.fillOpacity = 0.6;
             
             }
-            else if (viewMode === Page.economicPage || urbanMap || showMedianIncome) {
+            else if (viewMode === Page.economicPage || urbanMap || showMedianIncome || this.sortBy === SortingMethod.incomeBrackets || this.sortBy === SortingMethod.poverty) {
                 let brackets = [
                     feature.properties.LESS_10K22 
                         + feature.properties["10K_15K22"] 
@@ -146,6 +152,10 @@ class Map extends React.Component {
 
                     popup += "<p>Pop. Density: " + Number(popDensity).toFixed(2) + "</p>";
 
+                }
+                else if(this.sortBy === SortingMethod.poverty) {
+                    if(medianIncome < 25000) layer.options.fillColor = "pink";
+                    else layer.options.fillColor = "gold";
                 }
                 else {
                     let count = 0;
@@ -215,7 +225,7 @@ class Map extends React.Component {
                             + "%</td></tr>";
                 popup +="</tbody></table>";
             }
-            else if (viewMode === Page.electionPage || this.sortBy === SortingMethod.politicalIncome) {
+            else if (viewMode === Page.electionPage || this.sortBy === SortingMethod.politicalIncome || viewMode === Page.precinctAnalysis) {
                 let totalVotes = 
                     Number(feature.properties.G22USSDBOY) 
                     + Number(feature.properties.G22USSLSOP) 
@@ -438,6 +448,66 @@ class Map extends React.Component {
                                         ]
                                     ]
                                 );
+                        }
+                        else if (viewMode === Page.precinctAnalysis) {
+                            let electionName = name + " (President)";
+                            let electionData = [
+                                [
+                                    feature.properties.G20PREDBID, 
+                                    feature.properties.G20PRERTRU, 
+                                    Number(feature.properties.G20PRELJOR) + Number(feature.properties.G20PREOWRI) + Number(feature.properties.G20PREGHAW)
+                                ], 
+                                [
+                                    "Joe Biden",
+                                    "Donald Trump", 
+                                    "Other"
+                                ]
+                            ];
+                            if (currentState === "alabama") {
+                                electionName = name + " (Senate)";
+                                electionData =
+                                    [
+                                        [
+                                            feature.properties.G22USSDBOY, 
+                                            feature.properties.G22USSRBRI, 
+                                            Number(feature.properties.G22USSOWRI) + Number(feature.properties.G22USSLSOP)
+                                        ], 
+                                        [
+                                            "Will Boyd", 
+                                            "Katie Britt", 
+                                            "Other"
+                                        ]
+                                    ]
+                            }
+                            setData(
+                                [barTitle, barTitle, electionName], 
+                                [
+                                    [
+                                        feature.properties.WHT_NHSP22, 
+                                        feature.properties.BLK_NHSP22, 
+                                        feature.properties.HSP_POP22, 
+                                        Number(feature.properties.TOT_POP22) - Number(feature.properties.HSP_POP22) - Number(feature.properties.BLK_NHSP22) - Number(feature.properties.WHT_NHSP22)
+                                    ],
+                                    [
+                                        feature.properties.LESS_10K22 
+                                        + feature.properties["10K_15K22"] 
+                                        + feature.properties["15K_20K22"] 
+                                        + feature.properties["20K_25K22"], 
+                                        feature.properties["25K_30K22"] 
+                                        + feature.properties["30K_35K22"] 
+                                        + feature.properties["35K_40K22"] 
+                                        + feature.properties["40K_45K22"] 
+                                        + feature.properties["45K_50K22"], 
+                                        feature.properties["50K_60K22"] 
+                                        + feature.properties["60K_75K22"], 
+                                        feature.properties["75K_100K22"], 
+                                        feature.properties["100_125K22"], 
+                                        feature.properties["125_150K22"], 
+                                        feature.properties["150_200K22"] + feature.properties["200K_MOR22"]
+                                    ],
+                                    electionData
+                                ]
+                            );
                         }
                         selectedPopup = popup;
                         if (selectedFeature !== undefined) selectedFeature.setStyle({fillColor: selectedFeatureColor, fillOpacity: opacity});

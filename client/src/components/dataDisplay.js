@@ -8,6 +8,7 @@ import KDEChart from './eiPlots.js';
 import {Page, MapLevel, SortingMethod} from '../constants.js';
 import ElectionPage from './electionPage.js';
 import * as turf from '@turf/turf';
+import RegionPage from './regionPage.js';
 
 
 class DataDisplay extends React.Component {
@@ -118,6 +119,34 @@ class DataDisplay extends React.Component {
                     if(medianIncome > highestIncome) highestIncome = medianIncome;
                 }
             }
+            let shapes = [];
+            if(sortBy === SortingMethod.urbanRural) 
+                shapes = [
+                    {
+                        type: 'line',
+                        x0: 500,
+                        x1: 500,
+                        y0: 0.07,
+                        y1: 0.93,
+                        yref: 'paper', // Use 'paper' to make the line span the entire y-axis
+                        line: {
+                          color: 'orange',
+                          width: 3
+                        }
+                    },
+                    {
+                        type: 'line',
+                        x0: 1000,
+                        x1: 1000,
+                        y0: 0.07,
+                        y1: 0.93    ,
+                        yref: 'paper', // Use 'paper' to make the line span the entire y-axis
+                        line: {
+                          color: 'purple',
+                          width: 3
+                        }
+                    }
+                ];
             let plotData = [
                 {
                     x: xData,
@@ -142,6 +171,7 @@ class DataDisplay extends React.Component {
                 title: '',
                 xaxis: { title: label },
                 yaxis: { title: '% Votes' },
+                shapes: shapes,
                 width: 600,
                 height: 500
             };
@@ -223,6 +253,7 @@ class DataDisplay extends React.Component {
                     <td>{d.properties.NAME}</td>
                     <td>{readableNum(d.properties["TOT_POP22"])}</td>
                     <td>{d.properties["REGION"]}</td>
+                    <td>{readableNum(d.properties["WHT_NHSP22"])}</td>
                     <td>{readableNum(d.properties["BLK_NHSP22"])}</td>
                     <td>${readableNum(Number(medianIncome).toFixed(2))}</td>
                     <td>{readableNum(demVotes)}</td>
@@ -236,13 +267,38 @@ class DataDisplay extends React.Component {
                     console.log(e.points["0"].id)
                     return this.props.setSelectedFeature(e.points["0"].id)}}/>
                 <table class="gingles_tabular_display">
-                    <thead><tr><th>Precinct Name</th><th>Population</th><th>Region</th><th>Black Pop.(%)</th><th>Avg. Income</th><th>Republican Votes</th><th>DemocraticVotes</th></tr></thead>
+                    <thead><tr><th>Precinct Name</th><th>Population</th><th>Region</th><th>White Pop.</th><th>Black Pop.</th><th>Avg. Income</th><th>Republican Votes</th><th>DemocraticVotes</th></tr></thead>
                     <tbody>
                         {tabularDisplay}
                     </tbody>
                 </table>
             </div>;
             window.location.hash = this.props.selectedFeature;
+        }
+        else if(this.viewMode === Page.precinctAnalysis) {
+            let raceData = undefined;
+            let electionData = undefined;
+            let economicData = undefined;
+            let barTitle = this.state.featureData[0];
+            let electionTitle = this.state.featureData[0];
+            if(yAxis !== undefined) {
+                raceData = yAxis[0]
+                electionData = yAxis[2]
+                economicData = yAxis[1]
+                
+                barTitle = this.props.featureData[0][0]
+                electionTitle = this.props.featureData[0][2]
+            }
+            display = <div class="precinct_page"> 
+            <div class="precinct_col_1">
+                <RacePage graphTitle={barTitle}  key={raceData} yAxis={raceData}/>
+                <ElectionPage graphTitle={electionTitle} key={electionData} yAxis={electionData}/>
+            </div>
+            <div class="precinct_col_2">
+                <EconomicPage graphTitle={barTitle} key={economicData} yAxis={economicData}/>
+                {/* <RegionPage graphTitle={graphTitle} key={this.props.featureData[1][3]} yAxis={this.props.featureData[1][3]}/> */}
+            </div>
+        </div>;
         }
         else if (this.viewMode === Page.ecologicalInferencePage) {
             // <KDEChart data={dummyData} />

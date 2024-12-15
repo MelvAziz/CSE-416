@@ -15,8 +15,8 @@ class ElectionPage extends React.Component {
             else if (this.graphTitle.includes("Alabama")) 
                 yAxis = [[436746, 942154, 35338], ["Will Boyd", "Katie Britt", "Other"]];
         }
-        let width = 700;
-        let height = 600;
+        let width = 450;
+        let height = 350;
         let yAxisTitle = "Votes";
         let title = this.graphTitle + " Election Results"
         if(this.smallDisplay === true) {
