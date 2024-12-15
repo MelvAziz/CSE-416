@@ -47,7 +47,7 @@ class Map extends React.Component {
             labels={["Democratic",  "150k+",   "125-150k","100-125k","75-100k", "50-75k",  "25-50k",  ">25k",    ">25k",    "25-50k",  "50-75k",  "75-100k", "100-125k","125-150k","150k+", "Republican"]}
         />;
         }
-        else if (this.sortBy === SortingMethod.whiteRace || this.sortBy === SortingMethod.blackRace || this.sortBy === SortingMethod.whiteRaceIncome || this.sortBy === SortingMethod.blackRaceIncome) 
+        else if (this.sortBy === SortingMethod.whiteRace || this.sortBy === SortingMethod.blackRace || this.sortBy === SortingMethod.whiteRaceIncome || this.sortBy === SortingMethod.blackRaceIncome || this.sortBy === SortingMethod.incomeBrackets) 
             legend = <MapLegend 
                         colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} // Light Green -> Dark Green
                         labels={["<10%",    "10-20%",  "20-30%",  "30-40%",  "40-50%",  "50-60%",  "60-70%",  "70-80%",  "80-90%",  "90-100"]}
@@ -93,7 +93,7 @@ class Map extends React.Component {
                 else layer.options.fillOpacity = 0.2;
                 popup = "";
             }
-            else if (viewMode === Page.overviewPage) {
+            else if (viewMode === Page.overviewPage || viewMode === Page.ensemblePage) {
                 layer.options.fillColor = "white";
                 layer.options.fillOpacity = 0.6;
             
@@ -541,9 +541,17 @@ class Map extends React.Component {
         let mapContainerId = "main_map";
         let mapPopupId = "map_popup";
         if (this.viewMode === Page.selectStatePage) mapContainerId = "homepage_map";
-        if (this.viewMode === Page.overviewPage) {
+        else if (this.viewMode === Page.overviewPage) {
             mapContainerId = "overview_map";
             mapPopupId = "overview_map_popup";
+        }
+        else if(this.viewMode === Page.precinctAnalysis || this.viewMode === Page.ginglesPage) {
+            mapContainerId = "precinct_map";
+            mapPopupId = "precinct_map_popup";
+        }
+        else if(this.viewMode === Page.ensemblePage) {
+            mapContainerId = "ensemble_map";
+            mapPopupId = "ensemble_map_popup";
         }
         return (
             <div class="map_countainer">

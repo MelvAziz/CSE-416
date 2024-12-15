@@ -72,7 +72,7 @@ class StateDistrictAnalyzer extends React.Component {
             axios.get('http://localhost:8000/api/map?type=usa').then(response => {
                 this.setState({ viewMode: options, featureData: featureData, currentMap: response.data, updated: true})
             });
-        else if (options === "Overview") this.setState({viewMode: options, mapLevel: "dis", featureData: featureData, updated: false});
+        else if (options === "Overview" || options === Page.ensemblePage) this.setState({viewMode: options, mapLevel: "dis", featureData: featureData, updated: false});
         else this.setState({viewMode: options, mapLevel: MapLevel.precinct, featureData: featureData, updated: false, sortBy: sortBy});
     }
     setData(title, data) {

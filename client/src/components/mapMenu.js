@@ -99,6 +99,7 @@ class MapMenu extends React.Component {
             </div>
         }
         else if(this.props.viewMode === Page.ginglesPage)  {
+            mapMenuClass = "precinct_analysis_map_menu";
             if(this.state.sortBy === SortingMethod.whiteRace)               selectedSort[0] = "map_sort_button_selected";
             else if(this.state.sortBy === SortingMethod.whiteRaceIncome)    selectedSort[1] = "map_sort_button_selected";
             else if(this.state.sortBy === SortingMethod.blackRace)          selectedSort[2] = "map_sort_button_selected";
@@ -138,6 +139,7 @@ class MapMenu extends React.Component {
             </div>
         }
         else if(this.props.viewMode === Page.precinctAnalysis) {
+            mapMenuClass = "precinct_analysis_map_menu";
             let sortingOptionsA = [SortingMethod.whiteRace, SortingMethod.medianIncome, SortingMethod.bothPartiesElection]
             let sortingOptionsBA = [SortingMethod.whiteRace, SortingMethod.blackRace];
             let sortingOptionsBB = ["White Heatmap", "Black Heatmap"];
@@ -252,7 +254,7 @@ class MapMenu extends React.Component {
         else if(this.props.viewMode === Page.overviewPage) {
             mapMenuClass = "overview_map_menu";
             heatmap_type = 
-            <table>
+            <table class="district_overview_tabular_container">
                 <thead><tr><th>District Number</th><th>Representative</th><th>Party</th><th>Avg. Inc($)</th><th>Poverty(%)</th><th>Urban(%)</th><th>Suburban(%)</th><th>Rural(%)</th><th>Democratic(%)</th><th>Republican(%)</th></tr></thead>
                 <tbody>
                     {this.props.overviewData.map((district, index)=> {

@@ -17,6 +17,7 @@ class DataDisplay extends React.Component {
         this.sortBy = this.props.sortBy;
         this.viewMode = this.props.viewMode;
         this.state = {
+            sortBy: this.props.sortBy,
             featureData: this.props.featureData, 
             fetchedData: {}, 
             selectedPlan: 0, 
@@ -304,24 +305,74 @@ class DataDisplay extends React.Component {
             // <KDEChart data={dummyData} />
         }
         else if (this.viewMode === Page.ensemblePage) { 
+            let sortingOptionsA = [SortingMethod.whiteRace, SortingMethod.urban, SortingMethod.E0to25];
+            let sortingOptionsBA = [SortingMethod.whiteRace, SortingMethod.blackRace];
+            let sortingOptionsBB = ["White", "Black"];
+            let selected = ["selected", "", ""];
+            if(this.state.sortBy === SortingMethod.whiteRace || this.state.sortBy ===  SortingMethod.blackRace) {
+                sortingOptionsA[0] = this.state.sortBy;
+            }
+            else if(this.state.sortBy === SortingMethod.urban || this.state.sortBy ===  SortingMethod.suburban|| this.state.sortBy ===  SortingMethod.rural) {
+                selected = ["", "selected", ""];
+                sortingOptionsBA = [SortingMethod.urban, SortingMethod.suburban, SortingMethod.rural];
+                sortingOptionsBB = ["Urban", "Suburban", "Rural"];
+                sortingOptionsA[1] = this.state.sortBy;
+            }
+            else {
+                selected = ["", "", "selected"];
+                sortingOptionsBA = [SortingMethod.E0to25, SortingMethod.E25to50, SortingMethod.E50to75, SortingMethod.E75to100, SortingMethod.E100to125, SortingMethod.E125to150, SortingMethod.E150more];
+                sortingOptionsBB = ["0-25k","25-50k","50-75k","75-100k", "100-125k", "125-150k", ">150k"];
+                sortingOptionsA[2] = this.state.sortBy;
+            }
+            let secondDropDown = sortingOptionsBB.map((value, index) => {
+                return <option value={index}>{value}</option>
+            })
             display = <div>
-            <select name="ensemble_plan_dropdown" id="ensemble_plan_dropdown" onChange={async e =>
-                {
-                    const response = await axios.get('http://localhost:8000/api/ensemble?sort=' 
-                        + this.sortBy 
-                        + '&plan=' 
-                        + e.target.value
-                        + '&state=' 
-                        + this.state.featureData[0].split('_')[0]);
-                    return this.setState({fetchedData: response.data, selectedPlan: e.target.value});
-                }
-            }>
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-            </select>
+            <div class="ensemble_dropdown_container">
+                <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_2" onChange={async e =>
+                    {
+                        const response = await axios.get('http://localhost:8000/api/ensemble?sort=' 
+                            + sortingOptionsA[e.target.value]
+                            + '&plan=0' 
+                            + '&state=' 
+                            + this.state.featureData[0].split('_')[0]);
+                        return this.setState({fetchedData: response.data, sortBy: sortingOptionsA[e.target.value], selectedPlan: 0});
+                    }
+                }>
+                        <option value={0} {...selected[0]}>Race</option>
+                        <option value={1} {...selected[1]}>Region</option>
+                        <option value={2} {...selected[2]}>Economic</option>
+                </select>
+                <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_3" onChange={async e =>
+                    {
+                        const response = await axios.get('http://localhost:8000/api/ensemble?sort=' 
+                            + sortingOptionsBA[e.target.value]
+                            + '&plan=0' 
+                            + '&state=' 
+                            + this.state.featureData[0].split('_')[0]);
+                        return this.setState({fetchedData: response.data,  sortBy: sortingOptionsBA[e.target.value], selectedPlan: 0});
+                    }
+                }>
+                    {secondDropDown}
+                </select>
+                <select name="ensemble_plan_dropdown"  class="ensemble_dropdown" id="ensemble_plan_dropdown_1" onChange={async e =>
+                    {
+                        const response = await axios.get('http://localhost:8000/api/ensemble?sort=' 
+                            + this.state.sortBy 
+                            + '&plan=' 
+                            + e.target.value
+                            + '&state=' 
+                            + this.state.featureData[0].split('_')[0]);
+                        return this.setState({fetchedData: response.data, selectedPlan: e.target.value});
+                    }
+                }>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+            </div>
             <Graphs 
                 key={this.state.featureData + "_" + this.viewMode} 
                 data={this.state.fetchedData.plotData} 
