@@ -21,6 +21,8 @@ class DataContainer extends React.Component {
                     data={this.props.data} 
                     viewMode = {this.state.pageShown} 
                     featureData={this.state.featureData}
+                    setSelectedFeature={this.props.setSelectedFeature}
+                    selectedFeature={this.props.selectedFeature}
                 />
             </div>
         );

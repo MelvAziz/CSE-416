@@ -8,6 +8,7 @@ export const Page = {
     ecologicalInferencePage: 6,
     ensemblePage: 7,
     compareDistrictsPage: 8,
+    precinctAnalysis: 9
 };
 
 export const MapLevel = {
@@ -32,6 +33,7 @@ export const SortingMethod = {
     bothPartiesElection: "elec1",
     democraticElection: "elec2",
     republicanElection: "elec3",
+    poverty: "pov",
     E0to25: "E0_25k",
     E25to50: "E25_50k",
     E50to75: "E50_75k",

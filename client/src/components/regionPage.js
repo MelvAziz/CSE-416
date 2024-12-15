@@ -13,8 +13,8 @@ class RegionPage extends React.Component {
             else this.yAxis = [3681091, 3231588,  115580]
         }
         let yAxis = this.yAxis;
-        let width = 700;
-        let height = 600;
+        let width = 450;
+        let height = 350;
         let yAxisTitle = "Population";
         let title = this.graphTitle;
         if(this.smallDisplay === true) {

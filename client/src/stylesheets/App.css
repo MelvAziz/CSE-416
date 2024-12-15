@@ -150,6 +150,32 @@ p,tr,td {
   border-width: 1px;
 }
 
+#ensemble_map {
+  height: 86vh;
+  /* width:  calc(100vw - 2px); */
+  width: 48vw; 
+  position: absolute;
+  left: 1rem;
+  top: 12vh;
+  min-width: 30rem;
+  min-height: 20rem;
+  border-style: solid;
+  border-width: 1px;
+}
+
+#precinct_map {
+  height: 64vh;
+  /* width:  calc(100vw - 2px); */
+  width: 40vw; 
+  position: absolute;
+  left: 1rem;
+  top: 12vh;
+  min-width: 30rem;
+  min-height: 20rem;
+  border-style: solid;
+  border-width: 1px;
+}
+
 .overview_page {
   display: flex;
   /* flex-direction: column; */
@@ -196,6 +222,22 @@ p,tr,td {
   width: 30rem;
   bottom: calc(32vh - 2px);
   max-height: 20%;
+  padding-bottom: 1rem;
+  z-index: 10000;
+  border-radius: 0 5px 0 0;
+  border-style: solid;
+  border-width: 1px;
+  visibility: hidden;
+}
+
+.precinct_map_popup {
+  background-color: #ffffff;
+  font-size: 14px;
+  position: absolute;
+  left: 1rem;
+  width: 20rem;
+  bottom: calc(24vh - 2px);
+  max-height: 25%;
   padding-bottom: 1rem;
   z-index: 10000;
   border-radius: 0 5px 0 0;
@@ -285,6 +327,18 @@ p,tr,td {
   width: max(48vw, 30rem);
 }
 
+.precinct_analysis_map_menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  border-width: 1px;
+  border-style: solid;
+  height: 20vh;
+  width: max(40vw, 30rem);
+}
 .map_type_container {
   width: max(40vw, 30rem);
   display:flex;
@@ -455,4 +509,64 @@ p,tr,td {
 .summary_table_container {
   display: flex;
   justify-content: space-around;
+}
+
+.gingles_tabular_display {
+  display: block;
+  table-layout: fixed;
+  max-height: 200px;
+  height: 200px;
+  overflow-y: scroll;
+  width: 850px;
+  margin-left: 50px;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+.selected_tabular_display {
+  background-color: lightgray;
+}
+
+select {
+  background-color: #3ed0ac;
+  padding: 8px;
+  border: 1px solid black;
+}
+
+.precinct_col_1, .precinct_col_2 {
+  display: flex;
+}
+
+.precinct_dropdown {
+  /* display: flex; */
+  width: 250px;
+  border-radius: 20px;
+}
+.precinct_dropdown_container {
+  display: flex;
+  /* width: 1000vw; */
+  justify-content: space-around;
+  margin: 3%;
+}
+.map_precinct_analysis_sort_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.district_overview_tabular_container:hover {
+  cursor: pointer;
+}
+
+.ensemble_dropdown_container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  /* width: 100px; */
+}
+
+.ensemble_dropdown {
+  width: 200px;
+  border-radius: 10px;  
 }
