@@ -47,7 +47,7 @@ class Map extends React.Component {
             labels={["Democratic",  "150k+",   "125-150k","100-125k","75-100k", "50-75k",  "25-50k",  ">25k",    ">25k",    "25-50k",  "50-75k",  "75-100k", "100-125k","125-150k","150k+", "Republican"]}
         />;
         }
-        else if (this.sortBy === SortingMethod.whiteRace || this.sortBy === SortingMethod.blackRace || this.sortBy === SortingMethod.whiteRaceIncome || this.sortBy === SortingMethod.blackRaceIncome || this.sortBy === SortingMethod.incomeBrackets) 
+        else if (this.sortBy === SortingMethod.whiteRace || this.sortBy === SortingMethod.blackRace || this.sortBy === SortingMethod.whiteRaceIncome || this.sortBy === SortingMethod.blackRaceIncome || this.sortBy === SortingMethod.incomeBrackets || this.sortBy === SortingMethod.poverty) 
             legend = <MapLegend 
                         colors={["#ffff3f", "#eeef20", "#dddf00", "#d4d700", "#bfd200", "#aacc00", "#80b918", "#55a630", "#2b9348", "#007f5f"]} // Light Green -> Dark Green
                         labels={["<10%",    "10-20%",  "20-30%",  "30-40%",  "40-50%",  "50-60%",  "60-70%",  "70-80%",  "80-90%",  "90-100"]}
@@ -72,12 +72,6 @@ class Map extends React.Component {
                         colors={["yellow", "darkorange", "purple"]} 
                         labels={["Rural",  "Suburban",   "Urban"]}
                     />;
-        else if(this.sortBy === SortingMethod.poverty) {
-            legend = <MapLegend 
-                colors={["pink", "gold"]} 
-                labels={["Poverty",  "Above Poverty Line"]}
-            />;
-        }
         function readableNum(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
@@ -154,8 +148,24 @@ class Map extends React.Component {
 
                 }
                 else if(this.sortBy === SortingMethod.poverty) {
-                    if(medianIncome < 25000) layer.options.fillColor = "pink";
-                    else layer.options.fillColor = "gold";
+                    let poverty = feature.properties.LESS_10K22 
+                    + feature.properties["10K_15K22"] 
+                    + feature.properties["15K_20K22"] 
+                    + feature.properties["20K_25K22"]
+                    + feature.properties["25K_30K22"] 
+                    + feature.properties["30K_35K22"];
+                    let frac = ((poverty/totalHouses)*100).toFixed(2);
+                    if (frac < 10) layer.options.fillColor = "#ffff3f"; //light green
+                    else if (frac < 20) layer.options.fillColor = "#eeef20";
+                    else if (frac < 30) layer.options.fillColor = "#dddf00";
+                    else if (frac < 40) layer.options.fillColor = "#d4d700";
+                    else if (frac < 50) layer.options.fillColor = "#bfd200";
+                    else if (frac < 60) layer.options.fillColor = "#aacc00";
+                    else if (frac < 70) layer.options.fillColor = "#80b918";
+                    else if (frac < 80) layer.options.fillColor = "#55a630";
+                    else if (frac < 90) layer.options.fillColor = "#2b9348";
+                    else layer.options.fillColor = "darkgreen";
+                    popup += "<p>Poverty: " + frac + "%</p>";
                 }
                 else {
                     let count = 0;

@@ -149,7 +149,19 @@ public class Ensemble {
 
         plotData.add(scatterPlot);
         JsonObject plotLayout = new JsonObject();
-        plotLayout.addProperty("title", "Distribution by Race");
+        // plotLayout.addProperty("title", "Distribution by Race");
+        if(sort.compareTo("blk") == 0)              plotLayout.addProperty("title","Distribution by Race");
+        else if(sort.compareTo("wht") == 0)         plotLayout.addProperty("title","Distribution by Race");
+        else if(sort.compareTo("E0_25k") == 0)      plotLayout.addProperty("title","Distribution by Income");
+        else if(sort.compareTo("E25_50k") == 0)     plotLayout.addProperty("title","Distribution by Income");
+        else if(sort.compareTo("E50_75k") == 0)     plotLayout.addProperty("title","Distribution by Income");
+        else if(sort.compareTo("E75_100k") == 0)    plotLayout.addProperty("title","Distribution by Income");
+        else if(sort.compareTo("E100_125k") == 0)   plotLayout.addProperty("title","Distribution by Income");
+        else if(sort.compareTo("E125_150k") == 0)   plotLayout.addProperty("title","Distribution by Income");
+        else if(sort.compareTo("E150k_MOR") == 0)   plotLayout.addProperty("title","Distribution by Income");
+        else if(sort.compareTo("urb") == 0)         plotLayout.addProperty("title","Distribution by Region");
+        else if(sort.compareTo("sub") == 0)         plotLayout.addProperty("title","Distribution by Region");
+        else if(sort.compareTo("rur") == 0)         plotLayout.addProperty("title","Distribution by Region");
         JsonObject yaxis = new JsonObject();
         if(sort.compareTo("blk") == 0)              yaxis.addProperty("title","% of Population Black");
         else if(sort.compareTo("wht") == 0)         yaxis.addProperty("title","% of Population White");

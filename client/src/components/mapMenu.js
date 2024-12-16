@@ -43,62 +43,7 @@ class MapMenu extends React.Component {
         else if (this.props.mapLevel === MapLevel.district)  selectedTab[2] = "map_type_button_selected";
 
         let selectedSort = ["", "", "", ""];
-        
-        if(this.props.viewMode === Page.economicPage) {
-            map_subdivisions = 
-            <div class="map_type_container"> 
-                <input  class={"map_type_button " + selectedTab[0]} type="button" value="Precinct" onClick={(e) =>  this.switchMap(MapLevel.precinct)}/>
-                {/* <input  class={"map_type_button " + selectedTab[1]} type="button" value="County" onClick={(e) =>    this.switchMap(MapLevel.county)}/> */}
-            </div>;
-        }
-        else if(this.props.viewMode === Page.racePage) map_subdivisions = 
-            <div class="map_type_container"> 
-                <input  class={"map_type_button " + selectedTab[0]} type="button" value="Precinct" onClick={(e) =>  this.switchMap(MapLevel.precinct)}/>
-                {/* <input  class={"map_type_button " + selectedTab[1]} type="button" value="County" onClick={(e) =>    this.switchMap(MapLevel.county)}/> */}
-                <input  class={"map_type_button " + selectedTab[2]} type="button" value="District" onClick={(e) =>  this.switchMap(MapLevel.district)}/>
-            </div>;
-
-
-        if(this.props.viewMode === Page.economicPage) {
-            if(this.state.sortBy === SortingMethod.medianIncome)            selectedSort[0] = "map_sort_button_selected";
-            else if(this.state.sortBy === SortingMethod.incomeBrackets)     selectedSort[1] = "map_sort_button_selected";
-            else if(this.state.sortBy === SortingMethod.urbanRural)         selectedSort[2] = "map_sort_button_selected";
-            heatmap_type = 
-            <div class="map_economic_sort_upper_container"> 
-                <div class="map_sort_container map_economic_sort_container">
-                    <input  class={"map_sort_buttons map_economic_sort_buttons " + selectedSort[0]} type="button" value="Median Income" onClick={(e) => this.switchSort(SortingMethod.medianIncome)}/>
-                    <input  class={"map_sort_buttons map_economic_sort_buttons " + selectedSort[1]} type="button" value="Income Brackets" onClick={(e) => this.switchSort(SortingMethod.incomeBrackets)}/>
-                    <input  class={"map_sort_buttons map_economic_sort_buttons " + selectedSort[2]} type="button" value="Rural vs. Urban" onClick={(e) => this.switchSort(SortingMethod.urbanRural)}/>
-                </div>
-                <MultiRangeSlider
-                    class = {"economic_slider"}
-                    min={0}
-                    max={7}
-                    step={1}
-                    minValue={3}
-                    maxValue={6}
-                    labels={["0k", "25k", "50k", "75k", "100k", "125k", "150k", "+"]}
-                    stepOnly = {true}
-                    style={{'font-size': '16px', 'width': 'max(38vw, 28rem)', 'visibility': sliderVisible}}
-                    onInput={(e) => {
-                        this.setRange(e);
-                    }}
-                />
-            </div>
-        }
-        else if(this.props.viewMode === Page.racePage)  {
-            if(this.state.sortBy === SortingMethod.whiteRace)         selectedSort[0] = "map_sort_button_selected";
-            else if(this.state.sortBy === SortingMethod.blackRace)    selectedSort[1] = "map_sort_button_selected";
-            // else if(this.state.sortBy === SortingMethod.hispanicRace) selectedSort[2] = "map_sort_button_selected";
-            
-            heatmap_type = 
-            <div class="map_sort_container map_race_sort_container">
-                <input  class={"map_sort_buttons " + selectedSort[0]} type="button" value="White" onClick={(e) =>       this.switchSort(SortingMethod.whiteRace)}/>
-                <input  class={"map_sort_buttons " + selectedSort[1]} type="button" value="Black" onClick={(e) =>       this.switchSort(SortingMethod.blackRace)}/> 
-                {/* <input  class={"map_sort_buttons " + selectedSort[2]} type="button" value="Hispanic" onClick={(e) =>    this.switchSort(SortingMethod.hispanicRace)}/> */}
-            </div>
-        }
-        else if(this.props.viewMode === Page.ginglesPage)  {
+        if(this.props.viewMode === Page.ginglesPage)  {
             mapMenuClass = "precinct_analysis_map_menu";
             if(this.state.sortBy === SortingMethod.whiteRace)               selectedSort[0] = "map_sort_button_selected";
             else if(this.state.sortBy === SortingMethod.whiteRaceIncome)    selectedSort[1] = "map_sort_button_selected";
@@ -125,19 +70,6 @@ class MapMenu extends React.Component {
 
             </div>
         }
-        else if(this.props.viewMode === Page.electionPage) {
-            if(this.state.sortBy === SortingMethod.bothPartiesElection)       selectedSort[0] = "map_sort_button_selected";
-            else if(this.state.sortBy === SortingMethod.democraticElection)   selectedSort[1] = "map_sort_button_selected";
-            else if(this.state.sortBy === SortingMethod.republicanElection)   selectedSort[2] = "map_sort_button_selected";
-            let elecTitle = "2020 President ";
-            if(this.selectedState === "Alabama") elecTitle = "2022 Senator ";
-            heatmap_type = 
-            <div class="map_sort_container map_election_sort_container">
-                <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[0]} type="button" value={elecTitle + "(General)"} onClick={(e) =>       this.switchSort(SortingMethod.bothPartiesElection)}/>
-                <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[1]} type="button" value={elecTitle + "(Democratic)"} onClick={(e) =>    this.switchSort(SortingMethod.democraticElection)}/>
-                <input  class={"map_sort_buttons map_election_sort_button " + selectedSort[2]} type="button" value={elecTitle + "(Republican)"} onClick={(e) =>    this.switchSort(SortingMethod.republicanElection)}/>
-            </div>
-        }
         else if(this.props.viewMode === Page.precinctAnalysis) {
             mapMenuClass = "precinct_analysis_map_menu";
             let sortingOptionsA = [SortingMethod.whiteRace, SortingMethod.medianIncome, SortingMethod.bothPartiesElection]
@@ -155,7 +87,7 @@ class MapMenu extends React.Component {
                 sortingOptionsBB = ["Median Income", "Income Bracket", "Urban/Rural", "Poverty"];
                 sortingOptionsA[1] = this.state.sortBy;
             }
-           else if(this.state.sortBy === SortingMethod.bothPartiesElection || this.state.sortBy === SortingMethod.democraticElection || this.state.sortBy === SortingMethod.republicanElection) {
+           else if(this.state.sortBy === SortingMethod.bothPartiesElection || this.state.sortBy === SortingMethod.democraticElection || this.state.sortBy === SortingMethod.republicanElection || this.state.sortBy === SortingMethod.politicalIncome) {
                 selected = ["", "", "selected"];
                 sortingOptionsBA = [SortingMethod.politicalIncome, SortingMethod.bothPartiesElection, SortingMethod.democraticElection, SortingMethod.republicanElection];
                 sortingOptionsBB = ["Political/Income", elecTitle + " (General)", elecTitle + " (Democratic)", elecTitle + " (Republican)"];
@@ -318,15 +250,15 @@ class MapMenu extends React.Component {
                         }
                         return <tr class={selectedClass} onClick={() => this.props.setSelectedFeature(district.properties.NAME)}>
                             <td>{district.properties.ID}</td>
-                            <td>{district.properties["REPRESENTATIVE"]}</td>
-                            <td>{district.properties["PARTY"]}</td>
-                            <td>${readableNum(location.toFixed(0))}</td>
-                            <td>{((povertyLine/district.properties["TOT_HOUS22"])*100).toFixed(2)}%</td>
-                            <td>{((district.properties["URBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
-                            <td>{((district.properties["SUBURBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
-                            <td>{((district.properties["RURAL_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
-                            <td>{((demVotes/totalVotes)*100).toFixed(2)}%</td>
-                            <td>{((repVotes/totalVotes)*100).toFixed(2)}%</td>
+                            <td class="text_left">{district.properties["REPRESENTATIVE"]}</td>
+                            <td class="text_left">{district.properties["PARTY"]}</td>
+                            <td class="numbers_right">${readableNum(location.toFixed(0))}</td>
+                            <td class="numbers_right">{((povertyLine/district.properties["TOT_HOUS22"])*100).toFixed(2)}%</td>
+                            <td class="numbers_right">{((district.properties["URBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
+                            <td class="numbers_right">{((district.properties["SUBURBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
+                            <td class="numbers_right">{((district.properties["RURAL_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
+                            <td class="numbers_right">{((demVotes/totalVotes)*100).toFixed(2)}%</td>
+                            <td class="numbers_right">{((repVotes/totalVotes)*100).toFixed(2)}%</td>
                         </tr>
                     }
                     )}

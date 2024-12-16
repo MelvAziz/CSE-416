@@ -40,7 +40,6 @@ const KDEChart = ({ data, groups, candidate, candidateList}) => {
           data={[
             {
               x: (selectedGroup.x_vals).map((value) => {
-                console.log(candidate)
                 if(candidate === "1"  ) return (1-value);
                 else return value;
               }),

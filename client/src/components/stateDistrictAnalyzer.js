@@ -38,7 +38,6 @@ class StateDistrictAnalyzer extends React.Component {
         });
     }
     setSelectedFeature(name) {
-        console.log("test");
         this.setState({selectedFeature: name, sortBy: this.state.sortBy})
     }
     setMapLevel(option) {

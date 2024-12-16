@@ -32,12 +32,18 @@ class DataDisplay extends React.Component {
     async componentDidMount() {
        
         if (this.viewMode === Page.ensemblePage) {
+            let sortBy = this.state.sortBy;
+            if(!(sortBy === SortingMethod.whiteRace || sortBy ===  SortingMethod.blackRace
+                || sortBy === SortingMethod.urban || sortBy ===  SortingMethod.suburban|| sortBy ===  SortingMethod.rural
+                || sortBy === SortingMethod.E0to25 || sortBy ===  SortingMethod.E25to50 || sortBy ===  SortingMethod.E50to75 || sortBy ===  SortingMethod.E75to100 || sortBy ===  SortingMethod.E100to125 || sortBy ===  SortingMethod.E125to150 || sortBy ===  SortingMethod.E150more
+            )) {
+                sortBy = SortingMethod.whiteRace;
+            }
             const response = await axios.get('http://localhost:8000/api/ensemble?sort=' 
-                + this.sortBy 
+                + sortBy 
                 + '&plan=1&state=' 
                 + this.state.featureData[0].split('_')[0]);
-            console.log(response.data);
-            this.setState({fetchedData: response.data});
+            this.setState({fetchedData: response.data, sortBy: sortBy});
         }
         else if(this.viewMode === Page.ecologicalInferencePage) {
             const response = await axios.get('http://localhost:8000/api/ei?type=' 
@@ -47,7 +53,6 @@ class DataDisplay extends React.Component {
                 + '&election=' 
                 + this.state.eiSelectionC
             );
-            console.log(response.data.data);
             this.setState({fetchedData: response.data.data});
         }
         else if(this.viewMode === Page.overviewPage) {
@@ -100,7 +105,10 @@ class DataDisplay extends React.Component {
             let data = this.props.data;
             let totalVotes = 0;
             let highestIncome = 0;
-            if(sortBy === SortingMethod.blackRaceIncome || sortBy === SortingMethod.whiteRaceIncome) {
+            let highestDensity = 0;
+            let maxWidth = 100;
+            if(sortBy === SortingMethod.blackRaceIncome || sortBy === SortingMethod.whiteRaceIncome || sortBy === SortingMethod.politicalIncome) {
+                // maxWidth = 1;
                 for (var i = 0; i < data["features"].length; i++) {
                     let brackets = [
                         data["features"][i]["properties"].LESS_10K22 
@@ -137,33 +145,40 @@ class DataDisplay extends React.Component {
                     if(medianIncome > highestIncome) highestIncome = medianIncome;
                 }
             }
+            else if(sortBy === SortingMethod.urbanRural) {
+                for (var i = 0; i < data["features"].length; i++) {
+                    if((data["features"][i]["properties"]["TOT_POP22"])/(data["features"][i]["properties"]["ALAND20"]/1000000) > highestDensity) highestDensity=(data["features"][i]["properties"]["TOT_POP22"])/(data["features"][i]["properties"]["ALAND20"]/1000000);
+                }
+            }
+            if(sortBy === SortingMethod.politicalIncome) maxWidth = highestIncome;
+            else if(sortBy === SortingMethod.urbanRural) maxWidth = highestDensity;
             let shapes = [];
             if(sortBy === SortingMethod.urbanRural) 
                 shapes = [
-                    {
-                        type: 'line',
-                        x0: 500,
-                        x1: 500,
-                        y0: 0.07,
-                        y1: 0.93,
-                        yref: 'paper', // Use 'paper' to make the line span the entire y-axis
-                        line: {
-                          color: 'orange',
-                          width: 3
-                        }
-                    },
-                    {
-                        type: 'line',
-                        x0: 1000,
-                        x1: 1000,
-                        y0: 0.07,
-                        y1: 0.93    ,
-                        yref: 'paper', // Use 'paper' to make the line span the entire y-axis
-                        line: {
-                          color: 'purple',
-                          width: 3
-                        }
-                    }
+                    // {
+                    //     type: 'box',
+                    //     x0: 0,
+                    //     x1: 500,
+                    //     y0: 0,
+                    //     y1: 1,
+                    //     yref: 'paper', // Use 'paper' to make the line span the entire y-axis
+                    //     line: {
+                    //       color: 'yellow',
+                    //       width: 5
+                    //     }
+                    // },
+                    // {
+                    //     type: 'box',
+                    //     x0: 500,
+                    //     x1: 1000,
+                    //     y0: 0,
+                    //     y1: 1,
+                    //     yref: 'paper', // Use 'paper' to make the line span the entire y-axis
+                    //     line: {
+                    //       color: 'orange',
+                    //       width: 5
+                    //     }
+                    // }
                 ];
             let plotData = [
                 {
@@ -187,8 +202,8 @@ class DataDisplay extends React.Component {
             ];
             let plotLayout = {
                 title: '',
-                xaxis: { title: label },
-                yaxis: { title: '% Votes' },
+                xaxis: { title: label, range: [0, maxWidth] },
+                yaxis: { title: '% Votes', range: [0, 100] },
                 shapes: shapes,
                 width: 600,
                 height: 500
@@ -259,7 +274,7 @@ class DataDisplay extends React.Component {
                 }
                 else if (sortBy !== SortingMethod.whiteRace && sortBy !== SortingMethod.blackRace) {
                     if(sortBy === SortingMethod.whiteRaceIncome || sortBy === SortingMethod.blackRaceIncome) 
-                        xData.push((d["properties"][propName] / (d["properties"]["TOT_POP22"]*2)) + (medianIncome/(2*highestIncome)));
+                        xData.push((d["properties"][propName]*100 / (d["properties"]["TOT_POP22"]*2)) + (medianIncome*100/(2*highestIncome)));
                     else xData.push(Math.round(medianIncome))
                 }
                 else xData.push(Math.round(d["properties"][propName] / d["properties"]["TOT_POP22"] * 100))
@@ -268,24 +283,26 @@ class DataDisplay extends React.Component {
                     selectedClass = "selected_tabular_display"
                 }
                 return <tr class={selectedClass} id={d.properties.NAME}>
-                    <td>{d.properties.NAME}</td>
-                    <td>{readableNum(d.properties["TOT_POP22"])}</td>
+                    <td class="text_left">{d.properties.NAME}</td>
+                    <td class="numbers_right">{readableNum(d.properties["TOT_POP22"])}</td>
                     <td>{d.properties["REGION"]}</td>
-                    <td>{readableNum(d.properties["WHT_NHSP22"])}</td>
-                    <td>{readableNum(d.properties["BLK_NHSP22"])}</td>
-                    <td>${readableNum(Number(medianIncome).toFixed(2))}</td>
-                    <td>{readableNum(demVotes)}</td>
-                    <td>{readableNum(repVotes)}</td>
+                    <td class="numbers_right">{readableNum(d.properties["WHT_NHSP22"])}</td>
+                    <td class="numbers_right">{readableNum(d.properties["BLK_NHSP22"])}</td>
+                    <td class="numbers_right">${readableNum(Number(medianIncome).toFixed(2))}</td>
+                    <td class="numbers_right">{readableNum(demVotes)}</td>
+                    <td class="numbers_right">{readableNum(repVotes)}</td>
 
                 </tr>
             })
+            let max = 100;
+            if(sortBy === SortingMethod.politicalIncome) max = 100000;
+            else if(sortBy === SortingMethod.urbanRural) max = 40000;
             display = 
             <div>
-                <GinglesGraph data={plotData} layout={plotLayout}  onClick={e => {
-                    console.log(e.points["0"].id)
+                <GinglesGraph plotData={plotData} layout={plotLayout} max={max} onClick={e => {
                     return this.props.setSelectedFeature(e.points["0"].id)}}/>
                 <table class="gingles_tabular_display">
-                    <thead><tr><th>Precinct Name</th><th>Population</th><th>Region</th><th>White Pop.</th><th>Black Pop.</th><th>Avg. Income</th><th>Republican Votes</th><th>DemocraticVotes</th></tr></thead>
+                    <thead><tr><th>Precinct Name</th><th>Population</th><th>Region</th><th>White Pop.</th><th>Black Pop.</th><th>Avg. Income</th><th>Republican Votes</th><th>Democratic Votes</th></tr></thead>
                     <tbody>
                         {tabularDisplay}
                     </tbody>
@@ -363,7 +380,6 @@ class DataDisplay extends React.Component {
                                 + '&election='
                                 + this.state.eiSelectionC
                             );
-                            console.log(response.data.data)
                             return this.setState({fetchedData: response.data.data, eiSelectionA: sortingOptionsA[e.target.value]});
                         }
                     }>
@@ -382,7 +398,6 @@ class DataDisplay extends React.Component {
                                 + '&election='
                                 + sortingOptionsC[e.target.value]
                             );
-                            console.log(response.data.data)
                             return this.setState({fetchedData: response.data.data, eiSelectionC: sortingOptionsC[e.target.value]});
                         }
                     }>
@@ -405,17 +420,18 @@ class DataDisplay extends React.Component {
             let sortingOptionsA = [SortingMethod.whiteRace, SortingMethod.urban, SortingMethod.E0to25];
             let sortingOptionsBA = [SortingMethod.whiteRace, SortingMethod.blackRace];
             let sortingOptionsBB = ["White", "Black"];
+            let sortBy = this.state.sortBy;
             let selected = ["selected", "", ""];
-            if(this.state.sortBy === SortingMethod.whiteRace || this.state.sortBy ===  SortingMethod.blackRace) {
+            if(sortBy === SortingMethod.whiteRace || sortBy ===  SortingMethod.blackRace) {
                 sortingOptionsA[0] = this.state.sortBy;
             }
-            else if(this.state.sortBy === SortingMethod.urban || this.state.sortBy ===  SortingMethod.suburban|| this.state.sortBy ===  SortingMethod.rural) {
+            else if(sortBy === SortingMethod.urban || sortBy ===  SortingMethod.suburban|| sortBy ===  SortingMethod.rural) {
                 selected = ["", "selected", ""];
                 sortingOptionsBA = [SortingMethod.urban, SortingMethod.suburban, SortingMethod.rural];
                 sortingOptionsBB = ["Urban", "Suburban", "Rural"];
                 sortingOptionsA[1] = this.state.sortBy;
             }
-            else {
+            else if(sortBy === SortingMethod.E0to25 || sortBy ===  SortingMethod.E25to50 || sortBy ===  SortingMethod.E50to75 || sortBy ===  SortingMethod.E75to100 || sortBy ===  SortingMethod.E100to125 || sortBy ===  SortingMethod.E125to150 || sortBy ===  SortingMethod.E150more) {
                 selected = ["", "", "selected"];
                 sortingOptionsBA = [SortingMethod.E0to25, SortingMethod.E25to50, SortingMethod.E50to75, SortingMethod.E75to100, SortingMethod.E100to125, SortingMethod.E125to150, SortingMethod.E150more];
                 sortingOptionsBB = ["0-25k","25-50k","50-75k","75-100k", "100-125k", "125-150k", ">150k"];
@@ -483,14 +499,41 @@ class DataDisplay extends React.Component {
             let representatives = this.state.fetchedData.representatives;
 
             if(stateName !== undefined) {
-                let redistrictingParty = "Republican Party"
-                if(attributes["REDIST_PARTY"] === "DEM") 
-                    redistrictingParty = "Democratic Party"
+                let redistrictingParty = attributes["REDIST_PARTY"]
 
                 display = <div class="overview_container">
                     <h3>{stateName.substring(0, 1).toUpperCase() + stateName.substr(1, stateName.length)}</h3>
-                        <p>Total Population: {attributes["TOT_POP22"]}</p>
+                        {/* <p>Total Population: {attributes["TOT_POP22"]}</p>
                         <p>Redistricting Party: {redistrictingParty}</p>
+                        <p>Political Lean: {redistrictingParty}</p> */}
+                        <div class="summary_table_container">
+                            <table class="state_table_container">
+                                <thead>
+                                    <tr>
+                                        <th>Total Population</th>
+                                        <th>Redistricting Party</th>
+                                        <th>Political Lean</th>
+                                        <th>Pop. Density (per km^2)</th>
+                                        <th>Med. Income ($)</th>
+                                        <th>Poverty (%)</th>
+                                        <th>Precincts</th>
+                                        <th>Districts</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="numbers_right">{readableNum(attributes["TOT_POP22"])}</td>
+                                        <td class="numbers_right">{redistrictingParty}</td>
+                                        <td class="numbers_right">{redistrictingParty}</td>
+                                        <td class="numbers_right">{attributes["POP_DEN"]}</td>
+                                        <td class="numbers_right">${readableNum(attributes["MED_INC"])}</td>
+                                        <td class="numbers_right">{attributes["POV_PEC"]}%</td>
+                                        <td class="numbers_right">{readableNum(attributes["PRE_NUM"])}</td>
+                                        <td class="numbers_right">{attributes["DIST_NUM"]}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="summary_table_container">
                             <table class="ensemble_plan_container">
                                 <thead><tr><th>Ensemble ID</th><th>Number of District Plans</th><th>Equality Threshold</th></tr></thead>
@@ -503,9 +546,9 @@ class DataDisplay extends React.Component {
                                 </tbody>
                             </table>
                             <table class="ensemble_plan_container">
-                                <thead><tr><th>District Number</th><th>Representative</th></tr></thead>
+                                <thead><tr><th>District Number</th><th>Representative</th><th>Party</th></tr></thead>
                                 <tbody>
-                                    {representatives.map((rep, index) => <tr><td>{index+1}</td><td>{rep}</td></tr>)}
+                                    {representatives.map((rep, index) => <tr><td>{index+1}</td><td class="text_left">{rep.substring(0, rep.length-5)}</td><td class="text_left">{rep.substring(rep.length-4, rep.length-1)}</td></tr>)}
                                 </tbody>
                             </table>
                         </div>
