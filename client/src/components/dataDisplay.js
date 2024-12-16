@@ -10,6 +10,7 @@ import ElectionPage from './electionPage.js';
 import eiData from '../ei/mass/racial-president.json';
 import * as turf from '@turf/turf';
 import RegionPage from './regionPage.js';
+import GinglesGraph from './ginglesGraph.js';
 
 
 class DataDisplay extends React.Component {
@@ -280,7 +281,7 @@ class DataDisplay extends React.Component {
             })
             display = 
             <div>
-                <Graphs data={plotData} layout={plotLayout}  onClick={e => {
+                <GinglesGraph data={plotData} layout={plotLayout}  onClick={e => {
                     console.log(e.points["0"].id)
                     return this.props.setSelectedFeature(e.points["0"].id)}}/>
                 <table class="gingles_tabular_display">
