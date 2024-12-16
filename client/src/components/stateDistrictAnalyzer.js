@@ -68,6 +68,8 @@ class StateDistrictAnalyzer extends React.Component {
             else featureData[0] = this.state.selectedState + " (President)";
             sortBy = SortingMethod.bothPartiesElection;
         }
+        if(options === Page.ecologicalInferencePage) 
+            sortBy = SortingMethod.bothPartiesElection;
         if(options === Page.selectStatePage) 
             axios.get('http://localhost:8000/api/map?type=usa').then(response => {
                 this.setState({ viewMode: options, featureData: featureData, currentMap: response.data, updated: true})

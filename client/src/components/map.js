@@ -225,7 +225,7 @@ class Map extends React.Component {
                             + "%</td></tr>";
                 popup +="</tbody></table>";
             }
-            else if (viewMode === Page.electionPage || this.sortBy === SortingMethod.politicalIncome || viewMode === Page.precinctAnalysis) {
+            else if (viewMode === Page.electionPage || this.sortBy === SortingMethod.politicalIncome || viewMode === Page.precinctAnalysis || viewMode === Page.ecologicalInferencePage) {
                 let totalVotes = 
                     Number(feature.properties.G22USSDBOY) 
                     + Number(feature.properties.G22USSLSOP) 
@@ -552,6 +552,10 @@ class Map extends React.Component {
         else if(this.viewMode === Page.ensemblePage) {
             mapContainerId = "ensemble_map";
             mapPopupId = "ensemble_map_popup";
+        }
+        else if(this.viewMode === Page.ecologicalInferencePage) {
+            mapContainerId = "ecological_map";
+            mapPopupId = "ecological_map_popup";
         }
         return (
             <div class="map_countainer">

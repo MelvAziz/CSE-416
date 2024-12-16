@@ -192,7 +192,7 @@ class MapMenu extends React.Component {
                 />
             </div>            
         }
-        else if(this.props.viewMode === Page.ecologicalInferencePage || this.props.viewMode === Page.ensemblePage) {
+        else if(this.props.viewMode === Page.ensemblePage) {
             if(this.state.sortBy === SortingMethod.whiteRace)         selectedSort[0] = "map_sort_button_selected";
             else if(this.state.sortBy === SortingMethod.blackRace)    selectedSort[1] = "map_sort_button_selected";
             // else if(this.state.sortBy === SortingMethod.hispanicRace) selectedSort[2] = "map_sort_button_selected";

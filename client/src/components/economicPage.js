@@ -13,7 +13,7 @@ class EconomicPage extends React.Component {
             else this.yAxis = [369303, 353032, 336230, 301312, 256373, 211933, 821953]
         }
         let yAxis = this.yAxis;
-        let width = 450;
+        let width = 950;
         let height = 350;
         let yAxisTitle = "# of Households";
         let title = this.graphTitle.split('_')[0] + ' Income Distribution';

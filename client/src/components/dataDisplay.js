@@ -22,6 +22,9 @@ class DataDisplay extends React.Component {
             featureData: this.props.featureData, 
             fetchedData: {}, 
             selectedPlan: 0, 
+            eiSelectionA: "race",
+            eiSelectionC: "senator",
+            eiSelectionD: 0
         }
     }
 
@@ -34,6 +37,17 @@ class DataDisplay extends React.Component {
                 + this.state.featureData[0].split('_')[0]);
             console.log(response.data);
             this.setState({fetchedData: response.data});
+        }
+        else if(this.viewMode === Page.ecologicalInferencePage) {
+            const response = await axios.get('http://localhost:8000/api/ei?type=' 
+                + this.state.eiSelectionA
+                + '&state=' 
+                + this.state.featureData[0].split('_')[0]
+                + '&election=' 
+                + this.state.eiSelectionC
+            );
+            console.log(response.data.data);
+            this.setState({fetchedData: response.data.data});
         }
         else if(this.viewMode === Page.overviewPage) {
             const response = await axios.get('http://localhost:8000/api/attributes?type=summary&state=' 
@@ -304,69 +318,87 @@ class DataDisplay extends React.Component {
         </div>;
         }
         else if (this.viewMode === Page.ecologicalInferencePage) {
-            let sortingOptionsA = [SortingMethod.whiteRace, SortingMethod.urban, SortingMethod.E0to25];
-            let sortingOptionsBA = [SortingMethod.whiteRace, SortingMethod.blackRace];
-            let sortingOptionsBB = ["White", "Black"];
+            let sortingOptionsA = ["race", "eco", "region"];
+            let sortingOptionsB = ["White", "Black", "Hispanic"];
+            let electionTitle = "president";
+            if(this.state.featureData[0].split('_')[0] === "Alabama") electionTitle = "governor"
+            let sortingOptionsC = ["senator", electionTitle];
+            let sortingOptionsD = ["Joe Biden", "Donald Trump"]
+            if(this.state.eiSelectionC === "senator") sortingOptionsD = ["Ed Markey", "Kevin O'Connor"]
+            if(this.state.featureData[0].split('_')[0] === "Alabama") {
+                if(this.state.eiSelectionC === "senator") sortingOptionsD = ["Will Boyd", "Katie Britt"]
+                else sortingOptionsD = ["Yolanda Flowers", "Kay Ivey"]
+            }
+
             let selected = ["selected", "", ""];
-            if(this.state.sortBy === SortingMethod.whiteRace || this.state.sortBy ===  SortingMethod.blackRace) {
-                sortingOptionsA[0] = this.state.sortBy;
-            }
-            else if(this.state.sortBy === SortingMethod.urban || this.state.sortBy ===  SortingMethod.suburban|| this.state.sortBy ===  SortingMethod.rural) {
+            let selected2 = ["selected", ""];
+            let selected3 = ["selected", ""];
+            if(this.state.electionD === 1) selected3 = ["", "selected"];
+            if(this.state.eiSelectionA === "eco") {
                 selected = ["", "selected", ""];
-                sortingOptionsBA = [SortingMethod.urban, SortingMethod.suburban, SortingMethod.rural];
-                sortingOptionsBB = ["Urban", "Suburban", "Rural"];
-                sortingOptionsA[1] = this.state.sortBy;
+                sortingOptionsB = ["0-25k","25-50k","50-75k","75-100k", "100-125k", "125-150k", ">150k"];
             }
-            else {
+            else if(this.state.eiSelectionA === "region") {
                 selected = ["", "", "selected"];
-                sortingOptionsBA = [SortingMethod.E0to25, SortingMethod.E25to50, SortingMethod.E50to75, SortingMethod.E75to100, SortingMethod.E100to125, SortingMethod.E125to150, SortingMethod.E150more];
-                sortingOptionsBB = ["0-25k","25-50k","50-75k","75-100k", "100-125k", "125-150k", ">150k"];
-                sortingOptionsA[2] = this.state.sortBy;
+                sortingOptionsB = ["Rural","Suburban","Urban"];
             }
-            let secondDropDown = sortingOptionsBB.map((value, index) => {
-                return <option value={index}>{value}</option>
-            
+            if(this.state.eiSelectionC !== "senator") selected2 = ["", "selected"];
+            let secondDropDown = sortingOptionsC.map((value, index) => {
+                return <option value={index} {...selected2[index]}>{value.charAt(0).toUpperCase() + value.substring(1, value.length)}</option>
+            })
+            let thirdDropDown = sortingOptionsD.map((value, index) => {
+                return <option value={index} {...selected2[index]}>{value}</option>
             })
             display = <div>
                 <div name="ei_dropdown_container">
-                    <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_2" onChange={async e =>
+                    <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_1" onChange={async e =>
                         {
                             {/*This call should get economic, racial, or regional-president.json
                             that we pass in directly to the graph */}
-                            const response = await axios.get('http://localhost:8000/api/ensemble?sort=' 
+                            const response = await axios.get('http://localhost:8000/api/ei?type=' 
                                 + sortingOptionsA[e.target.value]
-                                + '&state=' 
-                                + this.state.featureData[0].split('_')[0]);
-                            return this.setState({fetchedData: response.data, sortBy: sortingOptionsA[e.target.value], selectedPlan: 0});
+                                + '&state='
+                                + this.state.featureData[0].split('_')[0]
+                                + '&election='
+                                + this.state.eiSelectionC
+                            );
+                            console.log(response.data.data)
+                            return this.setState({fetchedData: response.data.data, eiSelectionA: sortingOptionsA[e.target.value]});
                         }
                     }>
                             <option value={0} {...selected[0]}>Race</option>
-                            <option value={1} {...selected[1]}>Region</option>
-                            <option value={2} {...selected[2]}>Economic</option>
+                            <option value={1} {...selected[1]}>Economic</option>
+                            <option value={2} {...selected[2]}>Region</option>
                     </select>
-                    <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_3" onChange={
-                        {/*this needs to change between the subtype within a type
-                        (White, Black, Hispanic; eco bins; rural urban suburban) 
-                        Then we set a value that matches the index so that we can match
-                        the group (ex. White = data[0].groups[0], Black = data[0].groups[1], etc*/}
+                    <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_1" onChange={async e =>
+                        {
+                            {/*This call should get economic, racial, or regional-president.json
+                            that we pass in directly to the graph */}
+                            const response = await axios.get('http://localhost:8000/api/ei?type=' 
+                                + this.state.eiSelectionA
+                                + '&state='
+                                + this.state.featureData[0].split('_')[0]
+                                + '&election='
+                                + sortingOptionsC[e.target.value]
+                            );
+                            console.log(response.data.data)
+                            return this.setState({fetchedData: response.data.data, eiSelectionC: sortingOptionsC[e.target.value]});
+                        }
                     }>
-                {data[0].group[index].map((option, index) => (
-                <option key={index} value={option}>
-                    {option}
-                </option>
-                ))}
-
-                        {secondDropDown}
+                            {secondDropDown}
                     </select>
-                    <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_3" onChange={
-                        {/*this needs to set the party field for republican or democrat*/}
+                    <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_1" onChange={async e =>
+                        {return this.setState({eiSelectionD: e.target.value});}
                     }>
-                        {secondDropDown}
+                            {thirdDropDown}
                     </select>
+                    <KDEChart key={this.state.eiSelectionD+""+this.state.eiSelectionA+""+this.state.eiSelectionC} 
+                    data = {this.state.fetchedData} 
+                    groups={sortingOptionsB} 
+                    candidate={this.state.eiSelectionD} 
+                    candidateList={sortingOptionsD}/>
                 </div>
-                <KDEChart 
-                data = {data} party = {party}/>
-            </div>
+            </div>;
         }
         else if (this.viewMode === Page.ensemblePage) { 
             let sortingOptionsA = [SortingMethod.whiteRace, SortingMethod.urban, SortingMethod.E0to25];

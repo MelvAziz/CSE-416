@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Plot from "react-plotly.js";
 
-const KDEChart = ({ data }) => {
+const KDEChart = ({ data, groups, candidate, candidateList}) => {
   const [selectedGroup, setSelectedGroup] = useState(data[0]?.groups[0]); // Default to the first group of the first candidate
+  
 
   const handleGroupSelection = (group) => {
     setSelectedGroup(group);
@@ -13,9 +14,10 @@ const KDEChart = ({ data }) => {
       <h1>KDE Chart</h1>
       <div>
         {/* Render buttons for each group */}
-        {data[0]?.groups.map((group) => (
-          <button
-            key={group.group}
+        {
+        data[0]?.groups.map((group, index) => {
+          return <button
+            key={groups[index]}
             onClick={() => handleGroupSelection(group)}
             style={{
               margin: "5px",
@@ -27,9 +29,9 @@ const KDEChart = ({ data }) => {
               cursor: "pointer",
             }}
           >
-            {group.group}
+            {groups[index]}
           </button>
-        ))}
+          })}
       </div>
 
       {/* Plot only the selected group's data */}
@@ -37,7 +39,11 @@ const KDEChart = ({ data }) => {
         <Plot
           data={[
             {
-              x: selectedGroup.x_vals,
+              x: (selectedGroup.x_vals).map((value) => {
+                console.log(candidate)
+                if(candidate === "1"  ) return (1-value);
+                else return value;
+              }),
               y: selectedGroup.y_vals,
               type: "scatter",
               mode: "lines",
@@ -45,8 +51,8 @@ const KDEChart = ({ data }) => {
             },
           ]}
           layout={{
-            title: `KDE of ${selectedGroup.group}`,
-            xaxis: { title: "Support" },
+            title: `KDE of ${groups[Number((selectedGroup.group).split(' ')[1])-1] + " Pop."}`,
+            xaxis: { title: "Support for " + candidateList[candidate] },
             yaxis: { title: "Density" },
             template: "plotly_white",
           }}
