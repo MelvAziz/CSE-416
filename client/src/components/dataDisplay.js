@@ -336,28 +336,32 @@ class DataDisplay extends React.Component {
         </div>;
         }
         else if (this.viewMode === Page.ecologicalInferencePage) {
-            let sortingOptionsA = ["race", "eco", "region"];
+            let sortingOptionsA = ["race", "eco", "raceco", "region"];
             let sortingOptionsB = ["White", "Black", "Hispanic"];
             let electionTitle = "president";
             if(this.state.featureData[0].split('_')[0] === "Alabama") electionTitle = "governor"
             let sortingOptionsC = ["senator", electionTitle];
-            let sortingOptionsD = ["Joe Biden", "Donald Trump"]
-            if(this.state.eiSelectionC === "senator") sortingOptionsD = ["Ed Markey", "Kevin O'Connor"]
+            let sortingOptionsD = ["Joe Biden (DEM)", "Donald Trump (REP)"]
+            if(this.state.eiSelectionC === "senator") sortingOptionsD = ["Ed Markey (DEM)", "Kevin O'Connor (REP)"]
             if(this.state.featureData[0].split('_')[0] === "Alabama") {
-                if(this.state.eiSelectionC === "senator") sortingOptionsD = ["Will Boyd", "Katie Britt"]
-                else sortingOptionsD = ["Yolanda Flowers", "Kay Ivey"]
+                if(this.state.eiSelectionC === "senator") sortingOptionsD = ["Will Boyd (DEM)", "Katie Britt (REP)"]
+                else sortingOptionsD = ["Yolanda Flowers (DEM)", "Kay Ivey (REP)"]
             }
 
-            let selected = ["selected", "", ""];
+            let selected = ["selected", "", "", ""];
             let selected2 = ["selected", ""];
             let selected3 = ["selected", ""];
             if(this.state.electionD === 1) selected3 = ["", "selected"];
+            if(this.state.eiSelectionA === "raceco") {
+                selected = ["", "", "selected", ""];
+                sortingOptionsB = ["White Poverty","Black Poverty","Black High Income", "White High Income"];
+            }
             if(this.state.eiSelectionA === "eco") {
-                selected = ["", "selected", ""];
+                selected = ["", "selected", "", ""];
                 sortingOptionsB = ["0-25k","25-50k","50-75k","75-100k", "100-125k", "125-150k", ">150k"];
             }
             else if(this.state.eiSelectionA === "region") {
-                selected = ["", "", "selected"];
+                selected = ["", "", "", "selected"];
                 sortingOptionsB = ["Rural","Suburban","Urban"];
             }
             if(this.state.eiSelectionC !== "senator") selected2 = ["", "selected"];
@@ -385,7 +389,8 @@ class DataDisplay extends React.Component {
                     }>
                             <option value={0} {...selected[0]}>Race</option>
                             <option value={1} {...selected[1]}>Economic</option>
-                            <option value={2} {...selected[2]}>Region</option>
+                            <option value={2} {...selected[2]}>Race/Economic</option>
+                            <option value={3} {...selected[3]}>Region</option>
                     </select>
                     <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_1" onChange={async e =>
                         {
@@ -500,7 +505,25 @@ class DataDisplay extends React.Component {
 
             if(stateName !== undefined) {
                 let redistrictingParty = attributes["REDIST_PARTY"]
+                let districtBannerA = ["6 | 1  Rep|Dem", "7 | 0 Rep|Dem"].map(p => <th>{p}</th>)
+                let districtBannerB = <tbody>
+                    <tr><td>0</td><td>5,000</td><td>10%</td><td>454</td><td>4546</td></tr>
+                    <tr><td>0</td><td>5,000</td><td>10%</td><td>473</td><td>4527</td></tr>
+                    <tr><td>0</td><td>5,000</td><td>10%</td><td>439</td><td>4561</td></tr>
+                    <tr><td>0</td><td>5,000</td><td>10%</td><td>460</td><td>4540</td></tr>
+                    <tr><td>0</td><td>5,000</td><td>10%</td><td>442</td><td>4558</td></tr>
+                </tbody>
+                if(attributes["DIST_NUM"] === 9) {
+                    districtBannerA = <th>0 | 9 Rep|Dem</th>
+                    districtBannerB =  districtBannerB = <tbody>
+                    <tr><td>0</td><td>5,000</td><td>10%</td><td>5000</td></tr>
+                    <tr><td>0</td><td>5,000</td><td>10%</td><td>5000</td></tr>
+                    <tr><td>0</td><td>5,000</td><td>10%</td><td>5000</td></tr>
+                    <tr><td>0</td><td>5,000</td><td>10%</td><td>5000</td></tr>
+                    <tr><td>0</td><td>5,000</td><td>10%</td><td>5000</td></tr>
 
+                </tbody>
+                }
                 display = <div class="overview_container">
                     <h3>{stateName.substring(0, 1).toUpperCase() + stateName.substr(1, stateName.length)}</h3>
                         {/* <p>Total Population: {attributes["TOT_POP22"]}</p>
@@ -536,14 +559,8 @@ class DataDisplay extends React.Component {
                         </div>
                         <div class="summary_table_container">
                             <table class="ensemble_plan_container">
-                                <thead><tr><th>Ensemble ID</th><th>Number of District Plans</th><th>Equality Threshold</th></tr></thead>
-                                <tbody>
-                                    <tr><td>0</td><td>5,000</td><td>10%</td></tr>
-                                    <tr><td>1</td><td>5,000</td><td>10%</td></tr>
-                                    <tr><td>2</td><td>5,000</td><td>10%</td></tr>
-                                    <tr><td>3</td><td>5,000</td><td>10%</td></tr>
-                                    <tr><td>4</td><td>5,000</td><td>10%</td></tr>
-                                </tbody>
+                                <thead><tr><th>Ensemble ID</th><th>Number of District Plans</th><th>Equality Threshold</th>{districtBannerA}</tr></thead>
+                                {districtBannerB}
                             </table>
                             <table class="ensemble_plan_container">
                                 <thead><tr><th>District Number</th><th>Representative</th><th>Party</th></tr></thead>

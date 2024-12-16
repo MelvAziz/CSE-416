@@ -193,7 +193,23 @@ class MapMenu extends React.Component {
                         function readableNum(x) {
                             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         }
-                        let tempPop = district.properties["TOT_HOUS22"]/2;
+                        let totalPop = district.properties["LESS_10K22"]
+                                    +district.properties["E10K_15K22"]
+                                    +district.properties["E15K_20K22"]
+                                    +district.properties["E20K_25K22"]
+                                    +district.properties["E25K_30K22"]
+                                    +district.properties["E30K_35K22"]
+                                    +district.properties["E35K_40K22"]
+                                    +district.properties["E40K_45K22"]
+                                    +district.properties["E45K_50K22"]
+                                    +district.properties["E50K_60K22"]
+                                    +district.properties["E60K_75K22"]
+                                    +district.properties["E75K_100K22"]
+                                    +district.properties["E100_125K22"]
+                                    +district.properties["E125_150K22"]
+                                    +district.properties["E150_200K22"]
+                                    +district.properties["E200K_MOR22"];
+                        let tempPop = totalPop/2;
                         let count = 0;
                         let i = 0;
                         let brackets = [
@@ -253,7 +269,7 @@ class MapMenu extends React.Component {
                             <td class="text_left">{district.properties["REPRESENTATIVE"]}</td>
                             <td class="text_left">{district.properties["PARTY"]}</td>
                             <td class="numbers_right">${readableNum(location.toFixed(0))}</td>
-                            <td class="numbers_right">{((povertyLine/district.properties["TOT_HOUS22"])*100).toFixed(2)}%</td>
+                            <td class="numbers_right">{((povertyLine/(totalPop))*100).toFixed(2)}%</td>
                             <td class="numbers_right">{((district.properties["URBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
                             <td class="numbers_right">{((district.properties["SUBURBAN_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>
                             <td class="numbers_right">{((district.properties["RURAL_POP"]/district.properties["TOT_POP22"])*100).toFixed(2)}%</td>

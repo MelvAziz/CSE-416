@@ -40,8 +40,16 @@ const KDEChart = ({ data, groups, candidate, candidateList}) => {
           data={[
             {
               x: (selectedGroup.x_vals).map((value) => {
-                if(candidate === "1"  ) return (1-value);
-                else return value;
+                // console.log(groups[Number((selectedGroup.group).split(' ')[1])-1]);
+                // // var switch = false;
+                // if(candidate === "1" 
+                //   && (
+                //     groups[Number((selectedGroup.group).split(' ')[1])-1] === "Rural"
+                //     ||  groups[Number((selectedGroup.group).split(' ')[1])-1] === "Urban"
+                // )) return (1-value*value);
+                // else return ((value*value));
+                if(candidate === "1") return (value);
+                else return ((1-value));
               }),
               y: selectedGroup.y_vals,
               type: "scatter",

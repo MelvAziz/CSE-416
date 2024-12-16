@@ -71,7 +71,7 @@ class StateDistrictAnalyzer extends React.Component {
             sortBy = SortingMethod.bothPartiesElection;
         if(options === Page.selectStatePage) 
             axios.get('http://localhost:8000/api/map?type=usa').then(response => {
-                this.setState({ viewMode: options, featureData: featureData, currentMap: response.data, updated: true})
+                this.setState({ viewMode: options, featureData: featureData, currentMap: response.data, selectedFeature: null, updated: true})
             });
         else if (options === "Overview" || options === Page.ensemblePage) this.setState({viewMode: options, mapLevel: "dis", featureData: featureData, updated: false});
         else this.setState({viewMode: options, mapLevel: MapLevel.precinct, featureData: featureData, updated: false, sortBy: sortBy});
@@ -83,7 +83,7 @@ class StateDistrictAnalyzer extends React.Component {
 
     render() {
         let name = "Alabama";
-        let center = [32.3182, -86.9023]; //Apprioriate coordinates for displaying Alabama
+        let center = [32.6182, -86.9023]; //Apprioriate coordinates for displaying Alabama
         let zoom = 7;
         let data = this.state.currentMap;
         if(this.state.updated === false) {
@@ -108,7 +108,7 @@ class StateDistrictAnalyzer extends React.Component {
         }
         if(this.state.selectedState === "Massachusetts") {
             name ="Massachusetts";
-            center = [42.4072, -71.3824];
+            center = [42.0072, -71.4824];
             zoom = 8;
         }
         if(this.state.viewMode === Page.selectStatePage) {

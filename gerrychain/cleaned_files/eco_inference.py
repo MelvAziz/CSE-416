@@ -243,13 +243,24 @@ def ei_analysis(type, state, precincts, elec_type):
 
 
 
-  ei = RowByColumnEI(model_name='multinomial-dirichlet-modified', pareto_shape=100, pareto_scale=100)
-  ei.fit(group_fractions_rbyc,
-       votes_fractions_rbyc,
-       precinct_pops,
-       demographic_group_names=demographic_group_names_rbyc,
-       candidate_names=candidate_names_rbyc,
-       #precinct_names=precinct_names,
+  # ei = RowByColumnEI(model_name='multinomial-dirichlet-modified', pareto_shape=100, pareto_scale=100)
+  # ei.fit(group_fractions_rbyc,
+  #      votes_fractions_rbyc,
+  #      precinct_pops,
+  #      demographic_group_names=demographic_group_names_rbyc,
+  #      candidate_names=candidate_names_rbyc,
+  #      #precinct_names=precinct_names,
+  # )
+  ei = TwoByTwoEI(model_name="king99_pareto_modification", pareto_scale=8, pareto_shape=2)
+  ei.fit(
+    group_fractions_rbyc,
+    votes_fractions_rbyc,
+    precinct_pops,
+    demographic_group_names=demographic_group_names_rbyc,
+    candidate_names=candidate_names_rbyc,
+    precinct_names=precinct_names,
+    draws=100,
+    tune=100,
   )
 
   #ei.plot()
