@@ -23,7 +23,7 @@ class DataDisplay extends React.Component {
             featureData: this.props.featureData, 
             fetchedData: {}, 
             selectedPlan: 0, 
-            eiSelectionA: "race",
+            eiSelectionA: "raceco",
             eiSelectionC: "senator",
             eiSelectionD: 0
         }
@@ -295,7 +295,7 @@ class DataDisplay extends React.Component {
                 </tr>
             })
             let max = 100;
-            if(sortBy === SortingMethod.politicalIncome) max = 100000;
+            if(sortBy === SortingMethod.politicalIncome) max = 150000;
             else if(sortBy === SortingMethod.urbanRural) max = 40000;
             display = 
             <div>
@@ -336,8 +336,8 @@ class DataDisplay extends React.Component {
         </div>;
         }
         else if (this.viewMode === Page.ecologicalInferencePage) {
-            let sortingOptionsA = ["race", "eco", "raceco", "region"];
-            let sortingOptionsB = ["White", "Black", "Hispanic"];
+            let sortingOptionsA = ["raceco", "region"];
+            let sortingOptionsB = ["White Poverty","Black Poverty","White High Income", "Black High Income"];
             let electionTitle = "president";
             if(this.state.featureData[0].split('_')[0] === "Alabama") electionTitle = "governor"
             let sortingOptionsC = ["senator", electionTitle];
@@ -348,13 +348,13 @@ class DataDisplay extends React.Component {
                 else sortingOptionsD = ["Yolanda Flowers (DEM)", "Kay Ivey (REP)"]
             }
 
-            let selected = ["selected", "", "", ""];
+            let selected = ["selected", ""];
             let selected2 = ["selected", ""];
             let selected3 = ["selected", ""];
             if(this.state.electionD === 1) selected3 = ["", "selected"];
             if(this.state.eiSelectionA === "raceco") {
                 selected = ["", "", "selected", ""];
-                sortingOptionsB = ["White Poverty","Black Poverty","Black High Income", "White High Income"];
+                sortingOptionsB = ["White Poverty","Black Poverty","White High Income", "Black High Income"];
             }
             if(this.state.eiSelectionA === "eco") {
                 selected = ["", "selected", "", ""];
@@ -364,7 +364,11 @@ class DataDisplay extends React.Component {
                 selected = ["", "", "", "selected"];
                 sortingOptionsB = ["Rural","Suburban","Urban"];
             }
-            if(this.state.eiSelectionC !== "senator") selected2 = ["", "selected"];
+            // if(this.state.eiSelectionC !== "senator") selected2 = ["", "selected"];
+
+            
+
+
             let secondDropDown = sortingOptionsC.map((value, index) => {
                 return <option value={index} {...selected2[index]}>{value.charAt(0).toUpperCase() + value.substring(1, value.length)}</option>
             })
@@ -387,26 +391,8 @@ class DataDisplay extends React.Component {
                             return this.setState({fetchedData: response.data.data, eiSelectionA: sortingOptionsA[e.target.value]});
                         }
                     }>
-                            <option value={0} {...selected[0]}>Race</option>
-                            <option value={1} {...selected[1]}>Economic</option>
-                            <option value={2} {...selected[2]}>Race/Economic</option>
-                            <option value={3} {...selected[3]}>Region</option>
-                    </select>
-                    <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_1" onChange={async e =>
-                        {
-                            {/*This call should get economic, racial, or regional-president.json
-                            that we pass in directly to the graph */}
-                            const response = await axios.get('http://localhost:8000/api/ei?type=' 
-                                + this.state.eiSelectionA
-                                + '&state='
-                                + this.state.featureData[0].split('_')[0]
-                                + '&election='
-                                + sortingOptionsC[e.target.value]
-                            );
-                            return this.setState({fetchedData: response.data.data, eiSelectionC: sortingOptionsC[e.target.value]});
-                        }
-                    }>
-                            {secondDropDown}
+                            <option value={0} {...selected[0]}>Race/Economic</option>
+                            <option value={1} {...selected[1]}>Region</option>
                     </select>
                     <select name="ensemble_plan_dropdown" class="ensemble_dropdown" id="ensemble_plan_dropdown_1" onChange={async e =>
                         {return this.setState({eiSelectionD: e.target.value});}
@@ -508,19 +494,19 @@ class DataDisplay extends React.Component {
                 let districtBannerA = ["6 | 1  Rep|Dem", "7 | 0 Rep|Dem"].map(p => <th>{p}</th>)
                 let districtBannerB = <tbody>
                     <tr><td>0</td><td>5,000</td><td>10%</td><td>454</td><td>4546</td></tr>
-                    <tr><td>0</td><td>5,000</td><td>10%</td><td>473</td><td>4527</td></tr>
-                    <tr><td>0</td><td>5,000</td><td>10%</td><td>439</td><td>4561</td></tr>
-                    <tr><td>0</td><td>5,000</td><td>10%</td><td>460</td><td>4540</td></tr>
-                    <tr><td>0</td><td>5,000</td><td>10%</td><td>442</td><td>4558</td></tr>
+                    <tr><td>1</td><td>5,000</td><td>10%</td><td>473</td><td>4527</td></tr>
+                    <tr><td>2</td><td>5,000</td><td>10%</td><td>439</td><td>4561</td></tr>
+                    <tr><td>3</td><td>5,000</td><td>10%</td><td>460</td><td>4540</td></tr>
+                    <tr><td>4</td><td>5,000</td><td>10%</td><td>442</td><td>4558</td></tr>
                 </tbody>
                 if(attributes["DIST_NUM"] === 9) {
                     districtBannerA = <th>0 | 9 Rep|Dem</th>
                     districtBannerB =  districtBannerB = <tbody>
                     <tr><td>0</td><td>5,000</td><td>10%</td><td>5000</td></tr>
-                    <tr><td>0</td><td>5,000</td><td>10%</td><td>5000</td></tr>
-                    <tr><td>0</td><td>5,000</td><td>10%</td><td>5000</td></tr>
-                    <tr><td>0</td><td>5,000</td><td>10%</td><td>5000</td></tr>
-                    <tr><td>0</td><td>5,000</td><td>10%</td><td>5000</td></tr>
+                    <tr><td>1</td><td>5,000</td><td>10%</td><td>5000</td></tr>
+                    <tr><td>2</td><td>5,000</td><td>10%</td><td>5000</td></tr>
+                    <tr><td>3</td><td>5,000</td><td>10%</td><td>5000</td></tr>
+                    <tr><td>4</td><td>5,000</td><td>10%</td><td>5000</td></tr>
 
                 </tbody>
                 }

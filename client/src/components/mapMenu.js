@@ -265,7 +265,7 @@ class MapMenu extends React.Component {
                             selectedClass = "selected_tabular_display"
                         }
                         return <tr class={selectedClass} onClick={() => this.props.setSelectedFeature(district.properties.NAME)}>
-                            <td>{district.properties.ID}</td>
+                            <td>{index+1}</td>
                             <td class="text_left">{district.properties["REPRESENTATIVE"]}</td>
                             <td class="text_left">{district.properties["PARTY"]}</td>
                             <td class="numbers_right">${readableNum(location.toFixed(0))}</td>

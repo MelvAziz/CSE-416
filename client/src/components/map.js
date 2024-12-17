@@ -372,6 +372,7 @@ class Map extends React.Component {
                     document.getElementById("map_popup").style.visibility = 'visible';
                     document.getElementById("map_popup").innerHTML = popup;
                 }
+ 
             });
             layer.on('mouseout', function(e){
                 if (selectedPopup !== undefined && viewMode !== Page.selectStatePage) {
@@ -389,7 +390,7 @@ class Map extends React.Component {
             }
             layer.on('click', function (e) {
                 if (viewMode === Page.selectStatePage) {
-                    switchState(feature.properties.name);
+                    if(feature.properties.name === "Alabama" || feature.properties.name === "Massachusetts" ) switchState(feature.properties.name);
                 }
                 else {
                     if(popup !== undefined) {
